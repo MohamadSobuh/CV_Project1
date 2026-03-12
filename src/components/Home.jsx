@@ -153,6 +153,10 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <footer>
+                
+            </footer>
         </div>
     )
 }
