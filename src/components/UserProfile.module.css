@@ -1,0 +1,40 @@
+.full {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #E6F7F9;
+    min-height: calc(100vh - 80px);
+}
+
+
+.profile {
+    width: 600px;
+    padding: 5px 30px;
+    background-color: white;
+    border: none;
+    box-shadow: 0px 0px 5px #07526B;
+    border-radius: 25px;
+}
+
+.imgProfile {
+    width: 80px;
+    height: 80px;
+    margin: 10px 0;
+    background-color: #07526B;
+    padding: 3px;
+}
+
+
+.text {
+    color: #1A83A8;
+    margin: 10px 0px;
+}
+
+.center {
+    text-align: center;
+}
+
+.hr {
+    color: #07526B;
+}
+

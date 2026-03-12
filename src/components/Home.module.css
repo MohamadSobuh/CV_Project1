@@ -1,0 +1,131 @@
+.bg {
+    color: white;
+    background-color: #E6F7F9;
+}
+
+
+.a {
+    color: #082F43;
+    background: url();
+}
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.logo {
+    width: 50px;
+    height: 60px;
+    margin: 10px;
+}
+
+.btn1 {
+    background-color: #E6F7F9;
+    color: #1A83A8;
+    border: 1px solid #1A83A8;
+    border-radius: 45px;
+    padding: 5px 20px;
+}
+
+.btn1:hover {
+    background-color: #d2f7fa;
+    border: 1px solid #082F43;
+}
+
+.getStarted {
+    background-color: white;
+    color: #1A83A8;
+    padding: 5px 10px;
+    border: 1px solid #1A83A8;
+    border-radius: 25px;
+    margin-bottom: 100px;
+}
+
+.body {
+    text-align: center;
+    margin: 170px 0px;
+}
+
+.section {
+    text-align: center;
+    padding: 100px 60px;
+}
+
+.section h1 {
+    margin-bottom: 80px;
+    color: #082F43;
+}
+
+.r {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background-color: #082F43;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto 20px;
+    padding: 20px;
+}
+
+.icon {
+    background-color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconInside {
+    color: #082F43;
+    font-size: 30px;
+}
+
+.workcard {
+    background-color: white;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.howWorks {
+    color: #082F43;
+}
+
+.iconhowWorks {
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconInsideHowWorks {
+    font-size: 100px;
+}
+
+.steptitle {
+    display: flex;
+    gap: 10px;
+}
+
+.step {
+    gap : 130px;
+    padding: 50px;
+}
+
+.allsteps {
+    margin-left: 180px;
+}
