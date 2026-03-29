@@ -37,12 +37,12 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
         <div className={style.modalOverlay} onClick={handleClose}>
             <div className={style.modalContent} onClick={e => e.stopPropagation()}>
                 <h2 className={style.modalTitle}>
-                    {formData?.id ? t.editTopic || "Edit Topic" : t.addTopic || "Add Topic"}
+                    {formData?.id ? t.editTopic || "Edit Topic" : t.addNewTopic || "Add Topic"}
                 </h2>
 
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="mb-4">
-                        <label className={style.labelStyle}>{t.topicNameLabel}</label>
+                        <label className={style.labelStyle}>{t.topicTitleLabel}</label>
                         <AdminInput
                             registerProps={register("title")}
                             placeholder={t.topicPlaceholder}
@@ -51,7 +51,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                     </div>
 
                     <div className="mb-4">
-                        <label className={style.labelStyle}>{t.descriptionLabel}</label>
+                        <label className={style.labelStyle}>{t.description}</label>
                         <textarea
                             {...register("desc")}
                             className={style.textareaStyle}

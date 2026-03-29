@@ -15,6 +15,7 @@ export default function Tasks({ language }) {
     const [showModal, setShowModal] = useState(false);
     const tasksPerPage = 4;
     const [topicsFromDB, setTopicsFromDB] = useState([]);
+    const [showDeleteModal, setShowDeleteModal] = useState(null);
 
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -36,10 +37,9 @@ export default function Tasks({ language }) {
         ]);
     }, []);
 
-    const handleDelete = (id) => {
-        if (window.confirm(t.deleteConfirm)) {
-
-        }
+    const handleDelete = () => {
+        setUsers(tasks.filter(task => task.id !== showDeleteModal));
+        setShowDeleteModal(null);
     };
 
     const totalPages = Math.ceil(tasks.length / tasksPerPage);
@@ -215,7 +215,7 @@ export default function Tasks({ language }) {
                                     />
                                     <FaTrash
                                         className={style.actionIcon}
-                                        onClick={() => handleDelete(task.id)}
+                                        onClick={() => setShowDeleteModal(task.id)}
                                         style={{ color: "red" }}
                                     />
                                 </td>
@@ -224,19 +224,34 @@ export default function Tasks({ language }) {
                     </tbody>
                 </table>
 
-                <div className={language === "ar" ? style.footAr : style.foot}>
-                    {/* <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
-                    <button className={style.btnActive}>{currentPage}</button>
-                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button> */}
-                    <div className={style.pagination}>
-                        <button className={style.pageBtn} onClick={handlePrev} disabled={currentPage === 1}>
-                            {t.prev}
-                        </button>
-                        <span className="mx-3 align-self-center"> {currentPage} / {totalPages} </span>
-                        <button className={style.pageBtn} onClick={handleNext} disabled={currentPage === totalPages}>
-                            {t.next}
-                        </button>
+                {showDeleteModal && (
+                    <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
+                        <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
+                            <h2 className={style.modalTitle}>{t.confirm}</h2>
+                            <p>{t.confirmDeleteDesc}</p>
+
+                            <div className={style.modalButtons}>
+                                <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
+                                    {t.confirmDeleteCancel}
+                                </button>
+
+                                <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
+                                    onClick={() => {
+                                        handleDelete(showDeleteModal);
+                                        setShowDeleteModal(null);
+                                    }} >
+                                    {t.confirmDeleteBtn}
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                )}
+
+
+                <div className={language === "ar" ? style.footAr : style.foot}>
+                    <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                    <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
+                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
                 </div>
             </div>
         </div>

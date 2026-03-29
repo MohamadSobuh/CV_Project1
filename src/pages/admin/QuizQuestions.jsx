@@ -189,15 +189,12 @@ const QuizQuestions = ({ language = 'en' }) => {
             </div>
 
             {totalPages > 1 && (
-                <div className={style.pagination}>
-                    <button className={style.pageBtn} onClick={handlePrev} disabled={currentPage === 1}>
-                        {t.previous}
-                    </button>
-                    <span className="mx-3 align-self-center"> {currentPage} / {totalPages} </span>
-                    <button className={style.pageBtn} onClick={handleNext} disabled={currentPage === totalPages}>
-                        {t.next}
-                    </button>
-                </div>
+
+                    <div className={language === "ar" ? style.footAr : style.foot}>
+                        <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                        <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
+                        <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                    </div>
             )}
         </div>
     );

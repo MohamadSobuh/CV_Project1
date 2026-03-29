@@ -10,6 +10,8 @@
     align-items: center;
     z-index: 2000;
     backdrop-filter: blur(2px);
+        color: #0E5A6A;
+
 }
 
 .modalContent {
@@ -117,46 +119,37 @@
 
 .modalButtons {
     display: flex;
-    gap: 15px;
-    margin-top: 30px;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .btnActive {
     background-color: #6997A4;
     color: white;
-    border: none;
-    padding: 10px 20px;
+    border: 1px solid #1A83A8;
+    padding: 3px 8px;
     border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
 }
 
 .btnActive:hover {
-    background-color: #1A83A8 !important;
-    color: white !important;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
+    background-color: #1A83A8 ;
+    color: white ;
 }
 
+
 .btnOutline {
-    background-color: transparent;
-    color: #6997A4;
+    background-color: white;
     border: 1px solid #6997A4;
-    padding: 10px 20px;
+    color: #6997A4;
+    padding: 3px 8px;
     border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
 }
 
 .btnOutline:hover {
-    background-color: #1A83A8 !important;
-    color: white !important;
-    cursor: pointer;
+    background-color: #1A83A8;
+    color: white;
 }
-
 
 .selectStyle,
 .textareaStyle {
@@ -205,15 +198,18 @@
     font-size: 14px;
 }
 
-.pagination {
+.footAr {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    margin-top: 40px;
-    padding-bottom: 30px;
-    width: 100%;
+    justify-content: flex-start;
+    margin: 10px;
+    gap: 10px;
+}
+
+.foot {
+    display: flex;
     justify-content: flex-end;
+    margin: 10px;
+    gap: 10px;
 }
 
 @media (max-width: 1024px) {

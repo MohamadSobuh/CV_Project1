@@ -31,7 +31,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+    color: #0E5A6A;
 }
 
 .modalContent {
@@ -56,12 +58,6 @@
     }
 }
 
-.modalTitle {
-    color: #1A83A8;
-    font-weight: bold;
-    margin-bottom: 25px;
-    font-size: 1.5rem;
-}
 
 .labelStyle {
     display: block;
@@ -97,7 +93,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .topicCard {
@@ -193,27 +189,32 @@
     cursor: pointer;
 }
 
-.btnActive:hover {
-    background-color: #1A83A8 !important;
-    color: white !important;
-    font-weight: 600;
-    cursor: pointer;
+.btnOutline {
+    background-color: white;
+    border: 1px solid #6997A4;
+    color: #6997A4;
+    padding: 3px 8px;
+    border-radius: 8px;
 }
 
-
-.btnOutline {
-    background: white;
+.btnActive {
+    background-color: #6997A4;
     border: 1px solid #1A83A8;
-    color: #1A83A8;
-    padding: 8px 20px;
+    color: white;
+    padding: 3px 8px;
     border-radius: 8px;
-    cursor: pointer;
 }
 
 .btnOutline:hover {
     background-color: #1A83A8;
     color: white;
 }
+
+.btnActive:hover {
+    background-color: #1A83A8 ;
+    color: white ;
+}
+
 
 .pagination {
     display: flex;

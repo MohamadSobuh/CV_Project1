@@ -13,6 +13,7 @@ export default function Users({ language }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const usersPerPage = 4;
+    const [showDeleteModal, setShowDeleteModal] = useState(null);
 
     const t = translations[language];
 
@@ -29,12 +30,10 @@ export default function Users({ language }) {
         ]);
     }, []);
 
-    const handleDelete = (id) => {
-        if (window.confirm(t.deleteConfirm)) {
-
-        }
+    const handleDelete = () => {
+        setUsers(users.filter(user => user.id !== showDeleteModal));
+        setShowDeleteModal(null);
     };
-
     const totalPages = Math.ceil(users.length / usersPerPage);
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -118,7 +117,7 @@ export default function Users({ language }) {
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.passwordLabel}</label>
+                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.pass}</label>
                                 <AdminInput
                                     type="password"
                                     name="password"
@@ -192,10 +191,11 @@ export default function Users({ language }) {
                                 </td>
                                 <td className={style.center}>{user.CVnumbers}</td>
                                 <td>{user.joinDate}</td>
+
                                 <td className={style.center}>
                                     <FaTrash
                                         className={style.actionIcon}
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => setShowDeleteModal(user.id)}
                                         style={{ color: "#ff0000" }}
                                     />
                                 </td>
@@ -204,9 +204,32 @@ export default function Users({ language }) {
                     </tbody>
                 </table>
 
+                {showDeleteModal && (
+                    <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
+                        <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
+                            <h2 className={style.modalTitle}>{t.confirm}</h2>
+                            <p>{t.confirmDeleteDesc}</p>
+
+                            <div className={style.modalButtons}>
+                                <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
+                                    {t.confirmDeleteCancel}
+                                </button>
+
+                                <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
+                                    onClick={() => {
+                                        handleDelete(showDeleteModal);
+                                        setShowDeleteModal(null);
+                                    }} >
+                                    {t.confirmDeleteBtn}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className={language === "ar" ? style.footAr : style.foot}>
                     <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
-                    <button className={style.btnActive}>{currentPage}</button>
+                    <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
                     <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
                 </div>
             </div>
