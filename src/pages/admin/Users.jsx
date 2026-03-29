@@ -70,7 +70,7 @@ export default function Users({ language }) {
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
             <h1>{t.title}</h1>
-            <p>{t.description}</p>
+            <p>{t.descriptionUsersPage}</p>
             <button
                 className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
                 onClick={() => setShowModal(true)}

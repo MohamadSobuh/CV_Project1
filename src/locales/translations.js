@@ -87,7 +87,7 @@ const translations = {
 
         /* Users Table Page */
         title: "Users Management",
-        description: "Manage all registered users",
+        descriptionUsersPage: "Manage all registered users",
         addUser: "+ Add User",
         user: "User",
         progress: "Progress",
@@ -198,6 +198,40 @@ const translations = {
         saveChanges: "Save Changes",
         //view
         view: "View",
+
+        /* User Dash Page*/
+        welcome: "Welcome back,",
+        quickLook: "Here's a quick look at your current progress",
+        over: "Overview",
+        totalCVs: "Total Uploaded CVs",
+        progressTitle: "Your Progress",
+        currentPlan: "Current Learning Plan",
+        completed: "of the plan completed",
+        goToPlan: "Go to plan",
+        careerTips: "Career Tips",
+        tip1: "Keep your CV under 2 pages for better readability.",
+        tip2: "Use action verbs like 'Managed', 'Developed', and 'Led'.",
+        tip3: "Quantify your achievements with numbers and %.",
+        improveSkills: "Do you want to improve your skills in a specific field?",
+        uploadDesc: "Upload your CV now and get instant AI-powered analysis",
+        uploadNow: "Upload Now",
+
+
+        /* Upload CV Page */
+        uploadCVtitle: "Start the analysis",
+        uploadCVdescription: "Upload your resume so we can begin building your career path",
+        uploadText: "Click to upload or drag the file here",
+        uploadHint: "PDF, Word (MAX. 5MB)",
+        fileSelected: "The file was successfully selected",
+        chooseField: "Choose your target career field",
+        selectPlaceholder: "Choose Field",
+        analysisBtn: "Analysis",
+        errorBoth: "Please upload your CV and choose a field",
+        errorFile: "Please upload your CV",
+        errorField: "Please choose a field",
+        errorType: "Invalid file type, please upload a PDF or Word document",
+        errorSize: "File size must be less than 5MB",
+
     },
     ar: {
         /* for user sidebar */
@@ -288,7 +322,7 @@ const translations = {
 
         /* Users Table Page */
         title: "إدارة المستخدمين",
-        description: "إدارة جميع المستخدمين المسجلين",
+        descriptionUsersPage: "إدارة جميع المستخدمين المسجلين",
         addUser: "+ إضافة مستخدم",
         user: "المستخدم",
         progress: "التقدم",
@@ -400,6 +434,37 @@ const translations = {
         //view
         view: "عرض",
 
+        /* User Dash Page */
+        welcome: "مرحباً بعودتك،",
+        quickLook: "إليك نظرة سريعة على تقدمك الحالي",
+        over: "نظرة عامة",
+        totalCVs: "عدد السير الذاتية المرفوعة",
+        progressTitle: "تقدمك",
+        currentPlan: "خطة التعلم الحالية",
+        completed: "من الخطة مكتمل",
+        goToPlan: "اذهب إلى الخطة",
+        careerTips: "نصائح مهنية",
+        tip1: "حافظ على أن تكون سيرتك الذاتية أقل من صفحتين لسهولة القراءة.",
+        tip2: "استخدم أفعال قوية مثل 'أدرت'، 'طورت'، و'قدت'.",
+        tip3: "قم بتوضيح إنجازاتك بالأرقام والنسب المئوية.",
+        improveSkills: "هل تريد تحسين مهاراتك في مجال معين؟",
+        uploadDesc: "قم برفع سيرتك الذاتية الآن واحصل على تحليل فوري مدعوم بالذكاء الاصطناعي",
+        uploadNow: "ارفع الآن",
+
+        /* Upload CV Page */
+        uploadCVtitle: "ابدأ التحليل",
+        uploadCVdescription: "ارفع سيرتك الذاتية لنبدأ ببناء مسارك المهني",
+        uploadText: "اضغط للرفع أو اسحب الملف هنا",
+        uploadHint: "PDF, Word (الحد الأقصى 5MB)",
+        fileSelected: "تم اختيار الملف بنجاح",
+        chooseField: "اختر المجال المهني المستهدف",
+        selectPlaceholder: "اختر المجال",
+        analysisBtn: "تحليل",
+        errorBoth: "يجب رفع السيرة الذاتية واختيار المجال",
+        errorFile: "يجب رفع السيرة الذاتية",
+        errorField: "يجب اختيار المجال",
+        errorType: "نوع الملف غير صالح، الرجاء رفع PDF أو Word",
+        errorSize: "يجب أن يكون حجم الملف أقل من 5MB",
 
     }
 };
