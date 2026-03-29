@@ -1,13 +1,13 @@
-import logo from "./../images/logo.png";
-import sign from "./../images/sign.png";
+import logo from "../../images/logo.png";
+import sign from "../../images/sign.png";
 import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Input from "./Input";
-import InputError from "./InputError";
+import Input from "../../components/ui/Input";
+import InputError from "../../components/ui/InputError";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "./validationSchema";
+import { loginSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -30,32 +30,52 @@ const inputs = [
 
 export default function Signin() {
     const [serverError, setServerError] = useState("");
-    const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm(
+    const { register, handleSubmit, setError, watch, formState: { errors, isSubmitting } } = useForm(
         {
             resolver: yupResolver(loginSchema)
         }
     );
     const navigate = useNavigate();
+    // const checker = () => {
+    //     if (localStorage.getItem("userRole") === "admin") {
+    //         navigate("/admin");
+    //     } else {
+    //         navigate("/user");
+    //     }
+    // }
 
     console.log("Current Values:", watch());
     const submitForm = async (data) => {
         try {
-            const response = await axios.post("http://localhost:5000/api/users/login", data); //هون حطو ال url تبع backend
-            //     const token = response.data.access; // التوكن الأساسي
-            // const refreshToken = response.data.refresh;
+            const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", data); //هون حطو ال url تبع backend
+            const token = response.data.access; // التوكن الأساسي
+            const refreshToken = response.data.refresh;
 
-            // localStorage.setItem("accessToken", token);
-            // localStorage.setItem("refreshToken", refreshToken);
+            localStorage.setItem("accessToken", token);
+            localStorage.setItem("refreshToken", refreshToken);
 
-            // localStorage.setItem("userRole", response.data.user.role);
+            localStorage.setItem("userRole", response.data.user.role);
 
-            // console.log("Login Successful! Token stored.");
+            console.log("Login Successful! Token stored.");
             console.log("Success:", response.data);
-            navigate("/");  //المكان الذي ينتقل إليه بعد تسجيل الدخول
+            // checker();  //المكان الذي ينتقل إليه بعد تسجيل الدخول
+            navigate("/admin");
 
         } catch (error) {
-            console.error("Error:", error.response?.data || error.message);
-            setServerError(error.response?.data || error.message);
+            if (error.response && error.response.data) {
+                const serverErrors = error.response.data;
+
+                if (serverErrors.non_field_errors) {
+                    setError("email", {
+                        type: "server",
+                        message: serverErrors.non_field_errors[0]
+                    });
+                    setError("password", {
+                        type: "server",
+                        message: serverErrors.non_field_errors[0]
+                    });
+                }
+            }
         }
     };
 

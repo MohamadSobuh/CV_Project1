@@ -1,0 +1,246 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+}
+
+.modalContent {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 650px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.menuContainer {
+    position: relative;
+}
+
+.moreIcon {
+    cursor: pointer;
+    color: #546e7a;
+    transition: 0.3s;
+}
+
+.moreIcon:hover {
+    color: #1A83A8;
+}
+
+/* القائمة المنسدلة */
+.dropdownMenu {
+    position: absolute;
+    top: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 160px;
+    padding: 8px;
+    border: 1px solid #e0f2f1;
+}
+
+/* تحديد اتجاه القائمة بناءً على اللغة */
+.menuEn {
+    right: 0;
+}
+
+.menuAr {
+    left: 0;
+}
+
+.menuItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    color: #082F43;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+    text-align: inherit;
+}
+
+.menuItem:hover {
+    background-color: #f0f9fa;
+}
+
+
+
+.pageBtn {
+    background-color: white;
+    color: #1A83A8;
+    border: 1px solid #1A83A8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+}
+
+.pageBtn:hover {
+    background-color: #1A83A8;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalButtons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btnActive {
+    background-color: #6997A4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnActive:hover {
+    background-color: #1A83A8 !important;
+    color: white !important;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnOutline {
+    background-color: transparent;
+    color: #6997A4;
+    border: 1px solid #6997A4;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnOutline:hover {
+    background-color: #1A83A8 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+
+.selectStyle,
+.textareaStyle {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #D1E9ED;
+    background-color: #F0F9FA;
+    color: #082F43;
+    outline: none;
+    font-size: 14px;
+}
+
+.selectStyle:focus,
+.textareaStyle:focus {
+    border-color: #1A83A8;
+}
+
+/* --- كودك الأصلي مع إبقاء التعديلات اللازمة --- */
+
+.dash {
+    background-color: #E6F7F9;
+    color: #082F43;
+    padding: 20px 40px 20px 280px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    direction: ltr;
+    transition: padding 0.3s ease;
+}
+
+.dashArabic {
+    background-color: #E6F7F9;
+    color: #082F43;
+    padding: 20px 280px 20px 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    direction: rtl;
+    transition: padding 0.3s ease;
+}
+
+.labelStyle {
+    display: block;
+    margin-bottom: 8px;
+    color: #1A83A8;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding-bottom: 30px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+@media (max-width: 1024px) {
+
+    .dash,
+    .dashArabic {
+        padding: 80px 20px 20px 20px;
+    }
+
+    .modalContent {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+.btnAdd {
+    background-color: #1A83A8;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.quizTitle {
+    color: #082F43;
+    font-weight: 700;
+    font-size: 25px;
+}

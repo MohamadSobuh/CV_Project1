@@ -6,7 +6,6 @@
     min-height: calc(100vh - 80px);
 }
 
-
 .profile {
     width: 600px;
     padding: 5px 30px;
@@ -36,5 +35,5 @@
 
 .hr {
     color: #07526B;
+    text-decoration: none;
 }
-

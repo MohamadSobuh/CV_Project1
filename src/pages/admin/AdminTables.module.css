@@ -1,0 +1,460 @@
+.usersPage,
+.TasksPage {
+    background-color: #E6F7F9;
+    color: #082F43;
+    padding-left: 260px;
+    padding-top: 20px;
+
+}
+
+.usersPageArabic,
+.TasksPageArabic {
+    background-color: #E6F7F9;
+    color: #082F43;
+    padding-right: 260px;
+    padding-top: 20px;
+}
+
+.addUserbtn,
+.addTaskbtn {
+    background-color: #1A83A8;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    float: right;
+    margin: 25px;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding-bottom: 30px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.pageBtn {
+    background-color: white;
+    color: #1A83A8;
+    border: 1px solid #1A83A8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+}
+
+.pageBtn:hover {
+    background-color: #1A83A8;
+    color: white;
+}
+
+
+
+
+
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modalContent {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.modalContent label,
+.modalContent input,
+.modalContent select {
+    font-size: 14px;
+    color: #1A83A8;
+    font-size: 14px;
+    outline: none;
+}
+
+.formRow {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.modalButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btnActive {
+    background-color: #1A83A8;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btnOutline {
+    background-color: transparent;
+    border: 2px solid #1A83A8;
+    color: #1A83A8;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.addUserbtnAr,
+.addTaskbtnAr {
+    background-color: #1A83A8;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    float: left;
+    margin: 25px;
+
+}
+
+.ForUsers {
+    background-color: white;
+    margin: 20px auto;
+    border-radius: 25px;
+    width: 95%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.ForTasks {
+    background-color: white;
+    margin: 20px auto;
+    border-radius: 25px;
+    width: 95%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.usersTable {
+    width: 100%;
+    color: #1A83A8;
+    border-collapse: collapse;
+    table-layout: auto;
+    background-color: white;
+}
+
+.tasksTable {
+    width: 100%;
+    color: #1A83A8;
+    border-collapse: collapse;
+    table-layout: auto;
+    background-color: white;
+}
+
+.usersTable th {
+    background-color: #1A83A8;
+    color: white;
+}
+
+.tasksTable th {
+    background-color: #1A83A8;
+    color: white;
+}
+
+.tasksTable th,
+.tasksTable td {
+    padding: 10px 20px;
+    white-space: nowrap;
+    border-bottom: 1px solid #E6F7F9;
+
+}
+
+.usersTable th,
+.usersTable td {
+    padding: 10px 20px;
+    word-wrap: break-word;
+    border-bottom: 1px solid #E6F7F9;
+
+}
+
+.imgProfile {
+    width: 40px;
+    height: 40px;
+}
+
+.userInfo,
+.taskInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.taskInfo p {
+    margin: 0;
+}
+
+.fileIcon {
+    color: #0E5A6A;
+    font-size: 20px;
+}
+
+.topicBadge {
+    background: #E6F7F9;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #0E5A6A;
+}
+
+.resources {
+    display: flex;
+    gap: 10px;
+}
+
+.iconCircleHelp,
+.iconCircleVideo,
+.iconCircleImage {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.iconCircleHelp {
+    background: #FFE7B8;
+    color: #E6A100;
+}
+
+.iconCircleVideo {
+    background: #E4D7FF;
+    color: #7A5AF8;
+}
+
+.iconCircleImage {
+    background: #FFD6E7;
+    color: #E31B79;
+}
+
+.userInfo b {
+    display: block;
+}
+
+.imgProfile {
+    width: 40px;
+    height: 40px;
+}
+
+.center {
+    text-align: center;
+}
+
+.actionIcon {
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.progressContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progressBar {
+    width: 80px;
+    height: 10px;
+    background-color: #E6F7F9;
+    border-radius: 10px;
+}
+
+.progressFill {
+    height: 100%;
+    background-color: #1A83A8;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.footAr {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px;
+    gap: 10px;
+}
+
+.foot {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+    gap: 10px;
+}
+
+.btnOutline {
+    background-color: white;
+    border: 1px solid #1A83A8;
+    color: #1A83A8;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+
+
+.btnActive {
+    background-color: #1A83A8;
+    border: 1px solid #1A83A8;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+
+.btnOutline:hover {
+    background-color: #1A83A8;
+    color: white;
+}
+
+/* ====== شاشات أصغر من 1200px ====== */
+@media (max-width: 1200px) {
+
+    .usersPage,
+    .TasksPage {
+        padding-left: 250px;
+        /* إنجليزي يترك مسافة من اليسار */
+        padding-right: 20px;
+        /* نعطي مساحة صغيرة من اليمين */
+    }
+
+    .usersPageArabic,
+    .TasksPageArabic {
+        padding-right: 250px;
+        /* عربي يترك مسافة من اليمين */
+        padding-left: 20px;
+        /* مساحة صغيرة من اليسار */
+    }
+
+    .usersTable th,
+    .usersTable td,
+    .tasksTable th,
+    .tasksTable td {
+        padding: 10px;
+        font-size: 15px;
+    }
+}
+
+/* ====== شاشات أصغر من 992px ====== */
+@media (max-width: 992px) {
+
+    .usersPage,
+    .usersPageArabic,
+    .TasksPage,
+    .TasksPageArabic {
+        padding: 20px;
+        /* إزالة أي مسافات كبيرة من الجانبين */
+    }
+
+    .addAdminbtn,
+    .addAdminbtnAr {
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+
+    .usersTable th,
+    .usersTable td,
+    .tasksTable th,
+    .tasksTable td {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .imgProfile {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* ====== شاشات أصغر من 768px ====== */
+@media (max-width: 768px) {
+
+    .usersPage,
+    .usersPageArabic,
+    .TasksPage,
+    .TasksPageArabic {
+        padding: 15px;
+        /* أقل padding للهواتف الصغيرة */
+    }
+
+    .usersTable th,
+    .usersTable td,
+    .tasksTable th,
+    .tasksTable td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .ForUsers,
+    .ForTasks {
+        overflow-x: auto;
+        /* السماح بالتمرير الأفقي للجدول */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .imgProfile {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* ====== شاشات أصغر من 480px ====== */
+@media (max-width: 480px) {
+
+    .usersPage,
+    .usersPageArabic,
+    .TasksPage,
+    .TasksPageArabic {
+        padding: 10px;
+        /* أقل مساحة ممكنة */
+    }
+
+    .addAdminbtn,
+    .addAdminbtnAr {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .usersTable th,
+    .usersTable td,
+    .tasksTable th,
+    .tasksTable td {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .imgProfile {
+        width: 28px;
+        height: 28px;
+    }
+}

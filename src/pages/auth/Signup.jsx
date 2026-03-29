@@ -1,28 +1,28 @@
-import logo from "./../images/logo.png";
-import sign from "./../images/sign.png";
+import logo from "../../images/logo.png";
+import sign from "../../images/sign.png";
 import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "./Input";
-import InputError from "./InputError";
-import { signupSchema } from "./validationSchema";
+import Input from "../../components/ui/Input";
+import InputError from "../../components/ui/InputError";
+import { signupSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
 
     const inputs = [
         {
-            name: "firstname",
+            name: "first_name",
             type: "text",
             label: "First name",
             id: "firstname",
             col: "col-md-6"
         },
         {
-            name: "lastname",
+            name: "last_name",
             type: "text",
             label: "Last name",
             id: "lastname",
@@ -44,17 +44,39 @@ export default function Signup() {
         }
     ];
     const navigate = useNavigate();
+    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+        resolver: yupResolver(signupSchema)
+    });
 
     const submitForm = async (data) => {
         const payload = { ...data, role: 'user' };
 
         try {
-            const response = await axios.post("http://localhost:5000/api/users/signup", payload); //هون حطو ال url تبع backend
+            const response = await axios.post("http://127.0.0.1:8000/api/auth/register/", payload);
             console.log("Success:", response.data);
-            navigate("/");  //المكان الذي ينتقل إليه بعد التسجيل
-
+            navigate("/login");
         } catch (error) {
-            console.error("Error:", error.response?.data || error.message);
+            if (error.response && error.response.data) {
+                const serverErrors = error.response.data;
+
+                // 1. التعامل مع الأخطاء الخاصة بالحقول (مثل الإيميل المكرر)
+                Object.keys(serverErrors).forEach((field) => {
+                    // التأكد من أن الحقل موجود في الفورم
+                    setError(field, {
+                        type: "server",
+                        message: serverErrors[field][0] // نأخذ أول رسالة خطأ في المصفوفة
+                    });
+                });
+
+                // 2. التعامل مع الأخطاء العامة (non_field_errors) إذا وجدت
+                if (serverErrors.non_field_errors) {
+                    setError("root.serverError", {
+                        type: "server",
+                        message: serverErrors.non_field_errors[0]
+                    });
+                }
+            }
+            console.error("Error details:", error.response?.data);
         }
     };
     const handlePasswordStrength = (e) => {
@@ -77,9 +99,7 @@ export default function Signup() {
     }
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(signupSchema)
-    });
+
 
     return (
         <div className={style.bg}>

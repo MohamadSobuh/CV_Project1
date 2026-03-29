@@ -1,18 +1,30 @@
 .bg {
-    color: white;
-    background-color: #E6F7F9;
-}
-
-
-.a {
     color: #082F43;
-    background: url();
+    background: #E6F7F9;
+
 }
+
 .head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 5px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    border-bottom: 1px solid #082F43;
+}
+
+.row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.headright {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .logo {
@@ -21,17 +33,48 @@
     margin: 10px;
 }
 
+
+.selectLang {
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #07526B;
+    background-color: #07526B;
+    cursor: pointer;
+    color: white;
+}
+
+option {
+    background-color: #CDF6F9;
+    color: #07526B;
+}
+
+
 .btn1 {
     background-color: #E6F7F9;
-    color: #1A83A8;
-    border: 1px solid #1A83A8;
+    color: #082F43;
+    border: 1px solid #082F43;
     border-radius: 45px;
-    padding: 5px 20px;
+    padding: 5px 15px;
 }
 
 .btn1:hover {
-    background-color: #d2f7fa;
-    border: 1px solid #082F43;
+    background-color: #082F43;
+    color: #E6F7F9;
+    border: 1px solid #E6F7F9;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px;
+    gap: 40px;
+
+}
+
+.hero h1 {
+    margin-bottom: 30px;
+    font-size: 50px;
 }
 
 .getStarted {
@@ -40,22 +83,49 @@
     padding: 5px 10px;
     border: 1px solid #1A83A8;
     border-radius: 25px;
-    margin-bottom: 100px;
+    margin: 80px 0px 100px 0px;
+    transition: transform 0.3s, background-color 0.3s;
+
 }
 
-.body {
-    text-align: center;
-    margin: 170px 0px;
+.getStarted:hover {
+    transform: scale(1.1);
+    background-color: #1A83A8;
+    color: white;
 }
+
+.imgBox {
+    position: relative;
+    width: 600px;
+    height: 500px;
+    mask-image: radial-gradient(circle at center,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0.8) 50%,
+            rgba(0, 0, 0, 0) 90%);
+    -webkit-mask-image: radial-gradient(circle at center,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0.8) 50%,
+            rgba(0, 0, 0, 0) 90%);
+}
+
+.imgBox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
 .section {
     text-align: center;
-    padding: 100px 60px;
+    padding: 120px 60px;
+    background-color: #ffffff;
+
 }
 
 .section h1 {
     margin-bottom: 80px;
-    color: #082F43;
 }
 
 .r {
@@ -66,6 +136,7 @@
 
 .card {
     background-color: #082F43;
+    color: white;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
@@ -96,11 +167,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
+}
+
+.section2 {
+    text-align: center;
+    padding: 120px 60px;
+
 }
 
 .howWorks {
     color: #082F43;
+    margin-bottom: 200px;
 }
 
 .iconhowWorks {
@@ -122,10 +200,266 @@
 }
 
 .step {
-    gap : 130px;
+    gap: 130px;
     padding: 50px;
 }
 
 .allsteps {
     margin-left: 180px;
+}
+
+
+.subscription {
+    color: white;
+    border-radius: 25px;
+    background-color: #082F43;
+    padding: 50px;
+    margin: 150px;
+}
+
+.subscription form {
+    display: flex;
+    gap: 10px;
+}
+
+.subscription input {
+    background-color: #0d3f58;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-style: oblique;
+    color: #a0d8dd;
+}
+
+.subscription input::placeholder {
+    color: #a0d8dd;
+}
+
+.subscription button {
+    background-color: #a0d8dd;
+    color: #082F43;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 15px;
+}
+
+.stay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.footer {
+    color: #082F43;
+    margin: 0 150px;
+    padding: 40px 0;
+    border-top: 1px solid #082F43;
+}
+
+.footer ul {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.footer a {
+    text-decoration: none;
+    color: #082F43;
+}
+
+.footer a:hover {
+    color: #1A83A8;
+}
+
+.socialIcons a {
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.socialIcons a:hover {
+    transform: scale(1.2);
+}
+
+
+
+
+@media (max-width: 789px) {
+    .bg {
+        overflow-x: hidden;
+    }
+
+    .head {
+        padding: 10px;
+    }
+
+    .hero {
+        flex-direction: column;
+        padding: 20px;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .getStarted {
+        margin: 20px auto 40px auto;
+        display: block;
+    }
+
+    .imgBox {
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+    }
+
+    .section {
+        padding: 60px 20px;
+    }
+
+    .section h1 {
+        margin-bottom: 40px;
+    }
+
+    .r {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .card {
+
+        width: 90% !important;
+        max-width: none !important;
+        margin: 15px auto !important;
+
+    }
+
+    .section2 {
+        padding: 60px 20px;
+        margin-bottom: 20px;
+    }
+
+    .howWorks {
+        margin-bottom: 80px;
+    }
+
+    .allsteps {
+
+        width: 90% !important;
+        max-width: none !important;
+        margin: 15px auto !important;
+
+    }
+
+    .step {
+        gap: 40px;
+        padding: 20px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .step:nth-child(even) {
+        flex-direction: column !important;
+    }
+
+    .step:nth-child(odd) {
+        flex-direction: column-reverse !important;
+    }
+
+    .steptitle {
+        justify-content: center;
+    }
+
+    .step ul {
+        text-align: left;
+        display: inline-block;
+    }
+
+    .iconhowWorks {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+    }
+
+    .iconInsideHowWorks {
+        font-size: 60px;
+    }
+
+    .workcard {
+        padding: 30px;
+    }
+
+    .subscription {
+        margin: 50px 20px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .subscription form {
+        flex-direction: column;
+    }
+
+    .subscription input,
+    .subscription button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .stay {
+        margin-top: 30px;
+    }
+
+    .footer {
+        margin: 0 20px;
+        padding: 30px 0;
+        text-align: center;
+    }
+
+    .footer .row>div {
+        margin-bottom: 30px;
+    }
+
+
+    .socialIcons {
+        justify-content: center;
+        display: flex;
+    }
+}
+
+@media (max-width: 910px) {
+    .subscription form {
+        flex-direction: column;
+    }
+
+    .bg {
+        overflow-x: hidden;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 789px) {
+    .r {
+        flex-direction: column !important;
+    }
+
+    .card {
+        width: 90% !important;
+        max-width: none !important;
+        margin: 15px auto !important;
+    }
+
+    .workcard {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 20px 0 !important;
+        padding: 40px !important;
+    }
+
+    .step>div[class*="col-md-4"] {
+        width: 100% !important;
+        text-align: center;
+    }
+
+
 }

@@ -2,7 +2,6 @@ import style from "./Sidebar.module.css";
 import { Link } from "react-router-dom";
 import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt } from "react-icons/fa";
 import logo from "./../images/logo.png";
-import { useEffect } from "react";
 import translations from "../locales/translations";
 
 export default function Sidebar({ language }) {
