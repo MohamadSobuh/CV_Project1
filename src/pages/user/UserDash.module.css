@@ -1,0 +1,103 @@
+.userDash {
+    background-color: #E6F7F9;
+    color: #082F43;
+    padding-left: 260px;
+    padding-top: 20px;
+ 
+}
+
+.cardsUserDash {
+    background-color: white;
+    padding: 20px 20px 0px 20px;
+    color: #1A83A8;
+    margin: 10px;
+    border-radius: 20px;
+    height: fit-content;
+    
+}
+
+.cardHead {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+
+}
+
+.headIcon {
+    font-size: 25px;
+} 
+
+.cardContent {
+    margin: 10px;
+}
+
+.progressBar {
+    width: 100%;
+    height: 10px;
+    background-color: #E6F7F9;
+    border-radius: 10px;
+    margin: 5px 0px;
+}
+
+.progressFill {
+    height: 100%;
+    background-color: #1A83A8;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.goLink {
+    color: #1A83A8;
+    text-decoration: none;
+}
+
+li:nth-child(1)::marker {
+  color: #AC40FB;
+}
+
+li:nth-child(2)::marker {
+  color: #F1416F;
+}
+
+li:nth-child(3)::marker {
+  color: #3FB48D;
+}
+
+.forUploadPageAr {
+    background: linear-gradient(to left , #082F43 , #0d3f58 , #1A83A8 ,  #CDF6F9);
+    padding: 30px;
+    border-radius: 25px;
+    margin-right: 25px;
+    margin-top: 25px;
+    color: #E6F7F9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forUploadPageEn {
+    background: linear-gradient(to right , #082F43 , #0d3f58 , #1A83A8 ,  #CDF6F9);
+    padding: 30px;
+    border-radius: 25px;
+    margin-right: 25px;
+    margin-top: 25px;
+    color: #E6F7F9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btnToUploadPage {
+    background-color: #E6F7F9;
+    color: #082F43;
+    border-radius: 10px;
+    border: 1px solid #082F43;
+    padding: 10px;
+}
+
+.uploadIcon {
+    color: #082F43;
+    font-size: 120px;
+    margin-right: 50px;
+}
+
