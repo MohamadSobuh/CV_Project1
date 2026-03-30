@@ -8,6 +8,8 @@ import AdminInput from "../../components/ui/AdminInput";
 import InputError from "../../components/ui/InputError";
 import { topicSchema } from "../../utils/validationSchema";
 import AddTopicform from "./AddTopicform";
+import EmptyPage from "../../components/ui/EmptyPage";
+import { FaBookOpen } from 'react-icons/fa';
 import { Outlet } from 'react-router-dom';
 const TopicsPage = ({ language = 'en' }) => {
     const t = translations[language];
@@ -49,31 +51,43 @@ const TopicsPage = ({ language = 'en' }) => {
 
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-
-            <div className='row align-items-center justify-content-between mb-4'>
-                <div className='col-md-6'>
-                    <h1>{t.topicsTitle}</h1>
-                    <p>{t.topicsSub}</p>
-                </div>
-                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
-                    <button className={style.btnAdd} onClick={() => setShowAddModal(true)}>
-                        + {t.addTopic}
-                    </button>
-                </div>
-            </div>
-
-            <div className='row'>
-                {topics.map((topic) => (
-                    <div key={topic.id} className='col-lg-4 col-md-6 mb-4'>
-                        <TopicCard topic={topic}
-                            onEditClick={(topic) => setShowEditModal(topic)}
-                            onDeleteClick={(id) => setShowDeleteModal(id)}
-                            language={language}
-                            t={t} />
-
+            {topics.length === 0 ? (
+                <EmptyPage
+                    icon={<FaBookOpen />}
+                    title={t.emptyTopicsTitle}
+                    message={t.emptyTopicsMessage}
+                    btnText={t.addTopic}
+                    onClick={() => setShowAddModal(true)}
+                />
+            ) : (
+                <>
+                    <div className='row align-items-center justify-content-between mb-4'>
+                        <div className='col-md-6'>
+                            <h1>{t.topicsTitle}</h1>
+                            <p>{t.topicsSub}</p>
+                        </div>
+                        <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                            <button className={style.btnAdd} onClick={() => setShowAddModal(true)}>
+                                + {t.addTopic}
+                            </button>
+                        </div>
                     </div>
-                ))}
-            </div>
+
+                    <div className='row'>
+                        {topics.map((topic) => (
+                            <div key={topic.id} className='col-lg-4 col-md-6 mb-4'>
+                                <TopicCard topic={topic}
+                                    onEditClick={(topic) => setShowEditModal(topic)}
+                                    onDeleteClick={(id) => setShowDeleteModal(id)}
+                                    language={language}
+                                    t={t} />
+
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
+
 
             {showAddModal && (
                 <AddTopicform handleAdd={handleAdd} onClose={() => setShowAddModal(false)} t={t} />

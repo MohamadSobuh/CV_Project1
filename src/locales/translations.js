@@ -86,6 +86,8 @@ const translations = {
         learningPlan: "Learning Plan",
 
         /* Users Table Page */
+        emptyUsersTitle: "No Users Found",
+        emptyUsersMessage: "Start by adding new users to see them here.",
         title: "Users Management",
         descriptionUsersPage: "Manage all registered users",
         addUser: "+ Add User",
@@ -107,10 +109,12 @@ const translations = {
         emailInvalid: "Email is invalid",
         passRequired: "Password is required",
         passMin: "Password must be at least 6 characters",
-        enterFirstName : "Enter First Name",
-        enterLastName : "Enter Last Name",
+        enterFirstName: "Enter First Name",
+        enterLastName: "Enter Last Name",
 
         /* Tasks Table Page */
+        emptyTasksTitle: "No Tasks Found",
+        emptyTasksMessage: "Start by adding new tasks to get started.",
         titleTaskPage: "Tasks Management",
         descriptionTaskPage: "Manage lessons and tasks within topics",
         addTaskbtn: "+ Add Task",
@@ -125,6 +129,8 @@ const translations = {
         selTopic: "Select a Topic",
         contentDes: "Enter task content description",
         // add topics
+        emptyTopicsTitle: "No Topics Found",
+        emptyTopicsMessage: "Start by adding new topics to organize your content.",
         topicsTitle: "Topics Management",
         topicsSub: "Manage learning plan topics",
         addTopic: "Add Topic",
@@ -149,6 +155,8 @@ const translations = {
         hard: "Hard",
 
         // quiz
+        emptyQuestionsTitle: "No Questions Found",
+        emptyQuestionsMessage: "Start by adding your first quiz question.",
         quizTitle: "Quiz Questions",
         quizSub: "Manage quiz and placement test questions",
         addQuestion: "Add Question",
@@ -322,6 +330,8 @@ const translations = {
         learningPlan: "خطة التعلم",
 
         /* Users Table Page */
+        emptyUsersTitle: "لم يتم العثور على مستخدمين",
+        emptyUsersMessage: "ابدأ بإضافة مستخدمين جدد ليظهروا هنا.",
         title: "إدارة المستخدمين",
         descriptionUsersPage: "إدارة جميع المستخدمين المسجلين",
         addUser: "+ إضافة مستخدم",
@@ -343,10 +353,12 @@ const translations = {
         emailInvalid: "البريد الإلكتروني غير صالح",
         passRequired: "كلمة المرور مطلوبة",
         passMin: "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
-        enterFirstName : "ادخل الاسم الاول",
-        enterLastName : "ادخل اسم العائلة",
+        enterFirstName: "ادخل الاسم الاول",
+        enterLastName: "ادخل اسم العائلة",
 
         /* Tasks Table Page */
+        emptyTasksTitle: "لم يتم العثور على مهام",
+        emptyTasksMessage: "ابدأ بإضافة مهام جديدة للبدء.",
         titleTaskPage: "إدارة المهام",
         descriptionTaskPage: "إدارة الدروس والمهام ضمن المواضيع",
         addTaskbtn: "+ إضافة مهمة",
@@ -361,6 +373,8 @@ const translations = {
         selTopic: "اختر الموضوع",
         contentDes: "أدخل وصف محتوى المهمة",
         // add topics
+        emptyTopicsTitle: "لا يوجد مواضيع",
+        emptyTopicsMessage: "ابدأ بإضافة مواضيع جديدة لتنظيم المحتوى.",
         topicsTitle: "إدارة المواضيع",
         topicsSub: "إدارة مواضيع خطة التعلم",
         addTopic: "إضافة موضوع",
@@ -383,7 +397,10 @@ const translations = {
         easy: "سهل",
         medium: "متوسط",
         hard: "صعب",
+
         // quiz
+        emptyQuestionsTitle: "لا يوجد أسئلة",
+        emptyQuestionsMessage: "ابدأ بإضافة أول سؤال في الكويز.",
         quizTitle: "أسئلة الاختبارات",
         quizSub: "إدارة أسئلة الاختبارات واختبارات تحديد المستوى",
         addQuestion: "إضافة سؤال",

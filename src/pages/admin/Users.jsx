@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import style from "./AdminTables.module.css";
 import Admin from "../../images/Admin.jpg";
 import translations from '../../locales/translations';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaUsers } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
+import EmptyPage from "../../components/ui/EmptyPage";
 import { signupSchema } from "../../utils/validationSchema";
 export default function Users({ language }) {
     const [users, setUsers] = useState([]);
@@ -68,21 +69,88 @@ export default function Users({ language }) {
 
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
+            {users.length === 0 ? (
+                <EmptyPage
+                    icon={<FaUsers />}
+                    title={t.emptyUsersTitle}
+                    message={t.emptyUsersMessage}
+                    btnText={t.addUser}
+                    onClick={() => setShowModal(true)}
+                />
+            ) : (
+                <>
 
-            <div className='row align-items-center justify-content-between mb-4'>
-                <div className='col-md-6'>
-                    <h1>{t.title}</h1>
-                    <p>{t.descriptionUsersPage}</p>
-                </div>
-                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
-                    <button
-                        className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
-                        onClick={() => setShowModal(true)}
-                    >
-                        <b>{t.addUser}</b>
-                    </button>
-                </div>
-            </div>
+                    <div className='row align-items-center justify-content-between mb-4'>
+                        <div className='col-md-6'>
+                            <h1>{t.title}</h1>
+                            <p>{t.descriptionUsersPage}</p>
+                        </div>
+                        <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                            <button
+                                className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
+                                onClick={() => setShowModal(true)}
+                            >
+                                <b>{t.addUser}</b>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={style.ForUsers}>
+                        <table className={style.usersTable}>
+                            <thead>
+                                <tr>
+                                    <th>{t.user}</th>
+                                    <th>{t.learningPlan}</th>
+                                    <th>{t.progress}</th>
+                                    <th>{t.cvs}</th>
+                                    <th>{t.joinDate}</th>
+                                    <th>{t.actions}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentUsers.map(user => (
+                                    <tr key={user.id}>
+                                        <td>
+                                            <div className={style.userInfo}>
+                                                <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                                                <div className={style.userText}>
+                                                    <b>{user.firstName} {user.lastName}</b>
+                                                    <span>{user.email}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{user.learningPlan}</td>
+                                        <td>
+                                            <div className={style.progressContainer}>
+                                                <div className={style.progressBar}>
+                                                    <div className={style.progressFill} style={{ width: user.Progress }}></div>
+                                                </div>
+                                                <span>{user.Progress}</span>
+                                            </div>
+                                        </td>
+                                        <td className={style.center}>{user.CVnumbers}</td>
+                                        <td>{user.joinDate}</td>
+
+                                        <td className={style.center}>
+                                            <FaTrash
+                                                className={style.actionIcon}
+                                                onClick={() => setShowDeleteModal(user.id)}
+                                                style={{ color: "#ff0000" }}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <div className={style.foot}>
+                            <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                            <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
+                            <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                        </div>
+                    </div>
+                </>
+            )}
 
 
             {showModal && (
@@ -118,7 +186,7 @@ export default function Users({ language }) {
                                 <AdminInput
                                     type="email"
                                     name="email"
-                                    placeholder= {t.email}
+                                    placeholder={t.email}
                                     registerProps={register("email")}
                                 />
                                 <InputError error={errors.email} />
@@ -164,83 +232,29 @@ export default function Users({ language }) {
                 </div>
             )}
 
-            <div className={style.ForUsers}>
-                <table className={style.usersTable}>
-                    <thead>
-                        <tr>
-                            <th>{t.user}</th>
-                            <th>{t.learningPlan}</th>
-                            <th>{t.progress}</th>
-                            <th>{t.cvs}</th>
-                            <th>{t.joinDate}</th>
-                            <th>{t.actions}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentUsers.map(user => (
-                            <tr key={user.id}>
-                                <td>
-                                    <div className={style.userInfo}>
-                                        <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
-                                        <div className={style.userText}>
-                                            <b>{user.firstName} {user.lastName}</b>
-                                            <span>{user.email}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{user.learningPlan}</td>
-                                <td>
-                                    <div className={style.progressContainer}>
-                                        <div className={style.progressBar}>
-                                            <div className={style.progressFill} style={{ width: user.Progress }}></div>
-                                        </div>
-                                        <span>{user.Progress}</span>
-                                    </div>
-                                </td>
-                                <td className={style.center}>{user.CVnumbers}</td>
-                                <td>{user.joinDate}</td>
+            {showDeleteModal && (
+                <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
+                    <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
+                        <h2 className={style.modalTitle}>{t.confirm}</h2>
+                        <p>{t.confirmDeleteDesc}</p>
 
-                                <td className={style.center}>
-                                    <FaTrash
-                                        className={style.actionIcon}
-                                        onClick={() => setShowDeleteModal(user.id)}
-                                        style={{ color: "#ff0000" }}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        <div className={style.modalButtons}>
+                            <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
+                                {t.confirmDeleteCancel}
+                            </button>
 
-                {showDeleteModal && (
-                    <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
-                        <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
-                            <h2 className={style.modalTitle}>{t.confirm}</h2>
-                            <p>{t.confirmDeleteDesc}</p>
-
-                            <div className={style.modalButtons}>
-                                <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
-                                    {t.confirmDeleteCancel}
-                                </button>
-
-                                <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
-                                    onClick={() => {
-                                        handleDelete(showDeleteModal);
-                                        setShowDeleteModal(null);
-                                    }} >
-                                    {t.confirmDeleteBtn}
-                                </button>
-                            </div>
+                            <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
+                                onClick={() => {
+                                    handleDelete(showDeleteModal);
+                                    setShowDeleteModal(null);
+                                }} >
+                                {t.confirmDeleteBtn}
+                            </button>
                         </div>
                     </div>
-                )}
-
-                <div className={style.foot}>
-                    <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
-                    <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
-                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
                 </div>
-            </div>
+            )}
+
         </div>
     );
 }

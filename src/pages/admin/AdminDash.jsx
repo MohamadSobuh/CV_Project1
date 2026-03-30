@@ -12,7 +12,6 @@ export default function AdminDash({ language }) {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-
         setTotalUsers(1167);
         setTotalTasks(274);
         setQuestions(2740);

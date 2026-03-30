@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import style from "./AdminTables.module.css";
 import translations from "../../locales/translations";
-import { FaTrash, FaFileAlt, FaQuestionCircle, FaVideo, FaImage, FaEdit, FaEye } from "react-icons/fa";
+import { FaTrash, FaFileAlt, FaQuestionCircle, FaVideo, FaImage, FaEdit, FaEye, FaTasks } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
 import * as yup from "yup";
 import { signupSchemaForTasks } from "../../utils/validationSchema";
+import EmptyPage from "../../components/ui/EmptyPage";
+
 export default function Tasks({ language }) {
 
     const [tasks, setTasks] = useState([]);
@@ -72,22 +74,116 @@ export default function Tasks({ language }) {
 
     return (
         <div className={language === "ar" ? style.TasksPageArabic : style.TasksPage} >
+            {tasks.length === 0 ? (
+                <EmptyPage
+                    icon={<FaTasks />}
+                    title={t.emptyTasksTitle}
+                    message={t.emptyTasksMessage}
+                    btnText={t.addTaskbtn}
+                    onClick={() => setShowModal(true)}
+                />
+            ) : (
+                <>
+                    <div className='row align-items-center justify-content-between mb-4'>
+                        <div className='col-md-6'>
+                            <h1>{t.titleTaskPage}</h1>
+                            <p>{t.descriptionTaskPage}</p>
+                        </div>
+                        <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                            <button
 
-            <div className='row align-items-center justify-content-between mb-4'>
-                <div className='col-md-6'>
-                    <h1>{t.titleTaskPage}</h1>
-                    <p>{t.descriptionTaskPage}</p>
-                </div>
-                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
-                    <button
-                    
-                        className={language === 'ar' ? style.addTaskbtnAr : style.addTaskbtn}
-                        onClick={() => setShowModal(true)}
-                    >
-                        <b>{t.addTaskbtn}</b>
-                    </button>
-                </div>
-            </div>
+                                className={language === 'ar' ? style.addTaskbtnAr : style.addTaskbtn}
+                                onClick={() => setShowModal(true)}
+                            >
+                                <b>{t.addTaskbtn}</b>
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div className={style.ForTasks}>
+                        <table className={style.tasksTable}>
+                            <thead>
+                                <tr>
+                                    <th>{t.taskNameLabel}</th>
+                                    <th>{t.topicLabel}</th>
+                                    <th>{t.res}</th>
+                                    <th>{t.actions}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentTasks.map(task => (
+                                    <tr key={task.id}>
+                                        <td>
+                                            <div className={style.taskInfo}>
+                                                <FaFileAlt className={style.fileIcon} />
+                                                <p>{task.task}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className={style.topicBadge}>{task.topic}</span>
+                                        </td>
+                                        <td>
+                                            <div className={style.resources}>
+                                                {task.resources.includes("quiz") && <div className={style.iconCircleHelp}><FaQuestionCircle /></div>}
+                                                {task.resources.includes("video") && <div className={style.iconCircleVideo}><FaVideo /></div>}
+                                                {task.resources.includes("image") && <div className={style.iconCircleImage}><FaImage /></div>}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <FaEye
+                                                className={style.actionIcon}
+                                                onClick={() => handleView(task.id)}
+                                                style={{ color: "#1A83A8" }}
+                                            />
+                                            <FaEdit
+                                                className={style.actionIcon}
+                                                onClick={() => handleEdit(task.id)}
+                                                style={{ color: "#1A83A8" }}
+                                            />
+                                            <FaTrash
+                                                className={style.actionIcon}
+                                                onClick={() => setShowDeleteModal(task.id)}
+                                                style={{ color: "red" }}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {showDeleteModal && (
+                            <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
+                                <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
+                                    <h2 className={style.modalTitle}>{t.confirm}</h2>
+                                    <p>{t.confirmDeleteDesc}</p>
+
+                                    <div className={style.modalButtons}>
+                                        <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
+                                            {t.confirmDeleteCancel}
+                                        </button>
+
+                                        <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
+                                            onClick={() => {
+                                                handleDelete(showDeleteModal);
+                                                setShowDeleteModal(null);
+                                            }} >
+                                            {t.confirmDeleteBtn}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+
+                        <div className={style.foot}>
+                            <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                            <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
+                            <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                        </div>
+                    </div>
+                </>
+            )}
 
             {showModal && (
                 <div className={style.modalOverlay}>
@@ -179,88 +275,6 @@ export default function Tasks({ language }) {
                 </div >
             )
             }
-
-            <div className={style.ForTasks}>
-                <table className={style.tasksTable}>
-                    <thead>
-                        <tr>
-                            <th>{t.taskNameLabel}</th>
-                            <th>{t.topicLabel}</th>
-                            <th>{t.res}</th>
-                            <th>{t.actions}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentTasks.map(task => (
-                            <tr key={task.id}>
-                                <td>
-                                    <div className={style.taskInfo}>
-                                        <FaFileAlt className={style.fileIcon} />
-                                        <p>{task.task}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={style.topicBadge}>{task.topic}</span>
-                                </td>
-                                <td>
-                                    <div className={style.resources}>
-                                        {task.resources.includes("quiz") && <div className={style.iconCircleHelp}><FaQuestionCircle /></div>}
-                                        {task.resources.includes("video") && <div className={style.iconCircleVideo}><FaVideo /></div>}
-                                        {task.resources.includes("image") && <div className={style.iconCircleImage}><FaImage /></div>}
-                                    </div>
-                                </td>
-                                <td>
-                                    <FaEye
-                                        className={style.actionIcon}
-                                        onClick={() => handleView(task.id)}
-                                        style={{ color: "#1A83A8" }}
-                                    />
-                                    <FaEdit
-                                        className={style.actionIcon}
-                                        onClick={() => handleEdit(task.id)}
-                                        style={{ color: "#1A83A8" }}
-                                    />
-                                    <FaTrash
-                                        className={style.actionIcon}
-                                        onClick={() => setShowDeleteModal(task.id)}
-                                        style={{ color: "red" }}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {showDeleteModal && (
-                    <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
-                        <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
-                            <h2 className={style.modalTitle}>{t.confirm}</h2>
-                            <p>{t.confirmDeleteDesc}</p>
-
-                            <div className={style.modalButtons}>
-                                <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
-                                    {t.confirmDeleteCancel}
-                                </button>
-
-                                <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
-                                    onClick={() => {
-                                        handleDelete(showDeleteModal);
-                                        setShowDeleteModal(null);
-                                    }} >
-                                    {t.confirmDeleteBtn}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-
-                <div className={style.foot}>
-                    <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
-                    <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
-                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
-                </div>
-            </div>
         </div >
     );
 }
