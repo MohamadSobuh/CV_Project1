@@ -146,9 +146,9 @@ const QuizQuestions = ({ language = 'en' }) => {
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <div className='row align-items-center justify-content-between mb-4'>
-                <div className='col-md-6 text-start'>
-                    <h1 className={style.quizTitle}>{t.quizTitle || "Quiz Questions"}</h1>
-                    <p className={style.quizSub}>{t.quizSub || "Manage quiz questions"}</p>
+                <div className='col-md-6'>
+                    <h1>{t.quizTitle || "Quiz Questions"}</h1>
+                    <p>{t.quizSub || "Manage quiz questions"}</p>
                 </div>
                 <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                     <button onClick={() => setShowAddModal(true)} className={style.btnAdd}>
@@ -190,7 +190,7 @@ const QuizQuestions = ({ language = 'en' }) => {
 
             {totalPages > 1 && (
 
-                    <div className={language === "ar" ? style.footAr : style.foot}>
+                    <div className={style.foot}>
                         <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
                         <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
                         <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>

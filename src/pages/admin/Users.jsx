@@ -68,14 +68,22 @@ export default function Users({ language }) {
 
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
-            <h1>{t.title}</h1>
-            <p>{t.descriptionUsersPage}</p>
-            <button
-                className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
-                onClick={() => setShowModal(true)}
-            >
-                <b>{t.addUser}</b>
-            </button>
+
+            <div className='row align-items-center justify-content-between mb-4'>
+                <div className='col-md-6'>
+                    <h1>{t.title}</h1>
+                    <p>{t.descriptionUsersPage}</p>
+                </div>
+                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                    <button
+                        className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
+                        onClick={() => setShowModal(true)}
+                    >
+                        <b>{t.addUser}</b>
+                    </button>
+                </div>
+            </div>
+
 
             {showModal && (
                 <div className={style.modalOverlay}>
@@ -84,21 +92,21 @@ export default function Users({ language }) {
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={style.formRow}>
                                 <div style={{ flex: 1 }}>
-                                    <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.firstNameLabel}</label>
+                                    <label>{t.firstNameLabel}</label>
                                     <AdminInput
                                         type="text"
                                         name="firstname"
-                                        placeholder=""
+                                        placeholder={t.enterFirstName}
                                         registerProps={register("firstname")}
                                     />
                                     <InputError error={errors.firstname} />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.lastNameLabel}</label>
+                                    <label>{t.lastNameLabel}</label>
                                     <AdminInput
                                         type="text"
                                         name="lastname"
-                                        placeholder=""
+                                        placeholder={t.enterLastName}
                                         registerProps={register("lastname")}
                                     />
                                     <InputError error={errors.lastname} />
@@ -106,29 +114,29 @@ export default function Users({ language }) {
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.emailLabel}</label>
+                                <label>{t.emailLabel}</label>
                                 <AdminInput
                                     type="email"
                                     name="email"
-                                    placeholder=""
+                                    placeholder= {t.email}
                                     registerProps={register("email")}
                                 />
                                 <InputError error={errors.email} />
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.pass}</label>
+                                <label>{t.pass}</label>
                                 <AdminInput
                                     type="password"
                                     name="password"
-                                    placeholder=""
+                                    placeholder={t.pass}
                                     registerProps={register("password")}
                                 />
                                 <InputError error={errors.password} />
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.role}</label>
+                                <label>{t.role}</label>
                                 <select
                                     {...register("role")}
                                     style={{
@@ -227,7 +235,7 @@ export default function Users({ language }) {
                     </div>
                 )}
 
-                <div className={language === "ar" ? style.footAr : style.foot}>
+                <div className={style.foot}>
                     <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
                     <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
                     <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>

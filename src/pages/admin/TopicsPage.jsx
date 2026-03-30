@@ -52,8 +52,8 @@ const TopicsPage = ({ language = 'en' }) => {
 
             <div className='row align-items-center justify-content-between mb-4'>
                 <div className='col-md-6'>
-                    <h1 className={style.quizTitle}>{t.topicsTitle}</h1>
-                    <p className={style.quizSub}>{t.topicsSub}</p>
+                    <h1>{t.topicsTitle}</h1>
+                    <p>{t.topicsSub}</p>
                 </div>
                 <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                     <button className={style.btnAdd} onClick={() => setShowAddModal(true)}>

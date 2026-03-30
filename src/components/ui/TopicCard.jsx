@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import style from "../../pages/admin/AddTopics.module.css";
-import { FaBookOpen, FaEllipsisH, FaTasks, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBookOpen, FaEllipsisH, FaTasks, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
 const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
@@ -38,15 +38,12 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
 
                     {showMenu && (
                         <div className={`${style.dropdownMenu} ${language === 'ar' ? style.menuAr : style.menuEn}`}>
-                            <button className={style.menuItem}>
-                                <FaEye className={language === 'ar' ? 'ms-2' : 'me-2'} /> {t?.view || "View"}
-                            </button>
 
                             <button className={style.menuItem} onClick={() => {
                                 onEditClick(topic);
                                 setShowMenu(false);
                             }}>
-                                <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} /> {t?.editUser}
+                                <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} /> {t?.editTopic}
                             </button>
 
                             <button className={style.menuItem} onClick={() => {

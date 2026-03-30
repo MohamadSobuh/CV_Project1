@@ -38,7 +38,7 @@ export default function Tasks({ language }) {
     }, []);
 
     const handleDelete = () => {
-        setUsers(tasks.filter(task => task.id !== showDeleteModal));
+        setTasks(tasks.filter(task => task.id !== showDeleteModal));
         setShowDeleteModal(null);
     };
 
@@ -71,26 +71,31 @@ export default function Tasks({ language }) {
     };
 
     return (
-        <div className={language === "ar" ? style.TasksPageArabic : style.TasksPage}>
-            <h1>{t.titleTaskPage}</h1>
-            <p>{t.descriptionTaskPage}</p>
+        <div className={language === "ar" ? style.TasksPageArabic : style.TasksPage} >
 
-            <button
-                className={language === 'ar' ? style.addTaskbtnAr : style.addTaskbtn}
-                onClick={() => setShowModal(true)}
-            >
-                <b>{t.addTaskbtn}</b>
-            </button>
+            <div className='row align-items-center justify-content-between mb-4'>
+                <div className='col-md-6'>
+                    <h1>{t.titleTaskPage}</h1>
+                    <p>{t.descriptionTaskPage}</p>
+                </div>
+                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                    <button
+                    
+                        className={language === 'ar' ? style.addTaskbtnAr : style.addTaskbtn}
+                        onClick={() => setShowModal(true)}
+                    >
+                        <b>{t.addTaskbtn}</b>
+                    </button>
+                </div>
+            </div>
 
             {showModal && (
                 <div className={style.modalOverlay}>
                     <div className={style.modalContent}>
                         <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>{t.addTask}</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
-
-
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.taskNameLabel}</label>
+                                <label>{t.taskNameLabel}</label>
                                 <AdminInput
                                     type="text"
                                     name="taskName"
@@ -101,9 +106,10 @@ export default function Tasks({ language }) {
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.topicLabel}</label>
+                                <label>{t.topicLabel}</label>
                                 <select
                                     {...register("topic")}
+                                    defaultValue=""
                                     style={{
                                         borderRadius: "5px",
                                         backgroundColor: "#E6F7F9",
@@ -114,7 +120,7 @@ export default function Tasks({ language }) {
                                         fontSize: "12px"
                                     }}
                                 >
-                                    <option value="">{t.selTopic}</option>
+                                    <option value="" disabled hidden> {t.selTopic} </option>
                                     {topicsFromDB.map((topic, index) => (
                                         <option key={index} value={topic}>{topic}</option>
                                     ))}
@@ -123,7 +129,7 @@ export default function Tasks({ language }) {
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.contentLabel}</label>
+                                <label>{t.contentLabel}</label>
                                 <textarea
                                     {...register("content")}
                                     rows={3}
@@ -143,7 +149,7 @@ export default function Tasks({ language }) {
 
                             <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
                                 <div style={{ flex: 1 }}>
-                                    <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.videoUrlLabel}</label>
+                                    <label>{t.videoUrlLabel}</label>
                                     <AdminInput
                                         type="url"
                                         name="videoUrl"
@@ -153,7 +159,7 @@ export default function Tasks({ language }) {
                                     <InputError error={errors.videoUrl} />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <label style={{ display: "block", marginBottom: "5px", color: "#1A83A8" }}>{t.imageUrlLabel}</label>
+                                    <label>{t.imageUrlLabel}</label>
                                     <AdminInput
                                         type="url"
                                         name="imageUrl"
@@ -164,14 +170,15 @@ export default function Tasks({ language }) {
                                 </div>
                             </div>
 
-                            <div className={style.modalButtons}>
+                            <div className={style.modalButtons} >
                                 <button type="button" className={style.btnOutline} onClick={() => setShowModal(false)}>{t.cancel}</button>
                                 <button type="submit" className={style.btnActive}>{t.save}</button>
                             </div>
                         </form>
                     </div>
-                </div>
-            )}
+                </div >
+            )
+            }
 
             <div className={style.ForTasks}>
                 <table className={style.tasksTable}>
@@ -248,12 +255,12 @@ export default function Tasks({ language }) {
                 )}
 
 
-                <div className={language === "ar" ? style.footAr : style.foot}>
+                <div className={style.foot}>
                     <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
                     <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
                     <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

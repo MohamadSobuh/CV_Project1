@@ -36,9 +36,9 @@ const Settings = ({ language = 'en' }) => {
     };
 
     return (
-        <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+        <div className={language === 'ar' ? style.settingsPageAr : style.settingsPage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <div className="row align-items-center mb-4">
-                <div className="col-md-6 text-start">
+                <div className='col-md-6'>
                     <h1 className="fw-bold" style={{ color: '#082F43' }}>{t.settingsTitle || "Settings"}</h1>
                     <p style={{ color: '#546e7a' }}>{t.settingsSub || "Configure system settings"}</p>
                 </div>

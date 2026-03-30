@@ -107,6 +107,8 @@ const translations = {
         emailInvalid: "Email is invalid",
         passRequired: "Password is required",
         passMin: "Password must be at least 6 characters",
+        enterFirstName : "Enter First Name",
+        enterLastName : "Enter Last Name",
 
         /* Tasks Table Page */
         titleTaskPage: "Tasks Management",
@@ -248,7 +250,6 @@ const translations = {
         quiz: "أسئلة الاختبار",
         setting: "الإعدادات",
 
-
         /* for user profile */
         firstNameLabel: "الاسم الأول",
         lastNameLabel: "اسم العائلة",
@@ -342,7 +343,8 @@ const translations = {
         emailInvalid: "البريد الإلكتروني غير صالح",
         passRequired: "كلمة المرور مطلوبة",
         passMin: "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
-
+        enterFirstName : "ادخل الاسم الاول",
+        enterLastName : "ادخل اسم العائلة",
 
         /* Tasks Table Page */
         titleTaskPage: "إدارة المهام",

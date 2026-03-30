@@ -1,4 +1,4 @@
-.dash {
+.settingsPage {
     background-color: #E6F7F9;
     color: #082F43;
     padding: 20px 40px 20px 280px;
@@ -9,7 +9,7 @@
     direction: ltr;
 }
 
-.dashArabic {
+.settingsPageAr {
     background-color: #E6F7F9;
     color: #082F43;
     padding: 20px 280px 20px 40px;
@@ -23,8 +23,8 @@
 
 @media (max-width: 1024px) {
 
-    .dash,
-    .dashArabic {
+    .settingsPage,
+    .settingsPageAr {
         padding: 80px 20px 20px 20px;
     }
 
@@ -35,8 +35,8 @@
 
 @media (max-width: 576px) {
 
-    .dash,
-    .dashArabic {
+    .settingsPage,
+    .settingsPageAr {
         padding: 70px 15px 15px 15px;
     }
 

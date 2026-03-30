@@ -36,13 +36,13 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
     return (
         <div className={style.modalOverlay} onClick={handleClose}>
             <div className={style.modalContent} onClick={e => e.stopPropagation()}>
-                <h2 className={style.modalTitle}>
+                <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>
                     {formData?.id ? t.editTopic || "Edit Topic" : t.addNewTopic || "Add Topic"}
                 </h2>
 
                 <form onSubmit={handleSubmit(onFormSubmit)}>
-                    <div className="mb-4">
-                        <label className={style.labelStyle}>{t.topicTitleLabel}</label>
+                    <div style={{ marginBottom: "15px" }}>
+                        <label>{t.topicTitleLabel}</label>
                         <AdminInput
                             registerProps={register("title")}
                             placeholder={t.topicPlaceholder}
@@ -50,30 +50,31 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                         <InputError error={errors.title} />
                     </div>
 
-                    <div className="mb-4">
-                        <label className={style.labelStyle}>{t.description}</label>
+                    <div style={{ marginBottom: "15px" }}>
+                        <label>{t.description}</label>
                         <textarea
                             {...register("desc")}
                             className={style.textareaStyle}
                             rows="4"
+                            placeholder={t.descPlaceholder}
                         />
                         <InputError error={errors.desc} />
                     </div>
 
-                    <div className="mb-4">
-                        <label className={style.labelStyle}>{t.careerFieldLabel}</label>
-                        <select {...register("category")} className={style.selectStyle}>
-                            <option value="">{t.selectField || "Select Field"}</option>
+                    <div style={{ marginBottom: "15px" }}>
+                        <label>{t.careerFieldLabel}</label>
+                        <select {...register("category")} className={style.selectStyle} defaultValue="">
+                            <option value="" disabled hidden>{t.selectField || "Select Field"}</option>
                             <option value="Front-end Development">Front-end Development</option>
                             <option value="Backend Development">Backend Development</option>
                             <option value="UI/UX Design">UI/UX Design</option>
                         </select>
                         <InputError error={errors.category} />
                     </div>
-                    <div className="mb-4">
-                        <label className={style.labelStyle}>{t.difficultyLabel || "Difficulty Level"}</label>
-                        <select {...register("difficulty")} className={style.selectStyle}>
-                            <option value="">{t.selectDifficulty || "Select Difficulty"}</option>
+                    <div style={{ marginBottom: "15px" }}>
+                        <label>{t.difficultyLabel || "Difficulty Level"}</label>
+                        <select {...register("difficulty")} className={style.selectStyle} defaultValue="">
+                            <option value="" disabled hidden>{t.selectDifficulty || "Select Difficulty"}</option>
                             <option value="Easy">{t.easy}</option>
                             <option value="Medium">{t.medium}</option>
                             <option value="Hard">{t.hard}</option>
@@ -86,7 +87,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                             {t.cancel}
                         </button>
                         <button type="submit" className={style.btnActive}>
-                            {formData?.id ? t.saveChanges || "Save Changes" : t.addTopic || "Add Topic"}
+                            {formData?.id ? t.saveChanges || "Save Changes" : t.save || "Add Topic"}
                         </button>
                     </div>
                 </form>
