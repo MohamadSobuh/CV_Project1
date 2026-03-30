@@ -30,7 +30,7 @@ const TopicsPage = ({ language = 'en' }) => {
         { id: 12, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
     ]);
     const handleAdd = (newTopic) => {
-        newTopic = { ...newTopic, id: Date.now(), tasks: 5 };
+        newTopic = { id: topics.length + 1, ...newTopic, tasks: 5 };
         setTopics([newTopic, ...topics]);
         setShowAddModal(false);
     }

@@ -32,17 +32,28 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
         reset();
         onClose();
     };
+    const categories = [
+
+        { id: 1, name: "Front-end Development" },
+        { id: 2, name: "Backend Development" },
+        { id: 3, name: "UI/UX Design" }
+    ];
+    const difficulties = [
+        { id: 1, name: "Easy" },
+        { id: 2, name: "Medium" },
+        { id: 3, name: "Hard" }
+    ];
 
     return (
         <div className={style.modalOverlay} onClick={handleClose}>
             <div className={style.modalContent} onClick={e => e.stopPropagation()}>
                 <h2 className={style.modalTitle}>
-                    {formData?.id ? t.editTopic || "Edit Topic" : t.addNewTopic || "Add Topic"}
+                    {formData?.id ? t.editTopic : t.addTopic}
                 </h2>
 
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="mb-4">
-                        <label className={style.labelStyle}>{t.topicTitleLabel}</label>
+                        <label className={style.labelStyle}>{t.topicNameLabel}</label>
                         <AdminInput
                             registerProps={register("title")}
                             placeholder={t.topicPlaceholder}
@@ -51,7 +62,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                     </div>
 
                     <div className="mb-4">
-                        <label className={style.labelStyle}>{t.description}</label>
+                        <label className={style.labelStyle}>{t.descriptionLabel}</label>
                         <textarea
                             {...register("desc")}
                             className={style.textareaStyle}
@@ -63,20 +74,24 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                     <div className="mb-4">
                         <label className={style.labelStyle}>{t.careerFieldLabel}</label>
                         <select {...register("category")} className={style.selectStyle}>
-                            <option value="">{t.selectField || "Select Field"}</option>
-                            <option value="Front-end Development">Front-end Development</option>
-                            <option value="Backend Development">Backend Development</option>
-                            <option value="UI/UX Design">UI/UX Design</option>
+                            <option value="">{t.selectField}</option>
+                            {categories.map(category => (
+                                <option key={category.id} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                         <InputError error={errors.category} />
                     </div>
                     <div className="mb-4">
-                        <label className={style.labelStyle}>{t.difficultyLabel || "Difficulty Level"}</label>
+                        <label className={style.labelStyle}>{t.difficultyLabel}</label>
                         <select {...register("difficulty")} className={style.selectStyle}>
-                            <option value="">{t.selectDifficulty || "Select Difficulty"}</option>
-                            <option value="Easy">{t.easy}</option>
-                            <option value="Medium">{t.medium}</option>
-                            <option value="Hard">{t.hard}</option>
+                            <option value="">{t.selectDifficulty}</option>
+                            {difficulties.map(difficulty => (
+                                <option key={difficulty.id} value={difficulty.name}>
+                                    {difficulty.name}
+                                </option>
+                            ))}
                         </select>
                         <InputError error={errors.difficulty} />
                     </div>
@@ -86,7 +101,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                             {t.cancel}
                         </button>
                         <button type="submit" className={style.btnActive}>
-                            {formData?.id ? t.saveChanges || "Save Changes" : t.addTopic || "Add Topic"}
+                            {formData?.id ? t.saveChanges : t.addTopic}
                         </button>
                     </div>
                 </form>

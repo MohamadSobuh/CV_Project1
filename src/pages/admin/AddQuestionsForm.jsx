@@ -15,6 +15,10 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
         reset();
         onClose();
     };
+    const questionTypes = [
+        { id: 1, name: "Task Quiz" },
+        { id: 2, name: "Placement Test" }
+    ];
 
     const onSubmit = (data) => {
         // تجميع البيانات للشكل الذي يتوقعه الـ Backend (مصفوفة options)
@@ -80,8 +84,11 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                             <label className={style.labelStyle}>{t.questionType}</label>
                             <select {...register("questionType")} className={style.selectStyle}>
                                 <option value="">{t.selectType}</option>
-                                <option value="Task Quiz">Task Quiz</option>
-                                <option value="Placement Test">Placement Test</option>
+                                {questionTypes.map(questionType => (
+                                    <option key={questionType.id} value={questionType.name}>
+                                        {questionType.name}
+                                    </option>
+                                ))}
                             </select>
                             <InputError error={errors.questionType} />
                         </div>
