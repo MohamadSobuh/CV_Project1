@@ -59,24 +59,28 @@
 }
 
 
-.labelStyle {
+.modalContent label {
     display: block;
-    font-weight: 600;
-    color: #07526B;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #1A83A8;
+}
+
+.modalContent input {
+    font-size: 14px;
+    color: #1A83A8;
+    font-size: 14px;
+    outline: none;
 }
 
 .selectStyle,
 .textareaStyle {
+    border-radius: 5px;
+    background-color: #E6F7F9;
+    color: #1A83A8;
+    padding: 10px;
+    border: 1px solid #1A83A8;
     width: 100%;
-    padding: 12px 15px;
-    border-radius: 12px;
-    border: 1px solid #CFE9EC;
-    background-color: #f8fdfe;
-    color: #082F43;
-    outline: none;
-    transition: 0.3s;
+    font-size: 12px;
 }
 
 .selectStyle:focus,
@@ -211,8 +215,8 @@
 }
 
 .btnActive:hover {
-    background-color: #1A83A8 ;
-    color: white ;
+    background-color: #1A83A8;
+    color: white;
 }
 
 

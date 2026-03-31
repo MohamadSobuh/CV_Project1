@@ -52,7 +52,7 @@ export default function Signup() {
         const payload = { ...data, role: 'user' };
 
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/auth/register/", payload);
+            const response = await axios.post("http://127.0.0.1:8000/api/users/register/", payload);
             console.log("Success:", response.data);
             navigate("/login");
         } catch (error) {
@@ -61,10 +61,9 @@ export default function Signup() {
 
                 // 1. التعامل مع الأخطاء الخاصة بالحقول (مثل الإيميل المكرر)
                 Object.keys(serverErrors).forEach((field) => {
-                    // التأكد من أن الحقل موجود في الفورم
                     setError(field, {
                         type: "server",
-                        message: serverErrors[field][0] // نأخذ أول رسالة خطأ في المصفوفة
+                        message: serverErrors[field][0]
                     });
                 });
 

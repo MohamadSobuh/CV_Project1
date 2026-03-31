@@ -10,7 +10,7 @@
     align-items: center;
     z-index: 2000;
     backdrop-filter: blur(2px);
-        color: #0E5A6A;
+    color: #0E5A6A;
 
 }
 
@@ -40,6 +40,7 @@
 .moreIcon:hover {
     color: #1A83A8;
 }
+
 
 /* القائمة المنسدلة */
 .dropdownMenu {
@@ -133,8 +134,8 @@
 }
 
 .btnActive:hover {
-    background-color: #1A83A8 ;
-    color: white ;
+    background-color: #1A83A8;
+    color: white;
 }
 
 
@@ -153,19 +154,19 @@
 
 .selectStyle,
 .textareaStyle {
+    border-radius: 5px;
+    background-color: #E6F7F9;
+    color: #1A83A8;
+    padding: 10px;
+    border: 1px solid #1A83A8;
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #D1E9ED;
-    background-color: #F0F9FA;
-    color: #082F43;
-    outline: none;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .selectStyle:focus,
 .textareaStyle:focus {
     border-color: #1A83A8;
+    box-shadow: 0 0 0 3px rgba(26, 131, 168, 0.1);
 }
 
 /* --- كودك الأصلي مع إبقاء التعديلات اللازمة --- */
@@ -189,20 +190,10 @@
     direction: rtl;
     transition: padding 0.3s ease;
 }
-
-.labelStyle {
+.modalContent label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     color: #1A83A8;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.footAr {
-    display: flex;
-    justify-content: flex-start;
-    margin: 10px;
-    gap: 10px;
 }
 
 .foot {
@@ -235,8 +226,7 @@
     cursor: pointer;
 }
 
-.quizTitle {
-    color: #082F43;
-    font-weight: 700;
-    font-size: 25px;
+.btnAdd:hover {
+    background-color: #07526B;
 }
+

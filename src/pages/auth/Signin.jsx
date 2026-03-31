@@ -36,18 +36,18 @@ export default function Signin() {
         }
     );
     const navigate = useNavigate();
-    // const checker = () => {
-    //     if (localStorage.getItem("userRole") === "admin") {
-    //         navigate("/admin");
-    //     } else {
-    //         navigate("/user");
-    //     }
-    // }
+    const checker = () => {
+        if (localStorage.getItem("userRole") === "admin") {
+            navigate("/admin");
+        } else {
+            navigate("/user");
+        }
+    }
 
     console.log("Current Values:", watch());
     const submitForm = async (data) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", data); //هون حطو ال url تبع backend
+            const response = await axios.post("http://127.0.0.1:8000/api/users/login/", data); //هون حطو ال url تبع backend
             const token = response.data.access; // التوكن الأساسي
             const refreshToken = response.data.refresh;
 
@@ -58,8 +58,8 @@ export default function Signin() {
 
             console.log("Login Successful! Token stored.");
             console.log("Success:", response.data);
-            // checker();  //المكان الذي ينتقل إليه بعد تسجيل الدخول
-            navigate("/admin");
+            checker();
+
 
         } catch (error) {
             if (error.response && error.response.data) {

@@ -43,7 +43,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                                 setShowMenu(false);
                             }}>
                                 <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} />
-                                {t?.edit || "Update"}
+                                {t?.editQuestion || "Update"}
                             </button>
 
                             <button className={style.menuItem} onClick={() => {

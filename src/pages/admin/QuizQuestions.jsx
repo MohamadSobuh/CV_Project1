@@ -8,6 +8,8 @@ import { questionSchema } from "../../utils/validationSchema";
 import InputError from "../../components/ui/InputError";
 import AdminInput from "../../components/ui/AdminInput";
 import AddQuestionsForm from "./AddQuestionsForm";
+import EmptyPage from "../../components/ui/EmptyPage";
+import { FaQuestionCircle } from 'react-icons/fa';
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
@@ -31,7 +33,7 @@ const QuizQuestions = ({ language = 'en' }) => {
     };
 
     const t = translations[language];
-    useEffect(() => {
+   useEffect(() => {
         setQuestions([
             {
                 id: 1,
@@ -145,17 +147,43 @@ const QuizQuestions = ({ language = 'en' }) => {
 
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-            <div className='row align-items-center justify-content-between mb-4'>
-                <div className='col-md-6 text-start'>
-                    <h1 className={style.quizTitle}>{t.quizTitle || "Quiz Questions"}</h1>
-                    <p className={style.quizSub}>{t.quizSub || "Manage quiz questions"}</p>
-                </div>
-                <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
-                    <button onClick={() => setShowAddModal(true)} className={style.btnAdd}>
-                        + {t.addQuestion || "Add Question"}
-                    </button>
-                </div>
-            </div>
+            {questions.length === 0 ? (
+                <EmptyPage
+                    icon={<FaQuestionCircle />}
+                    title={t.emptyQuestionsTitle}
+                    message={t.emptyQuestionsMessage}
+                    btnText={t.addQuestion}
+                    onClick={() => setShowAddModal(true)}
+                />
+            ) : (
+                <>
+                    <div className='row align-items-center justify-content-between mb-4'>
+                        <div className='col-md-6'>
+                            <h1>{t.quizTitle || "Quiz Questions"}</h1>
+                            <p>{t.quizSub || "Manage quiz questions"}</p>
+                        </div>
+                        <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
+                            <button onClick={() => setShowAddModal(true)} className={style.btnAdd}>
+                                + {t.addQuestion || "Add Question"}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        {currentQuestions.map((q) => (
+                            <div key={q.id} className='col-lg-6 mb-4'>
+                                <QuestionCard
+                                    question={q}
+                                    language={language}
+                                    onEditClick={(question) => setShowEditModal(question)}
+                                    onDeleteClick={(id) => setShowDeleteModal(id)}
+                                    t={t}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
 
             {showAddModal && (
                 <AddQuestionsForm t={t} handleAdd={handleAdd} questionsFromDB={questionsFromDB} onClose={() => setShowAddModal(false)} />
@@ -176,25 +204,13 @@ const QuizQuestions = ({ language = 'en' }) => {
                 </div>
             )}
 
-            <div className='row'>
-                {currentQuestions.length > 0 ? (
-                    currentQuestions.map((q) => (
-                        <div key={q.id} className='col-lg-6 mb-4'>
-                            <QuestionCard question={q} language={language} onEditClick={(question) => setShowEditModal(question)} onDeleteClick={(id) => setShowDeleteModal(id)} t={t} />
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-center mt-5">No questions added yet.</p>
-                )}
-            </div>
-
             {totalPages > 1 && (
 
-                    <div className={language === "ar" ? style.footAr : style.foot}>
-                        <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
-                        <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
-                        <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
-                    </div>
+                <div className={style.foot}>
+                    <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                    <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
+                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                </div>
             )}
         </div>
     );

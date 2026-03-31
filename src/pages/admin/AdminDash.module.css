@@ -2,14 +2,13 @@
     background-color: #E6F7F9;
     color: #082F43;
     padding-left: 260px; 
-    padding-top: 20px;
+    padding: 20px 40px 20px 280px;
 }
 
 .dashArabic {
     background-color: #E6F7F9;
     color: #082F43;
-    padding-right: 260px; 
-    padding-top: 20px;
+    padding: 20px 280px 20px 40px;
 }
 
 .card {
@@ -20,7 +19,7 @@
     box-shadow: 0px 0px 5px #082F43;
     border-radius: 20px;
     padding: 15px 25px;
-    margin: 20px auto;
+    margin: 20px auto 20px 10px;
 }
 
 .iconStats {
@@ -30,10 +29,10 @@
 
 .lastUsers {
     background-color: white;
-    margin: 20px auto;
+    margin: 20px auto 20px 0px;
     padding: 20px;
     border-radius: 25px;
-    width: 95%;
+    width: 94%;
     max-width: 100%;
     box-sizing: border-box;
 }
