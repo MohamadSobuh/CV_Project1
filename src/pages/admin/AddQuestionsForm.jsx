@@ -77,15 +77,18 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                 <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>
                     {formData?.id ? t.editQuestion : t.addQuestion}
                 </h2>
-        
+
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
                         <div style={{ flex: 1 }}>
                             <label className={style.labelStyle}>{t.questionType}</label>
                             <select {...register("questionType")} className={style.selectStyle} defaultValue="">
                                 <option value="" disabled hidden>{t.selectQuestionType}</option>
-                                <option value="Task Quiz">Task Quiz</option>
-                                <option value="Placement Test">Placement Test</option>
+                                {questionTypes.map(questionType => (
+                                    <option key={questionType.id} value={questionType.name}>
+                                        {questionType.name}
+                                    </option>
+                                ))}
                             </select>
                             <InputError error={errors.questionType} />
                         </div>
