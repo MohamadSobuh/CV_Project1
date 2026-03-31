@@ -15,6 +15,10 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
         reset();
         onClose();
     };
+    const questionTypes = [
+        { id: 1, name: "Task Quiz" },
+        { id: 2, name: "Placement Test" }
+    ];
 
     const onSubmit = (data) => {
         // تجميع البيانات للشكل الذي يتوقعه الـ Backend (مصفوفة options)
