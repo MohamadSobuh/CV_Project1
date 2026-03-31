@@ -76,9 +76,11 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                         <label>{t.careerFieldLabel}</label>
                         <select {...register("category")} className={style.selectStyle} defaultValue="">
                             <option value="" disabled hidden>{t.selectField || "Select Field"}</option>
-                            <option value="Front-end Development">Front-end Development</option>
-                            <option value="Backend Development">Backend Development</option>
-                            <option value="UI/UX Design">UI/UX Design</option>
+                            {categories.map(category => (
+                                <option key={category.id} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                         <InputError error={errors.category} />
                     </div>
@@ -86,9 +88,11 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                         <label>{t.difficultyLabel || "Difficulty Level"}</label>
                         <select {...register("difficulty")} className={style.selectStyle} defaultValue="">
                             <option value="" disabled hidden>{t.selectDifficulty || "Select Difficulty"}</option>
-                            <option value="Easy">{t.easy}</option>
-                            <option value="Medium">{t.medium}</option>
-                            <option value="Hard">{t.hard}</option>
+                            {difficulties.map(difficulty => (
+                                <option key={difficulty.id} value={difficulty.name}>
+                                    {difficulty.name}
+                                </option>
+                            ))}
                         </select>
                         <InputError error={errors.difficulty} />
                     </div>
