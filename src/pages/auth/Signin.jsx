@@ -48,13 +48,12 @@ export default function Signin() {
     const submitForm = async (data) => {
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/users/login/", data); //هون حطو ال url تبع backend
-            const token = response.data.access; // التوكن الأساسي
-            const refreshToken = response.data.refresh;
+            const token = response.data.token; // التوكن الأساسي
+            const userRole = response.data.user.role;
 
             localStorage.setItem("accessToken", token);
-            localStorage.setItem("refreshToken", refreshToken);
 
-            localStorage.setItem("userRole", response.data.user.role);
+            localStorage.setItem("userRole", userRole);
 
             console.log("Login Successful! Token stored.");
             console.log("Success:", response.data);

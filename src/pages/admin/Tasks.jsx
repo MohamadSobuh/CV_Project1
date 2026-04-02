@@ -9,6 +9,7 @@ import InputError from "../../components/ui/InputError";
 import * as yup from "yup";
 import { signupSchemaForTasks } from "../../utils/validationSchema";
 import EmptyPage from "../../components/ui/EmptyPage";
+import axios from 'axios';
 
 export default function Tasks({ language }) {
 
@@ -31,13 +32,31 @@ export default function Tasks({ language }) {
     const t = translations[language];
 
     useEffect(() => {
-        setTasks([
-            { id: 1, task: "Introduction to HTML", topic: "HTML & CSS Fundamentals", resources: ["quiz", "video", "image"] },
-            { id: 2, task: "CSS Selectors", topic: "HTML & CSS Fundamentals", resources: ["quiz", "video"] },
-            { id: 3, task: "React Components", topic: "React Framework", resources: ["quiz", "video", "image"] },
-            { id: 4, task: "Functions and Scope", topic: "JavaScript Essentials", resources: ["quiz", "image"] }
-        ]);
+        const fetchTasks = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/tasks", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+
+                console.log(response.data);
+                setTasks(response.data);
+            } catch (err) {
+                console.error("Error fetching topics:", err);
+            }
+
+
+
+        };
+        fetchTasks();
     }, []);
+
 
     const handleDelete = () => {
         setTasks(tasks.filter(task => task.id !== showDeleteModal));

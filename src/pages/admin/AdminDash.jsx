@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import style from "./AdminDash.module.css";
 import { FaUsers, FaListUl, FaQuestionCircle } from "react-icons/fa";
 import translations from '../../locales/translations';
+import axios from 'axios';
 export default function AdminDash({ language }) {
   const [totalusers, setTotalUsers] = useState(0);
   const [totaltasks, setTotalTasks] = useState(0);
@@ -11,10 +12,13 @@ export default function AdminDash({ language }) {
 
   useEffect(() => {
     const fetchStats = async () => {
+
       try {
-        setTotalUsers(1167);
-        setTotalTasks(274);
-        setQuestions(2740);
+        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/stats");
+        console.log(response.data);
+        setTotalUsers(response.data.total_users);
+        setTotalTasks(response.data.total_tasks);
+        setQuestions(response.data.quiz_questions);
       } catch (err) {
         console.error("Error fetching stats:", err);
       }
@@ -29,17 +33,16 @@ export default function AdminDash({ language }) {
   useEffect(() => {
     const fetchLatestUsers = async () => {
       try {
+        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users");
+        console.log(response.data);
+        setLastUsers(response.data);
 
-        setLastUsers([
-          { id: 1, firstName: "Isra", lastName: "Shtaiwi", email: "isra@gmail.com", learningPlan: "Frontend" },
-          { id: 2, firstName: "Besan", lastName: "Ashraf", email: "besan@gmail.com", learningPlan: "Backend" },
-          { id: 3, firstName: "mohammad", lastName: "Sobuh", email: "mohammad@gmail.com", learningPlan: "Fullstack" }
-        ]);
 
       } catch (err) {
         console.error("Error fetching latest users:", err);
       }
     };
+
 
     fetchLatestUsers();
   }, []);
@@ -91,10 +94,10 @@ export default function AdminDash({ language }) {
           <tbody>
             {lastUsers.map((user) => (
               <tr key={user.id}>
-                <td>{user.firstName} {user.lastName}</td>
+                <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <span className={style.planName}>{user.learningPlan}</span>
+                  <span className={style.planName}>{user.learning_plan}</span>
                 </td>
 
               </tr>

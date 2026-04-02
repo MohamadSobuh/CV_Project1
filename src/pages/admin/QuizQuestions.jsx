@@ -10,10 +10,13 @@ import AdminInput from "../../components/ui/AdminInput";
 import AddQuestionsForm from "./AddQuestionsForm";
 import EmptyPage from "../../components/ui/EmptyPage";
 import { FaQuestionCircle } from 'react-icons/fa';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const navigate = useNavigate();
     const questionsPerPage = 4;
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
@@ -33,7 +36,26 @@ const QuizQuestions = ({ language = 'en' }) => {
     };
 
     const t = translations[language];
-   useEffect(() => {
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    navigate("/login");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/questions/", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+                setQuestions(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching questions:", error);
+            }
+        };
+        fetchQuestions();
         setQuestions([
             {
                 id: 1,

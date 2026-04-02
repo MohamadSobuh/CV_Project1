@@ -9,6 +9,7 @@ import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
 import EmptyPage from "../../components/ui/EmptyPage";
 import { signupSchema } from "../../utils/validationSchema";
+import axios from 'axios';
 export default function Users({ language }) {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,12 +24,27 @@ export default function Users({ language }) {
     });
 
     useEffect(() => {
-        setUsers([
-            { id: 1, image: Admin, firstName: "Isra", lastName: "Shtaiwi", email: "isra@gmail.com", learningPlan: "Frontend", Progress: "20%", CVnumbers: "1", joinDate: "7/11/2025" },
-            { id: 2, image: Admin, firstName: "Besan", lastName: "Ashraf", email: "besan@gmail.com", learningPlan: "Backend", Progress: "100%", CVnumbers: "4", joinDate: "7/11/2025" },
-            { id: 3, image: Admin, firstName: "mohammad", lastName: "Sobuh", email: "mohammad@gmail.com", learningPlan: "Fullstack", Progress: "80%", CVnumbers: "1", joinDate: "7/11/2025" },
-            { id: 4, image: Admin, firstName: "Shahd", lastName: "Ibrahem", email: "shahd@gmail.com", learningPlan: "Frontend", Progress: "50%", CVnumbers: "3", joinDate: "7/11/2025" }
-        ]);
+        const fetchUsers = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+
+                console.log(response.data);
+                setUsers(response.data);
+            } catch (err) {
+                console.error("Error fetching users:", err);
+            }
+        };
+        fetchUsers();
+
     }, []);
 
     const handleDelete = () => {
@@ -47,25 +63,47 @@ export default function Users({ language }) {
         prev > 1 ? prev - 1 : prev
     ));
 
-    const onSubmit = (data) => {
-        setUsers(prev => [
-            ...prev,
-            {
-                id: prev.length + 1,
-                image: Admin,
-                firstName: data.firstname,
-                lastName: data.lastname,
-                email: data.email,
-                learningPlan: "----",
-                Progress: "0%",
-                CVnumbers: "0",
-                joinDate: new Date().toLocaleDateString(),
-                role: data.role
+    const onSubmit = async (data) => {
+        const name = data.first_name + " " + data.last_name;
+        const payload = {
+            image: Admin,
+            name: name,
+            email: data.email,
+            password: data.password,
+            role: data.role
+        };
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/profiles/", payload, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+
+            if (response.status === 201 || response.status === 200) {
+                const newUser = {
+                    ...response.data,
+                    image: Admin,
+                    date_joined: response.data.date_joined ? new Date(response.data.date_joined).toLocaleDateString() : new Date().toLocaleDateString(),
+                    learning_plan: response.data.learning_plan || "----",
+                    progress: response.data.progress || "0%",
+                    cvs_count: response.data.cvs_count || 0,
+                };
+                setUsers(prev => [...prev, newUser]);
+                reset();
+                setShowModal(false);
+                alert("تم الحفظ في قاعدة البيانات بنجاح");
             }
-        ]);
+        } catch (error) {
+            console.error("تفاصيل الخطأ من السيرفر:", error.response?.data);
+            alert("فشلت الإضافة: " + JSON.stringify(error.response?.data));
+        }
+
+
         reset();
         setShowModal(false);
     };
+    console.log("Validation Errors:", errors);
 
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
@@ -114,22 +152,22 @@ export default function Users({ language }) {
                                             <div className={style.userInfo}>
                                                 <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                                                 <div className={style.userText}>
-                                                    <b>{user.firstName} {user.lastName}</b>
+                                                    <b>{user.first_name} {user.last_name}</b>
                                                     <span>{user.email}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{user.learningPlan}</td>
+                                        <td>{user.learning_plan}</td>
                                         <td>
                                             <div className={style.progressContainer}>
                                                 <div className={style.progressBar}>
-                                                    <div className={style.progressFill} style={{ width: user.Progress }}></div>
+                                                    <div className={style.progressFill} style={{ width: user.progress }}></div>
                                                 </div>
-                                                <span>{user.Progress}</span>
+                                                <span>{user.progress}</span>
                                             </div>
                                         </td>
-                                        <td className={style.center}>{user.CVnumbers}</td>
-                                        <td>{user.joinDate}</td>
+                                        <td className={style.center}>{user.cvs_count}</td>
+                                        <td>{user.date_joined}</td>
 
                                         <td className={style.center}>
                                             <FaTrash
@@ -163,21 +201,21 @@ export default function Users({ language }) {
                                     <label>{t.firstNameLabel}</label>
                                     <AdminInput
                                         type="text"
-                                        name="firstname"
+                                        name="first_name"
                                         placeholder={t.enterFirstName}
-                                        registerProps={register("firstname")}
+                                        registerProps={register("first_name")}
                                     />
-                                    <InputError error={errors.firstname} />
+                                    <InputError error={errors.first_name} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label>{t.lastNameLabel}</label>
                                     <AdminInput
                                         type="text"
-                                        name="lastname"
+                                        name="last_name"
                                         placeholder={t.enterLastName}
-                                        registerProps={register("lastname")}
+                                        registerProps={register("last_name")}
                                     />
-                                    <InputError error={errors.lastname} />
+                                    <InputError error={errors.last_name} />
                                 </div>
                             </div>
 

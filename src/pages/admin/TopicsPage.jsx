@@ -11,38 +11,146 @@ import AddTopicform from "./AddTopicform";
 import EmptyPage from "../../components/ui/EmptyPage";
 import { FaBookOpen } from 'react-icons/fa';
 import { Outlet } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
 const TopicsPage = ({ language = 'en' }) => {
     const t = translations[language];
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
 
-    const [topics, setTopics] = useState([
-        { id: 1, title: "HTML & CSS Fundamentals", desc: "Learn the basics of web structure and styling", tasks: 8, category: "Front-end Development" },
-        { id: 2, title: "JavaScript Essentials", desc: "Core concepts of JavaScript programming", tasks: 12, category: "Front-end Development" },
-        { id: 3, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 4, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 5, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 6, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 7, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 8, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 9, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 10, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 11, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-        { id: 12, title: "React Framework", desc: "Building modern web applications with React", tasks: 15, category: "Front-end Development" },
-    ]);
-    const handleAdd = (newTopic) => {
-        newTopic = { id: topics.length + 1, ...newTopic, tasks: 5 };
-        setTopics([newTopic, ...topics]);
-        setShowAddModal(false);
+    const [topics, setTopics] = useState([]);
+    useEffect(() => {
+        const fetchTopics = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+
+                console.log(response.data);
+                setTopics(response.data);
+            } catch (err) {
+                console.error("Error fetching topics:", err);
+            }
+
+
+
+        };
+        fetchTopics();
+
+    }, []);
+    const handleAdd = async (newTopic) => {
+        const token = localStorage.getItem("accessToken");
+        const payload = {
+            title: newTopic.title,
+            description: newTopic.description,
+            difficulty: newTopic.difficulty,
+            category: newTopic.category,
+            tasks: newTopic.tasks,
+            learning_plan: 5,////////////////////////////////////////????//
+        }
+
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/topics/", payload, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+
+            if (response.status === 201 || response.status === 200) {
+                const savedTopic = {
+                    ...response.data,
+                    tasks: response.data.tasks || 0,
+                    category: response.data.category || "General"
+                };
+
+                setTopics(prev => [savedTopic, ...prev]);
+                setShowAddModal(false);
+                alert("تمت إضافة الموضوع بنجاح");
+            }
+        } catch (error) {
+            console.error("Error adding topic:", error.response?.data);
+            alert("فشلت الإضافة: " + JSON.stringify(error.response?.data));
+        }
+    };
+    const handleDelete = async () => {
+        const token = localStorage.getItem("accessToken");
+
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            return;
+        }
+        try {
+            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/topics/${showDeleteModal}/`, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+
+            if (response.status === 200 || response.status === 204) {
+                setTopics(topics.filter(topic => topic.id !== showDeleteModal));
+                setShowDeleteModal(null);
+                alert("تم حذف الموضوع بنجاح");
+            }
+        } catch (error) {
+            console.error("Error deleting topic:", error.response?.data);
+            alert("فشل الحذف: " + JSON.stringify(error.response?.data));
+        }
     }
-    const handleDelete = () => {
-        setTopics(topics.filter(topic => topic.id !== showDeleteModal));
-        setShowDeleteModal(null);
-    }
-    const handleEdit = (data) => {
-        setTopics(topics.map(t => t.id === showEditModal.id ? { ...t, ...data } : t));
-        setShowEditModal(null);
+    const handleEdit = async (data) => {
+        const token = localStorage.getItem("accessToken");
+
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            return;
+        }
+        const validatedDifficulty = data.difficulty?.toLowerCase();
+
+        const payload = {
+            title: data.title,
+            desc: data.description || data.desc,
+            difficulty: validatedDifficulty,
+            tasks: data.tasks,
+            learning_plan: data.learning_plan || showEditModal.learning_plan
+        };
+
+        try {
+            const response = await axios.patch(`http://127.0.0.1:8000/api/dashboard/topics/${showEditModal.id}/`, payload, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+
+            if (response.status === 200) {
+                const updatedTopic = {
+                    ...response.data,
+                    tasks: response.data.tasks || 0,
+                    category: response.data.category || showEditModal.category
+                };
+
+                setTopics(prevTopics =>
+                    prevTopics.map(t => t.id === showEditModal.id ? updatedTopic : t)
+                );
+
+                setShowEditModal(null);
+                alert("تم تحديث الموضوع بنجاح");
+            }
+        } catch (error) {
+            console.error("Error updating topic:", error.response?.data);
+            alert("فشل التحديث: " + JSON.stringify(error.response?.data));
+        }
     };
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -75,7 +183,7 @@ const TopicsPage = ({ language = 'en' }) => {
 
                     <div className='row'>
                         {topics.map((topic) => (
-                            <div key={topic.id} className='col-lg-4 col-md-6 mb-4'>
+                            <div key={topic.id || index} className='col-lg-4 col-md-6 mb-4'>
                                 <TopicCard topic={topic}
                                     onEditClick={(topic) => setShowEditModal(topic)}
                                     onDeleteClick={(id) => setShowDeleteModal(id)}
