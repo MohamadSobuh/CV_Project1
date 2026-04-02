@@ -1,4 +1,4 @@
-import style from "./AdminSidebar.module.css";
+import style from "./SidebarAdminUser.module.css";
 import { Link } from "react-router-dom";
 import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars } from "react-icons/fa";
 import Admin from "../images/Admin.jpg";

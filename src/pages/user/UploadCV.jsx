@@ -1,35 +1,17 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import style from "./UploadCV.module.css";
-import { FaFileArrowUp } from "react-icons/fa6";
-import translations from '../locales/translations';
+import translations from '../../locales/translations';
+import FileUploadZone from "../../components/ui/FileUploadZone";
+import UploadPageError from "../../components/ui/UploadPageError";
+import { useUserFlow } from '../../context/UserFlowContext';
 
-export default function UploadCV({language}) {
+export default function UploadCV({ language }) {
     const [fields, setFields] = useState([]);
     const [selectedField, setSelectedField] = useState("");
     const [file, setFile] = useState();
     const [error, setError] = useState("");
-    const fileInputRef = useRef();
-    const [isDragging, setIsDragging] = useState(false);
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = () => {
-        setIsDragging(false);
-    };
-
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-
-        const uploadedFile = e.dataTransfer.files[0];
-        if (uploadedFile) {
-            setFile(uploadedFile);
-            setError("");
-        }
-    };
+    const { setUploadedCV, setTargetField } = useUserFlow();
 
     useEffect(() => {
         const data = [
@@ -76,6 +58,8 @@ export default function UploadCV({language}) {
         }
 
         setError("");
+        setUploadedCV(file);
+        setTargetField(selectedField);
     };
 
     const t = translations[language];
@@ -86,41 +70,12 @@ export default function UploadCV({language}) {
                 <h4>{t.uploadCVtitle}</h4>
                 <p className={style.center}>{t.uploadCVdescription}</p>
 
-                <div
-                    className={`${style.uploadSection} ${isDragging ? style.dragging : ""}`}
-                    onClick={() => fileInputRef.current.click()}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                >
-                    {!file ? (
-                        <>
-                            <FaFileArrowUp className={style.uploadIcon} />
-                            <p><b>{t.uploadText}</b></p>
-                            <p>{t.uploadHint}</p>
-                        </>
-                    ) : (
-                        <>
-                            <FaFileArrowUp className={style.uploadIcon} />
-                            <p className={style.fileName}><b>{file.name}</b></p>
-                            <p className={style.successMsg}>{t.fileSelected}</p>
-                        </>
-                    )}
-
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        style={{ display: "none" }}
-                        accept=".pdf,.doc,.docx"
-                        onChange={(e) => {
-                            const uploadedFile = e.target.files[0];
-                            if (uploadedFile) {
-                                setFile(uploadedFile);
-                                setError("");
-                            }
-                        }}
-                    />
-                </div>
+                <FileUploadZone
+                    file={file}
+                    setFile={setFile}
+                    setError={setError}
+                    t={t}
+                />
 
                 <p><b>{t.chooseField}</b></p>
                 <select value={selectedField} onChange={(e) => setSelectedField(e.target.value)} className={style.selectField}>
@@ -132,7 +87,7 @@ export default function UploadCV({language}) {
                     ))}
                 </select>
 
-                {error && <div className={style.errorMsg}>{error}</div>}
+                <UploadPageError error={error} />
 
                 <button className={style.analysisBtn} onClick={handleAnalysis}>{t.analysisBtn}</button>
             </div>

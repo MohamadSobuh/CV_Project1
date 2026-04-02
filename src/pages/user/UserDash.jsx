@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import style from "./UserDash.module.css";
-import { FaLightbulb, FaFile, FaCloudUploadAlt ,  FaAngleRight } from "react-icons/fa";
+import { FaLightbulb, FaFile, FaCloudUploadAlt, FaAngleRight } from "react-icons/fa";
 import { FaListCheck } from "react-icons/fa6";
-import translations from '../locales/translations';
+import translations from '../../locales/translations';
 
 export default function UserDash({ language }) {
     const [userInfo, setUserInfo] = useState({})
@@ -69,7 +69,10 @@ export default function UserDash({ language }) {
                 <div>
                     <h5>{t.improveSkills}</h5>
                     <p>{t.uploadDesc}</p>
-                    <button className={style.btnToUploadPage}><b>{t.uploadNow}</b></button>
+                    <Link to="/user/upload">
+                        <button className={style.btnToUploadPage}><b>{t.uploadNow}</b></button>
+
+                    </Link>
                 </div>
                 <FaCloudUploadAlt className={style.uploadIcon} />
             </div>

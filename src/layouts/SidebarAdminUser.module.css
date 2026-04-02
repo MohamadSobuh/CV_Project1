@@ -164,3 +164,10 @@
         font-size: 15px;
     }
 }
+
+ .logo {
+          width: 100px;
+          height: 120px;
+          margin: 80px auto 60px auto;
+          display: block;
+      }
