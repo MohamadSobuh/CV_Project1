@@ -4,14 +4,15 @@ import translations from '../../locales/translations';
 import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
 import { useUserFlow } from '../../context/UserFlowContext';
+import { useNavigate } from "react-router-dom";
 
 export default function UploadCV({ language }) {
     const [fields, setFields] = useState([]);
     const [selectedField, setSelectedField] = useState("");
     const [file, setFile] = useState();
     const [error, setError] = useState("");
-
-    const { setUploadedCV, setTargetField } = useUserFlow();
+    const { setHistory, setTargetField } = useUserFlow();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const data = [
@@ -58,8 +59,22 @@ export default function UploadCV({ language }) {
         }
 
         setError("");
-        setUploadedCV(file);
+        setHistory(prev => [
+            ...prev,
+            {
+                id: Date.now(),
+                fileName: file.name,
+                field: selectedField
+            }
+        ]);
         setTargetField(selectedField);
+        navigate("/user/analysisReport", {
+            state: {
+                mode: "new",
+                file,
+                selectedField
+            }
+        });
     };
 
     const t = translations[language];
@@ -81,7 +96,7 @@ export default function UploadCV({ language }) {
                 <select value={selectedField} onChange={(e) => setSelectedField(e.target.value)} className={style.selectField}>
                     <option value="" disabled hidden>{t.selectPlaceholder}</option>
                     {fields.map(field => (
-                        <option key={field.id} value={field.id}>
+                        <option key={field.id} value={field.name}>
                             {field.name}
                         </option>
                     ))}

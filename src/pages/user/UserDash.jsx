@@ -20,7 +20,7 @@ export default function UserDash({ language }) {
     const t = translations[language];
 
     return (
-        <div className={style.userDash}>
+        <div className={language === 'ar' ? style.userDashAr : style.userDash}>
             <h3><b>{t.welcome}{userInfo.firstName} {userInfo.lastName}</b></h3>
             <p>{t.quickLook}</p>
             <div className='row'>

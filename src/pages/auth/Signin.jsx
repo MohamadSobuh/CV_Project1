@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useUserFlow } from '../../context/UserFlowContext';
 
 const inputs = [
     {
@@ -29,6 +30,7 @@ const inputs = [
 ];
 
 export default function Signin() {
+    const { setUserId } = useUserFlow();
     const [serverError, setServerError] = useState("");
     const { register, handleSubmit, setError, watch, formState: { errors, isSubmitting } } = useForm(
         {
@@ -50,10 +52,12 @@ export default function Signin() {
             const response = await axios.post("http://127.0.0.1:8000/api/users/login/", data); //هون حطو ال url تبع backend
             const token = response.data.token; // التوكن الأساسي
             const userRole = response.data.user.role;
-
+            const userId = response.data.user.id;
             localStorage.setItem("accessToken", token);
 
             localStorage.setItem("userRole", userRole);
+            setUserId(userId);
+            localStorage.setItem("userId", userId);
 
             console.log("Login Successful! Token stored.");
             console.log("Success:", response.data);

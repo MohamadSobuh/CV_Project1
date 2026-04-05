@@ -242,6 +242,17 @@ const translations = {
         errorType: "Invalid file type, please upload a PDF or Word document",
         errorSize: "File size must be less than 5MB",
 
+
+        /* Analysis Report Page */
+        reportTitle: "CV Analysis Report",
+        strengths: "Strengths",
+        weaknesses: "Weaknesses",
+        readyToValidate: "Ready to validate your knowledge?",
+        TakeAdaptiveQuiz: "Take a short adaptive quiz to confirm your skill levels and personalise your learning plan.",
+        startQuiz: "Start Assessment Quiz"
+
+
+
     },
     ar: {
         /* for user sidebar */
@@ -485,6 +496,13 @@ const translations = {
         errorType: "نوع الملف غير صالح، الرجاء رفع PDF أو Word",
         errorSize: "يجب أن يكون حجم الملف أقل من 5MB",
 
+        /* Analysis Report Page */
+        reportTitle: "تقرير تحليل السيرة الذاتية",
+        strengths: "نقاط القوة",
+        weaknesses: "نقاط الضعف",
+        readyToValidate: "هل أنت مستعد لاختبار معرفتك؟",
+        TakeAdaptiveQuiz: "قم بإجراء اختبار قصير وتفاعلي لتأكيد مستوى مهاراتك وتخصيص خطة التعلم الخاصة بك.",
+        startQuiz: "ابدأ اختبار التقييم"
     }
 };
 export default translations;

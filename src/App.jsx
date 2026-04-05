@@ -25,6 +25,8 @@ import UploadCV from './pages/user/UploadCV';
 import UserDash from './pages/user/UserDash';
 
 import { UserFlowProvider } from './context/UserFlowContext';
+import AnalysisReport from './pages/user/AnalysisReport';
+import AnalysisHistory from './pages/user/AnalysisHistory';
 
 export default function App() {
   const [language, setLanguage] = useState("en");
@@ -82,7 +84,9 @@ export default function App() {
 
             <Route path='dashboard' element={<UserDash language={language} />}></Route>
             <Route path='upload' element={<UploadCV language={language} />} />
-
+            <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
+            <Route path='analysisReport' element={<AnalysisReport language={language} />} />
+            
           </Route>
 
           <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
