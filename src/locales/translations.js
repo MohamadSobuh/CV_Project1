@@ -225,6 +225,9 @@ const translations = {
         improveSkills: "Do you want to improve your skills in a specific field?",
         uploadDesc: "Upload your CV now and get instant AI-powered analysis",
         uploadNow: "Upload Now",
+        noPlanYet: "No learning plan yet",
+        uploadCVTitle: "Start by uploading your CV",
+        uploadCV: "Upload CV",
 
 
         /* Upload CV Page */
@@ -249,7 +252,9 @@ const translations = {
         weaknesses: "Weaknesses",
         readyToValidate: "Ready to validate your knowledge?",
         TakeAdaptiveQuiz: "Take a short adaptive quiz to confirm your skill levels and personalise your learning plan.",
-        startQuiz: "Start Assessment Quiz"
+        startQuiz: "Start Assessment Quiz",
+        readyToValidateF: "Your progress overview",
+        TakeAdaptiveQuizF: "View your latest assessment results and track your improvement."
 
 
 
@@ -480,6 +485,9 @@ const translations = {
         improveSkills: "هل تريد تحسين مهاراتك في مجال معين؟",
         uploadDesc: "قم برفع سيرتك الذاتية الآن واحصل على تحليل فوري مدعوم بالذكاء الاصطناعي",
         uploadNow: "ارفع الآن",
+        noPlanYet: "لا يوجد خطة تعلم بعد",
+        uploadCVTitle: "ابدأ برفع السيرة الذاتية",
+        uploadCV: "رفع السيرة الذاتية",
 
         /* Upload CV Page */
         uploadCVtitle: "ابدأ التحليل",
@@ -502,7 +510,9 @@ const translations = {
         weaknesses: "نقاط الضعف",
         readyToValidate: "هل أنت مستعد لاختبار معرفتك؟",
         TakeAdaptiveQuiz: "قم بإجراء اختبار قصير وتفاعلي لتأكيد مستوى مهاراتك وتخصيص خطة التعلم الخاصة بك.",
-        startQuiz: "ابدأ اختبار التقييم"
+        startQuiz: "ابدأ اختبار التقييم",
+        readyToValidateF: "نظرة عامة على تقدمك",
+        TakeAdaptiveQuizF: "اطّلع على نتائج التقييم الأخيرة وتابع مدى تطورك."
     }
 };
 export default translations;

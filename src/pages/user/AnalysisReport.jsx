@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import style from "./AnalysisReport.module.css";
 import translations from '../../locales/translations';
-import { Link } from 'react-router-dom'
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
@@ -96,8 +95,13 @@ export default function AnalysisReport({ language }) {
 
             <div className={style.startAssessQuiz}>
                 <FaLightbulb className={style.iconForStartAssessment} />
-                <h2>{t.readyToValidate}</h2>
-                <p>{t.TakeAdaptiveQuiz}</p>
+                {isNew ? <>
+                    <h2>{t.readyToValidate}</h2>
+                    <p>{t.TakeAdaptiveQuiz}</p>
+                </>
+                    : <> <h2>{t.readyToValidateF}</h2>
+                        <p>{t.TakeAdaptiveQuizF}</p></>}
+
                 <button className={style.startAssessment}>
                     {isNew
                         ? t.startQuiz

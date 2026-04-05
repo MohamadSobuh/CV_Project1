@@ -35,19 +35,29 @@ export default function UserDash({ language }) {
                     </div>
                 </div>
 
-                <div className={`${style.cardsUserDash} col-md-4`}>
+                <div className={`${style.cardsUserDash} col-md-4 `}>
                     <div className={style.cardHead}>
                         <h5><b>{t.progressTitle}</b></h5>
                         <FaListCheck className={style.headIcon} />
                     </div>
+
                     <div className={style.cardContent}>
-                        <p>{t.currentPlan}</p>
-                        <h5>{userInfo.learningPlan}</h5>
-                        <div className={style.progressBar}>
-                            <div className={style.progressFill} style={{ width: userInfo.Progress }}></div>
-                        </div>
-                        <p> {userInfo.Progress} {t.completed}</p>
-                        <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
+                        {userInfo.learningPlan ? (
+                            <>
+                                <p>{t.currentPlan}</p>
+                                <h5>{userInfo.learningPlan}</h5>
+                                <div className={style.progressBar}>
+                                    <div className={style.progressFill} style={{ width: userInfo.Progress }}></div>
+                                </div>
+                                <p> {userInfo.Progress} {t.completed}</p>
+                                <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
+
+                            </>) : (<>
+                                <p>{t.noPlanYet}</p>
+                           
+                            </>
+
+                        )}
                     </div>
                 </div>
 
