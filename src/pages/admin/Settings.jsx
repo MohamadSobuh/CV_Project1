@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import style from "./Settings.module.css";
-import SettingsCard from "../../components/ui/SettingsCard"; // خروج مستويين فقط
+import SettingsCard from "../../components/ui/SettingsCard";
 import { FaGlobe, FaLock, FaSave } from "react-icons/fa";
-import translations from "../../locales/translations"; // خروج مستويين فقط
+import translations from "../../locales/translations";
 const Settings = ({ language = 'en' }) => {
     const t = translations[language];
+    const navigate = useNavigate();
 
     const [siteSettings, setSiteSettings] = useState({
         siteName: "CVision",
@@ -15,6 +18,46 @@ const Settings = ({ language = 'en' }) => {
         sessionTimeout: 30,
         twoFactorAuth: false
     });
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login");
+                return;
+            }
+            try {
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/settings/", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+                console.log(response.data, "response");
+
+                if (response.data) {
+                    setSiteSettings(prev => ({
+                        ...prev,
+                        siteName: response.data.siteName || response.data.site_name || prev.siteName,
+                        defaultLanguage: response.data.defaultLanguage || response.data.default_language || prev.defaultLanguage
+                    }));
+
+                    setSecuritySettings(prev => ({
+                        ...prev,
+                        sessionTimeout: response.data.sessionTimeout || response.data.session_timeout || prev.sessionTimeout,
+                        twoFactorAuth: response.data.twoFactorAuth !== undefined ? response.data.twoFactorAuth : (response.data.two_factor_auth !== undefined ? response.data.two_factor_auth : prev.twoFactorAuth)
+                    }));
+                }
+            } catch (error) {
+                console.error("Error fetching settings:", error.response?.data || error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSettings();
+    }, [navigate]);
 
     const handleSiteChange = (e) => {
         const { name, value } = e.target;
@@ -29,22 +72,46 @@ const Settings = ({ language = 'en' }) => {
         }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login");
+            return;
+        }
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/settings/", { ...siteSettings, ...securitySettings }, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+            console.log(response.data, "response");
+        } catch (error) {
+            console.error("Error updating settings:", error.response?.data || error);
+        }
         console.log("Saving Settings:", { ...siteSettings, ...securitySettings });
-        // هنا يمكنك إضافة كود Axios لإرسال البيانات للـ Backend (Django)
         alert(language === 'ar' ? "تم حفظ الإعدادات بنجاح!" : "Settings saved successfully!");
     };
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                <div className="spinner-border" style={{ color: '#082F43' }} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={language === 'ar' ? style.settingsPageAr : style.settingsPage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <div className="row align-items-center mb-4">
                 <div className='col-md-6'>
-                    <h1 className="fw-bold" style={{ color: '#082F43' }}>{t.settingsTitle || "Settings"}</h1>
-                    <p style={{ color: '#546e7a' }}>{t.settingsSub || "Configure system settings"}</p>
+                    <h1 className="fw-bold" style={{ color: '#082F43' }}>{t.settingsTitle}</h1>
+                    <p style={{ color: '#546e7a' }}>{t.settingsSub}</p>
                 </div>
                 <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                     <button className={style.btnAdd} onClick={handleSave}>
-                        <FaSave className="me-2" /> {t.saveSettings || "Save Changes"}
+                        <FaSave className="me-2" /> {t.saveSettings}
                     </button>
                 </div>
             </div>
@@ -52,12 +119,12 @@ const Settings = ({ language = 'en' }) => {
             <div className="row g-4">
                 <div className="col-lg-6">
                     <SettingsCard
-                        title={t.generalSettings || "General Settings"}
-                        subTitle={t.generalSettingsSub || "Basic configuration options"}
+                        title={t.generalSettings}
+                        subTitle={t.generalSettingsSub}
                         icon={FaGlobe}
                     >
                         <div className="mb-3">
-                            <label className={style.label}>{t.siteNameLabel || "Site Name"}</label>
+                            <label className={style.label}>{t.siteNameLabel}</label>
                             <input
                                 type="text"
                                 name="siteName"
@@ -67,7 +134,7 @@ const Settings = ({ language = 'en' }) => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label className={style.label}>{t.defaultLanguageLabel || "Default Language"}</label>
+                            <label className={style.label}>{t.defaultLanguageLabel}</label>
                             <select
                                 name="defaultLanguage"
                                 className={`form-select ${style.inputField}`}
@@ -83,12 +150,12 @@ const Settings = ({ language = 'en' }) => {
 
                 <div className="col-lg-6">
                     <SettingsCard
-                        title={t.securitySettings || "Security"}
-                        subTitle={t.securitySettingsSub || "Security and access settings"}
+                        title={t.securitySettings}
+                        subTitle={t.securitySettingsSub}
                         icon={FaLock}
                     >
                         <div className="mb-3">
-                            <label className={style.label}>{t.sessionTimeoutLabel || "Session Timeout (minutes)"}</label>
+                            <label className={style.label}>{t.sessionTimeoutLabel}</label>
                             <input
                                 type="number"
                                 name="sessionTimeout"
@@ -101,10 +168,10 @@ const Settings = ({ language = 'en' }) => {
                         <div className={`d-flex align-items-center justify-content-between ${style.toggleSection}`}>
                             <div>
                                 <h6 className="mb-0 fw-bold" style={{ fontSize: '0.9rem', color: '#082F43' }}>
-                                    {t.twoFactorAuth || "Two-Factor Authentication"}
+                                    {t.twoFactorAuth}
                                 </h6>
                                 <small style={{ fontSize: '0.75rem', color: '#546e7a' }}>
-                                    {t.twoFactorDesc || "Require 2FA for admin accounts"}
+                                    {t.twoFactorDesc}
                                 </small>
                             </div>
                             <div className="form-check form-switch">

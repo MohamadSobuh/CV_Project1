@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { questionSchema } from "../../utils/validationSchema";
 
-const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, questionsFromDB }) => {
+const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, tasksFromDB }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(questionSchema)
     });
@@ -21,11 +21,10 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
     ];
 
     const onSubmit = (data) => {
-        // تجميع البيانات للشكل الذي يتوقعه الـ Backend (مصفوفة options)
         const formattedPayload = {
             id: formData?.id,
             type: data.questionType,
-            topic: data.associatedTask,
+            task: data.associatedTask,
             text: data.questionText,
             options: [
                 { text: data.option1, isCorrect: data.correctAnswer === "option1" },
@@ -34,6 +33,7 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                 { text: data.option4, isCorrect: data.correctAnswer === "option4" },
             ]
         };
+        console.log(formattedPayload, "formattedPayload");
 
         if (formData?.id) {
             handleEdit(formattedPayload);
@@ -46,7 +46,7 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
         if (formData?.id) {
             const initialValues = {
                 questionType: formData.type || "",
-                associatedTask: formData.topic || "",
+                associatedTask: formData.task || "",
                 questionText: formData.text || "",
                 option1: formData.options?.[0]?.text || "",
                 option2: formData.options?.[1]?.text || "",
@@ -96,8 +96,8 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                             <label className={style.labelStyle}>{t.associatedTask}</label>
                             <select {...register("associatedTask")} className={style.selectStyle} defaultValue="">
                                 <option value="" disabled hidden>{t.selectTask}</option>
-                                {questionsFromDB?.map((task) => (
-                                    <option key={task.id} value={task.name}>{task.name}</option>
+                                {tasksFromDB?.map((task) => (
+                                    <option key={task.id} value={task.task}>{task.task}</option>
                                 ))}
                             </select>
                             <InputError error={errors.associatedTask} />

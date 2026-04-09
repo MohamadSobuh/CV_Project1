@@ -75,7 +75,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                     <div style={{ marginBottom: "15px" }}>
                         <label>{t.careerFieldLabel}</label>
                         <select {...register("category")} className={style.selectStyle} defaultValue="">
-                            <option value="" disabled hidden>{t.selectField || "Select Field"}</option>
+                            <option value="" disabled hidden>{t.selectField}</option>
                             {categories.map(category => (
                                 <option key={category.id} value={category.name}>
                                     {category.name}
@@ -85,11 +85,11 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                         <InputError error={errors.category} />
                     </div>
                     <div style={{ marginBottom: "15px" }}>
-                        <label>{t.difficultyLabel || "Difficulty Level"}</label>
+                        <label>{t.difficultyLabel}</label>
                         <select {...register("difficulty")} className={style.selectStyle} defaultValue="">
-                            <option value="" disabled hidden>{t.selectDifficulty || "Select Difficulty"}</option>
+                            <option value="" disabled hidden>{t.selectDifficulty}</option>
                             {difficulties.map(difficulty => (
-                                <option key={difficulty.id} value={difficulty.name}>
+                                <option key={difficulty.id} value={difficulty.name.toLowerCase()}>
                                     {difficulty.name}
                                 </option>
                             ))}

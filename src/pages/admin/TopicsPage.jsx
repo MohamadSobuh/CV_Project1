@@ -47,14 +47,15 @@ const TopicsPage = ({ language = 'en' }) => {
 
     }, []);
     const handleAdd = async (newTopic) => {
+        console.log(newTopic);
         const token = localStorage.getItem("accessToken");
         const payload = {
             title: newTopic.title,
-            description: newTopic.description,
-            difficulty: newTopic.difficulty,
-            category: newTopic.category,
-            tasks: newTopic.tasks,
-            learning_plan: 5,////////////////////////////////////////????//
+            desc: newTopic.desc,
+            difficulty: newTopic.difficulty.toLowerCase(),
+            learning_plan: 5, ////////////////////////////////////////????//
+            tasks_count: 0,
+            order: 0
         }
 
         if (!token || token === "undefined") {
@@ -73,7 +74,7 @@ const TopicsPage = ({ language = 'en' }) => {
                 const savedTopic = {
                     ...response.data,
                     tasks: response.data.tasks || 0,
-                    category: response.data.category || "General"
+                    category: response.data.category
                 };
 
                 setTopics(prev => [savedTopic, ...prev]);
@@ -120,7 +121,7 @@ const TopicsPage = ({ language = 'en' }) => {
 
         const payload = {
             title: data.title,
-            desc: data.description || data.desc,
+            desc: data.desc,
             difficulty: validatedDifficulty,
             tasks: data.tasks,
             learning_plan: data.learning_plan || showEditModal.learning_plan
@@ -153,6 +154,7 @@ const TopicsPage = ({ language = 'en' }) => {
         }
     };
 
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(topicSchema)
     });
@@ -183,7 +185,7 @@ const TopicsPage = ({ language = 'en' }) => {
 
                     <div className='row'>
                         {topics.map((topic) => (
-                            <div key={topic.id || index} className='col-lg-4 col-md-6 mb-4'>
+                            <div key={topic.id} className='col-lg-4 col-md-6 mb-4'>
                                 <TopicCard topic={topic}
                                     onEditClick={(topic) => setShowEditModal(topic)}
                                     onDeleteClick={(id) => setShowDeleteModal(id)}

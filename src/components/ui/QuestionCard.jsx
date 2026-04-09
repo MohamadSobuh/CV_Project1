@@ -25,7 +25,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                         {question.type}
                     </span>
                     <span className={style.quizSub}>
-                        <span className="mx-1">•</span> {question.topic}
+                        <span className="mx-1">•</span> {question.topic}<span className="mx-1">•</span> {question.task}
                     </span>
                 </div>
 
@@ -43,7 +43,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                                 setShowMenu(false);
                             }}>
                                 <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} />
-                                {t?.editQuestion || "Update"}
+                                {t?.editQuestion}
                             </button>
 
                             <button className={style.menuItem} onClick={() => {
@@ -51,7 +51,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                                 setShowMenu(false);
                             }}>
                                 <FaTrash className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-danger`} />
-                                {t?.delete || "Delete"}
+                                {t?.delete}
                             </button>
                         </div>
                     )}

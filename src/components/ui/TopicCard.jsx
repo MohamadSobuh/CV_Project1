@@ -58,7 +58,7 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
             </div>
 
             <h4 className={style.topicTitle}>{topic.title}</h4>
-            <p className={style.topicDesc}>{topic.description}</p>
+            <p className={style.topicDesc}>{topic.desc}</p>
 
             <hr className={style.cardDivider} />
             <div className={style.taskCount}>

@@ -33,7 +33,7 @@ export default function AdminDash({ language }) {
   useEffect(() => {
     const fetchLatestUsers = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users");
+        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users/");
         console.log(response.data);
         setLastUsers(response.data);
 
@@ -93,11 +93,11 @@ export default function AdminDash({ language }) {
 
           <tbody>
             {lastUsers.map((user) => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
+              <tr key={user.id || user.email}>
+                <td>{user.first_name} {user.last_name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <span className={style.planName}>{user.learning_plan}</span>
+                  <span className={style.planName}>{user.learningPlan}</span>
                 </td>
 
               </tr>

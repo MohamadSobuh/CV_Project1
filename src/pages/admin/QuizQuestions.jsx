@@ -21,18 +21,52 @@ const QuizQuestions = ({ language = 'en' }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
-    const [questionsFromDB, setQuestionsFromDB] = useState([]);
+    const [tasksFromDB, setTasksFromDB] = useState([]);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(questionSchema)
     });
-    const handleEdit = (data) => {
-        setQuestions(questions.map((q) => q.id === showEditModal.id ? data : q));
-        setShowEditModal(null);
+    const handleEdit = async (data) => {
+        console.log(data, "data before update");
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login");
+                return;
+            }
+            const response = await axios.put(`http://127.0.0.1:8000/api/dashboard/questions/${showEditModal.id}/`, data, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+            console.log(response.data, "response");
+            setQuestions(prevQuestions =>
+                prevQuestions.map((q) =>
+                    q.id === showEditModal.id ? response.data : q
+                )
+            );
+            setShowEditModal(null);
+        } catch (error) {
+            console.error("Error updating question:", error.response?.data || error);
+        }
     };
-    const handleDelete = () => {
-        setQuestions(questions.filter((q) => q.id !== showDeleteModal));
-        setShowDeleteModal(null);
+    const handleDelete = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login");
+                return;
+            }
+            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/questions/${showDeleteModal}/`, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+            setQuestions(questions.filter((q) => q.id !== showDeleteModal));
+            setShowDeleteModal(null);
+        } catch (error) {
+            console.error("Error fetching questions:", error);
+        }
     };
 
     const t = translations[language];
@@ -50,112 +84,87 @@ const QuizQuestions = ({ language = 'en' }) => {
                     }
                 });
                 setQuestions(response.data);
-                console.log(response.data);
+                console.log(response.data, "questions");
             } catch (error) {
                 console.error("Error fetching questions:", error);
             }
         };
         fetchQuestions();
-        setQuestions([
-            {
-                id: 1,
-                type: "Placement Test",
-                topic: "HTML & CSS Fundamentals",
-                text: "أي خاصية CSS تستخدم لتغيير لون الخلفية؟",
-                options: [
-                    { text: "color", isCorrect: false },
-                    { text: "bg-color", isCorrect: false },
-                    { text: "background-color", isCorrect: true },
-                    { text: "backdrop", isCorrect: false }
-                ]
-            },
-            {
-                id: 2,
-                type: "Placement Test",
-                topic: "JavaScript Essentials",
-                text: "ما هي الطريقة الصحيحة لتعريف متغير لا يمكن تغيير قيمته لاحقاً؟",
-                options: [
-                    { text: "var", isCorrect: false },
-                    { text: "let", isCorrect: false },
-                    { text: "const", isCorrect: true },
-                    { text: "static", isCorrect: false }
-                ]
-            },
-            {
-                id: 3,
-                type: "Task Quiz",
-                topic: "React Framework",
-                text: "أي 'Hook' يستخدم لإدارة الحالة (State) في المكونات الوظيفية؟",
-                options: [
-                    { text: "useEffect", isCorrect: false },
-                    { text: "useContext", isCorrect: false },
-                    { text: "useState", isCorrect: true },
-                    { text: "useReducer", isCorrect: false }
-                ]
-            },
-            {
-                id: 4,
-                type: "Placement Test",
-                topic: "Web Basics",
-                text: "ماذا يرمز اختصار HTTP؟",
-                options: [
-                    { text: "HyperText Transfer Protocol", isCorrect: true },
-                    { text: "High Tech Tool Protocol", isCorrect: false },
-                    { text: "Hyperlink Text Test Process", isCorrect: false },
-                    { text: "Home Transfer Text Program", isCorrect: false }
-                ]
-            },
-            {
-                id: 5,
-                type: "Task Quiz",
-                topic: "React Framework",
-                text: "كيف نمرر البيانات من مكون أب (Parent) إلى مكون ابن (Child)؟",
-                options: [
-                    { text: "عن طريق الـ State", isCorrect: false },
-                    { text: "عن طريق الـ Props", isCorrect: true },
-                    { text: "عن طريق الـ Link", isCorrect: false },
-                    { text: "لا يمكن تمرير البيانات", isCorrect: false }
-                ]
-            },
-            {
-                id: 6,
-                type: "Task Quiz",
-                topic: "JavaScript Essentials",
-                text: "ما هي نتيجة ( '5' + 2 ) في لغة JavaScript؟",
-                options: [
-                    { text: "7", isCorrect: false },
-                    { text: "52", isCorrect: true },
-                    { text: "NaN", isCorrect: false },
-                    { text: "Error", isCorrect: false }
-                ]
-            }
-        ]);
+
     }, []);
 
     useEffect(() => {
-        setQuestionsFromDB([
-            { id: 1, name: "HTML & CSS Fundamentals" },
-            { id: 2, name: "React Framework" },
-            { id: 3, name: "JavaScript Essentials" }
-        ]);
+        const fetchTasks = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    navigate("/login");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/tasks/", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
+                setTasksFromDB(response.data);
+                console.log(response.data, "tasks");
+            } catch (err) {
+                console.error("Error fetching tasks:", err);
+            }
+        };
+        console.log(tasksFromDB);
+        fetchTasks();
     }, []);
 
-    const handleAdd = (data) => {
-        setQuestions(prev => [
-            {
-                id: prev.length + 1,
-                type: data.questionType,
-                topic: data.associatedTask,
-                text: data.questionText,
-                options: [
-                    { text: data.option1, isCorrect: data.correctAnswer === "option1" },
-                    { text: data.option2, isCorrect: data.correctAnswer === "option2" },
-                    { text: data.option3, isCorrect: data.correctAnswer === "option3" },
-                    { text: data.option4, isCorrect: data.correctAnswer === "option4" }
-                ]
-            },
-            ...prev
-        ]);
+    const handleAdd = async (data) => {
+        console.log(data);
+        console.log(data.task, "task");
+
+        const optionsArray = [
+            { text: data.options[0].text, is_Correct: data.options[0].isCorrect },
+            { text: data.options[1].text, is_Correct: data.options[1].isCorrect },
+            { text: data.options[2].text, is_Correct: data.options[2].isCorrect },
+            { text: data.options[3].text, is_Correct: data.options[3].isCorrect }
+        ];
+        console.log(optionsArray, "optionsArray");
+
+        const correctIndex = optionsArray.findIndex(opt => opt.is_Correct);
+        const correctLetter = ["A", "B", "C", "D"][correctIndex] || "A";
+
+        const getServerType = (type) => {
+            if (type === "Task Quiz") return "task_quiz";
+            if (type === "Placement Test") return "placement";
+            return type;
+        };
+
+        const payload = {
+            question_type: getServerType(data.type),
+            question_text: data.text,
+            task: data.task || null,
+            correct_answer: correctLetter,
+            order: 1,
+            options: optionsArray
+        };
+        console.log(payload, "payload");
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login");
+                return;
+            }
+            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/questions/", payload, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+
+            setQuestions(prev => [response.data, ...prev]);
+            console.log(response.data, "questions");
+        } catch (error) {
+            console.error("Server Validation Error:", error.response?.data);
+        }
+
+
         setShowAddModal(false);
     };
 
@@ -208,10 +217,10 @@ const QuizQuestions = ({ language = 'en' }) => {
             )}
 
             {showAddModal && (
-                <AddQuestionsForm t={t} handleAdd={handleAdd} questionsFromDB={questionsFromDB} onClose={() => setShowAddModal(false)} />
+                <AddQuestionsForm t={t} handleAdd={handleAdd} tasksFromDB={tasksFromDB} onClose={() => setShowAddModal(false)} />
             )}
             {showEditModal && (
-                <AddQuestionsForm t={t} formData={showEditModal} handleEdit={handleEdit} questionsFromDB={questionsFromDB} onClose={() => setShowEditModal(null)} />
+                <AddQuestionsForm t={t} formData={showEditModal} handleEdit={handleEdit} tasksFromDB={tasksFromDB} onClose={() => setShowEditModal(null)} />
             )}
             {showDeleteModal && (
                 <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)}>

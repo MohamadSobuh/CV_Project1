@@ -205,6 +205,7 @@ const translations = {
         sessionTimeoutLabel: "Session Timeout (minutes)",
         twoFactorAuth: "Two-Factor Authentication",
         twoFactorDesc: "Require 2FA for admin accounts",
+        saveSettings: "Save Changes",
         //confirm delete
         confirmDelete: "Are you sure you want to delete this {item}?",
         confirmDeleteDesc: "This action cannot be undone.",
@@ -504,6 +505,7 @@ const translations = {
         sessionTimeoutLabel: "مدة الجلسة (دقائق)",
         twoFactorAuth: "المصادقة الثنائية",
         twoFactorDesc: "المصادقة الثنائية للحسابات الإدارية",
+        saveSettings: "حفظ الإعدادات",
         //confirm delete
         confirmDelete: "هل أنت متأكد من حذف {item}؟",
         confirmDeleteDesc: "لا يمكن التراجع عن هذا الإجراء.",

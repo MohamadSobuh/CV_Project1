@@ -14,7 +14,7 @@ export const loginSchema = yup.object({
 });
 
 export const signupSchemaForTasks = yup.object({
-    taskName: yup.string().required("Task Name is required"),
+    task: yup.string().required("Task Name is required"),
     topic: yup.string().required("Topic is required"),
     content: yup.string().required("Content is required"),
     videoUrl: yup.string().url("Must be a valid URL").notRequired(),

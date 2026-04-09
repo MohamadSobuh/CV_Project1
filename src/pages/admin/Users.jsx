@@ -31,7 +31,7 @@ export default function Users({ language }) {
                     alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
                     return;
                 }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users", {
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/profiles/", {
                     headers: {
                         Authorization: `Token ${token}`
                     }
@@ -47,9 +47,25 @@ export default function Users({ language }) {
 
     }, []);
 
-    const handleDelete = () => {
-        setUsers(users.filter(user => user.id !== showDeleteModal));
-        setShowDeleteModal(null);
+    const handleDelete = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            return;
+        }
+        try {
+            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/profiles/${showDeleteModal}/`, {
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            });
+            if (response.status === 200 || response.status === 204) {
+                setUsers(users.filter(user => user.id !== showDeleteModal));
+                setShowDeleteModal(null);
+            }
+        } catch (err) {
+            console.error("Error deleting user:", err);
+        }
     };
     const totalPages = Math.ceil(users.length / usersPerPage);
     const indexOfLastUser = currentPage * usersPerPage;
@@ -70,7 +86,11 @@ export default function Users({ language }) {
             name: name,
             email: data.email,
             password: data.password,
-            role: data.role
+            role: data.role,
+            joinDate: new Date().toISOString().split('T')[0],
+            learningPlan: "----",
+            Progress: "0%",
+            CVnumbers: 0,
         };
         const token = localStorage.getItem("accessToken");
         try {
@@ -84,10 +104,9 @@ export default function Users({ language }) {
                 const newUser = {
                     ...response.data,
                     image: Admin,
-                    date_joined: response.data.date_joined ? new Date(response.data.date_joined).toLocaleDateString() : new Date().toLocaleDateString(),
-                    learning_plan: response.data.learning_plan || "----",
-                    progress: response.data.progress || "0%",
-                    cvs_count: response.data.cvs_count || 0,
+                    learningPlan: response.data.learningPlan || "----",
+                    Progress: response.data.Progress || "0%",
+                    CVnumbers: response.data.CVnumbers || 0,
                 };
                 setUsers(prev => [...prev, newUser]);
                 reset();
@@ -157,17 +176,17 @@ export default function Users({ language }) {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{user.learning_plan}</td>
+                                        <td>{user.learningPlan}</td>
                                         <td>
                                             <div className={style.progressContainer}>
                                                 <div className={style.progressBar}>
-                                                    <div className={style.progressFill} style={{ width: user.progress }}></div>
+                                                    <div className={style.progressFill} style={{ width: user.Progress }}></div>
                                                 </div>
-                                                <span>{user.progress}</span>
+                                                <span>{user.Progress}</span>
                                             </div>
                                         </td>
-                                        <td className={style.center}>{user.cvs_count}</td>
-                                        <td>{user.date_joined}</td>
+                                        <td className={style.center}>{user.CVnumbers}</td>
+                                        <td>{user.joinDate}</td>
 
                                         <td className={style.center}>
                                             <FaTrash
