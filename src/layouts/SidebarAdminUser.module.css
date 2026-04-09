@@ -1,21 +1,24 @@
 .nav {
+    position: fixed;
+    top: 15px;
+    bottom:15px;
+    left: 0px;
+     transform: translateX(15px);
+    width: 240px;
+    padding: 20px;
+    box-sizing: border-box; 
     background-color: #082F43;
+    border-radius: 25px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 240px;
-    overflow-y: auto;
-    transition: transform 0.3s ease;
+    overflow: hidden; 
     z-index: 1001;
 }
 
 .nav-rtl {
     right: 0;
     left: auto;
+     transform: translateX(-15px);
 }
 
 
@@ -112,6 +115,12 @@
     color: #CDF6F9;
 }
 
+@media (max-width: 2000px) {
+    .nav {
+        width: 250px;
+    }
+}
+
 @media (max-height: 800px) {
     .adimnImg {
         width: 100px;
@@ -168,6 +177,6 @@
  .logo {
           width: 80px;
           height: 100px;
-          margin: 80px auto 60px auto;
+          margin: 60px auto 40px auto;
           display: block;
       }

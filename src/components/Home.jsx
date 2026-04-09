@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
+import lightLogo from "../images/lightLogo.png";
 import darklogo from "../images/darklogo.png";
-import heroimg from "../images/heroimg.jpg";
 import translations from "../locales/translations";
 import style from "./Home.module.css";
-import { FaRegFileAlt, FaBrain, FaList, FaCloudUploadAlt, FaSearch, FaClipboardList, FaChartLine, FaArrowRight, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaCloudUploadAlt, FaSearch, FaClipboardList, FaChartLine, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { useState } from 'react';
-
+import Hero from "./Hero";
+import WhyCVison from './WhyCVison';
+import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function Home({ language, setLanguage }) {
     const [email, setEmail] = useState("");
@@ -13,74 +15,59 @@ export default function Home({ language, setLanguage }) {
         e.preventDefault();
         alert("Thank you for subscribing!");
     };
-
+    const [menuOpen, setMenuOpen] = useState(false);
     const t = translations[language];
 
     return (
         <div id="home" className={style.bg}>
-            <header className={style.head}>
-                <Link>
-                    <img src={darklogo} className={style.logo} alt="logo" />
-                </Link>
+            <header className={style.head} >
+                <img src={darklogo} className={style.logo} alt="logo" />
+
+                <nav className={style.navLinks}>
+                    <a href="#why">{t.navFeatures}</a>
+                    <a href="#how1">{t.navHow}</a>
+                    <a href="#subscribe">{t.navSubscribe}</a>
+                </nav>
+
                 <div className={style.headright}>
-                    <select name='lang' className={`${style.selectLang}`} value={language} onChange={(e) => setLanguage(e.target.value)}>
-                        <option value="en">ENG</option>
+                    <select
+                        name="lang"
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className={style.selectLang}
+                    >
+                        <option value="en">EN</option>
                         <option value="ar">AR</option>
                     </select>
 
-                    <Link to={"/login"}>
-                        <button className={style.btn1}><b>{t.login}<FaArrowRight /></b></button>
+                    <Link to="/login" className={style.btnPrimary} state={{ language }}>
+                        {t.login}
+                    </Link>
+
+                    <div className={style.menuIcon} onClick={() => setMenuOpen(!menuOpen)} style={{ color: "#082F43" }}>
+                        {menuOpen ? <FaTimes/> : <FaBars />}
+                    </div>
+                </div>
+
+                <div className={`${style.mobileMenu} ${menuOpen ? style.active : ""}`}>
+                    <a href="#why" onClick={() => setMenuOpen(false)}>{t.navFeatures}</a>
+                    <a href="#how1" onClick={() => setMenuOpen(false)}>{t.navHow}</a>
+                    <a href="#subscribe" onClick={() => setMenuOpen(false)}>{t.navSubscribe}</a>
+
+                    <Link to="/login" onClick={() => setMenuOpen(false)} state={{ language }}>
+                        {t.login}
                     </Link>
                 </div>
             </header>
 
-            <div className={style.hero}>
-                <div >
-                    <h1>{t.heroTitle1}<br />{t.heroTitle2}</h1>
-                    <h6>
-                        {t.heroDesc}
-                    </h6>
-                    <Link to={"/login"}>
-                        <button className={style.getStarted}><b>{t.getStarted}</b></button>
-                    </Link>
-                </div>
+            <Hero language={language} />
+            <div id="why">
+                <WhyCVison language={language} />
 
-                <div className={style.imageContent}>
-                    <div className={style.imgBox}><img src={heroimg} /></div>
-                </div>
             </div>
 
-            <section id="why" className={style.section}>
-                <h1>{t.whyTitle}</h1>
-                <div className={`${style.r}  row `}>
-                    <div className={`${style.card}  col-md-3 `}>
-                        <div className={style.icon}>
-                            <FaRegFileAlt className={style.iconInside} />
-                        </div>
-                        <h5>{t.card1Title}</h5>
-                        <p>{t.card1Desc}</p>
-                    </div>
-
-                    <div className={`${style.card}  col-md-3 `} >
-                        <div className={style.icon}>
-                            <FaBrain className={style.iconInside} />
-                        </div>
-                        <h5>{t.card2Title}</h5>
-                        <p>{t.card2Desc}</p>
-                    </div>
-
-                    <div className={`${style.card}  col-md-3 `} >
-                        <div className={style.icon}>
-                            <FaList className={style.iconInside} />
-                        </div>
-                        <h5>{t.card3Title}</h5>
-                        <p>{t.card3Desc}</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="how" className={style.howWorks}>
-                <h1 className={style.section2}>{t.howWorks}</h1>
+            <section id="how1" className={style.howWorks}>
+                <h1 className={style.section2}><b>{t.howWorks}</b></h1>
                 <div className={style.allsteps}>
                     <div className={`${style.step} row`} >
                         <div className='col-md-4 me-md-5'>

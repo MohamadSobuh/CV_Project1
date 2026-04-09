@@ -5,6 +5,7 @@
     align-items: center;
     height: 80vh;
     color: #1A83A8;
+    text-align: center;
 }
 
 .emptyPage div {
@@ -26,6 +27,10 @@
     background-color: #fce1e6;
     color: #F1416F;
     transform: scale(1.2);
+}
+
+.emptyPage p {
+  white-space: pre-line;
 }
 
 @keyframes float {

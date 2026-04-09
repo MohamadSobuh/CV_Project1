@@ -14,7 +14,6 @@ export default function Sidebar({ language }) {
   return (
 
     <>
-
       <button
         className={`${style.menuBtn} ${language === 'ar' ? style['menuBtn-rtl'] : ''}`}
         onClick={() => setOpen(!open)}
@@ -27,7 +26,7 @@ export default function Sidebar({ language }) {
         <Link className={`${style.links}`} to="/user/dashboard"> <FaThLarge className="m-3" />{t.dash}</Link>
         <Link className={`${style.links}`} to="/user/upload"> <FaUpload className="m-3" />{t.upload}</Link>
         <Link className={`${style.links}`} to="/user/analysisHistory"> <FaHistory className="m-3" />{t.history}</Link>
-        <Link className={`${style.links}`} to="/plan"> <FaClipboardList className="m-3" />{t.plan}</Link>
+        <Link className={`${style.links}`} to="/user/plan"> <FaClipboardList className="m-3" />{t.plan}</Link>
         <div className={style.bottomLinks}>
           <div className={style.bottomLinks}>
             <Link className={`${style.links} ${style.logout}`} to="/">

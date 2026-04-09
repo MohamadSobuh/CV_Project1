@@ -1,5 +1,13 @@
 const translations = {
     en: {
+        /* Sign Page */
+        welcomeLogIn: "Welcome back",
+        loginMessge: "Login to your account to continue",
+        password: "Password",
+        noAccount: "Don't have an account?",
+        signupTitle: "Sign up into CVision!",
+        haveAccount: "Already have an account?",
+
         /* for user sidebar */
         upload: "Upload CV",
         history: "Analysis History",
@@ -27,9 +35,13 @@ const translations = {
         description: "You can edit your profile settings here",
 
         /* for Home page */
-        heroTitle1: "Empower Your Skills",
-        heroTitle2: "Elevate Your Career",
-        heroDesc: "Understand your abilities accurately and develop them continuously with an AI-powered smart system.",
+        navFeatures: "CV Features",
+        navHow: "How It Works",
+        navSubscribe: "Stay Updated",
+        desWeb: "AI-Powered Resume Analysis",
+        heroTitle1: "Analyze your resume and",
+        heroTitle2: "develop it intelligently",
+        heroDesc: "Get an instant, intelligent analysis of your resume with a personalized learning plan that helps you stand out and land your ideal opportunity.",
         login: "Log in",
         getStarted: "Get Started",
         whyTitle: "Why CVision Is Your Smart Career Assistant?",
@@ -254,12 +266,47 @@ const translations = {
         TakeAdaptiveQuiz: "Take a short adaptive quiz to confirm your skill levels and personalise your learning plan.",
         startQuiz: "Start Assessment Quiz",
         readyToValidateF: "Your progress overview",
-        TakeAdaptiveQuizF: "View your latest assessment results and track your improvement."
+        TakeAdaptiveQuizF: "View your latest assessment results and track your improvement.",
 
+        /* History Page*/
+        journey: "YOUR JOURNEY",
+        analysisHistoryTitle: "Analysis History",
+        analysisHistoryDesc: "All your previous CV analyses in one place.",
+        viewFullAnalysis: "View Full Analysis",
+        emptyHistoryTitle: "No Analysis Yet",
+        emptyHistoryMessage: "You haven't uploaded or analyzed any CVs yet. Start your journey now!",
+
+        /* Quiz Result Page */
+        quizResultTitle: "Your Learning Plan is Ready!",
+        descriptionQuizResult: "Based on your CV analysis and quiz performance, we've created a personalised learning plan to help you improve your weak skills.",
+        viewPlan: "View My Learning Plan →",
+
+        /* Quiz Page */
+        titleQuizPage: "Assessment Quiz",
+        questionsCard: "Questions",
+        answered: "answered",
+        current: "Current",
+        answeredLabel: "Answered",
+        notAnswered: "Not answered",
+        finish: "Finish & Submit",
+
+        /* Topics Page */
+        planEmptyTitle: "Start Your Personalized Plan",
+        planEmptyMessage: "To create your plan, please upload your CV, complete the analysis,  and take the initial quiz.\n We’ll identify your strengths and weaknesses to build the perfect learning path for you.",
 
 
     },
     ar: {
+
+        /* Sign Page */
+        welcomeLogIn: "مرحباً بعودتك",
+        loginMessge: "سجل الدخول إلى حسابك للمتابعة",
+        password: "كلمة المرور",
+        noAccount: "ليس لديك حساب؟",
+        signupTitle: "إنشاء حساب في CVision!",
+        haveAccount: "لديك حساب بالفعل؟",
+
+
         /* for user sidebar */
         upload: "رفع السيرة الذاتية",
         history: "سجل التحليل",
@@ -287,9 +334,13 @@ const translations = {
         description: "يمكنك تعديل إعدادات حسابك من هنا",
 
         /* for Home page */
-        heroTitle1: "طوّر مهاراتك",
-        heroTitle2: "وارفع مستقبلك المهني",
-        heroDesc: "افهم قدراتك بدقة وطورها باستمرار باستخدام نظام ذكي يعتمد على الذكاء الاصطناعي.",
+        navFeatures: "مميزات CVision",
+        navHow: "كيف يعمل",
+        navSubscribe: "ابقَ على اطلاع",
+        desWeb: "تحليل السيرة الذاتية المدعوم بالذكاء الاصطناعي",
+        heroTitle1: "حلّل سيرتك الذاتية ",
+        heroTitle2: " وطوّرها بذكاء",
+        heroDesc: "احصل على تحليل فوري وذكي لسيرتك الذاتية مع خطة تعليمية مخصّصة \n تُساعدك على التميّز وتحقيق فرصتك المثالية",
         login: "تسجيل الدخول",
         getStarted: "ابدأ الآن",
         whyTitle: "لماذا CVision هو مساعدك الذكي لمسارك المهني؟",
@@ -512,7 +563,34 @@ const translations = {
         TakeAdaptiveQuiz: "قم بإجراء اختبار قصير وتفاعلي لتأكيد مستوى مهاراتك وتخصيص خطة التعلم الخاصة بك.",
         startQuiz: "ابدأ اختبار التقييم",
         readyToValidateF: "نظرة عامة على تقدمك",
-        TakeAdaptiveQuizF: "اطّلع على نتائج التقييم الأخيرة وتابع مدى تطورك."
+        TakeAdaptiveQuizF: "اطّلع على نتائج التقييم الأخيرة وتابع مدى تطورك.",
+
+        /* History Page*/
+        journey: "رحلتك",
+        analysisHistoryTitle: "سجل التحليلات",
+        analysisHistoryDesc: "جميع تحليلات السيرة الذاتية السابقة في مكان واحد.",
+        viewFullAnalysis: "عرض التحليل الكامل",
+        emptyHistoryTitle: "لا يوجد تحليلات بعد",
+        emptyHistoryMessage: "لم تقم برفع أو تحليل أي سيرة ذاتية بعد. ابدأ رحلتك الآن!",
+
+        /* Quiz Result Page */
+        quizResultTitle: "خطة التعلم الخاصة بك جاهزة!",
+        descriptionQuizResult: "بناءً على تحليل السيرة الذاتية وأداءك في الاختبار، قمنا بإنشاء خطة تعلم مخصصة لمساعدتك على تحسين مهاراتك الضعيفة.",
+        viewPlan: "عرض خطة التعلم الخاصة بي →",
+
+        /* Quiz Page */
+        titleQuizPage: "اختبار التقييم",
+        questionsCard: "الأسئلة",
+        answered: "مجاب",
+        current: "الحالي",
+        answeredLabel: "تمت الإجابة",
+        notAnswered: "لم تتم الإجابة",
+        finish: "إنهاء وإرسال",
+
+        /* Topics Page */
+        planEmptyTitle: "ابدأ خطتك الشخصية",
+        planEmptyMessage: "لإنشاء خطتك، قم برفع السيرة الذاتية، إتمام التحليل، ثم اجتياز الاختبار الأولي. \n سنحدد نقاط قوتك وضعفك لنبني لك خطة تعلم مناسبة.",
+
     }
 };
 export default translations;

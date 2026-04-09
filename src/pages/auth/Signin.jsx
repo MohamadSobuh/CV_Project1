@@ -1,5 +1,4 @@
-import logo from "../../images/logo.png";
-import sign from "../../images/sign.png";
+import darklogo from "../../images/darklogo.png";
 import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -11,25 +10,32 @@ import { loginSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUserFlow } from '../../context/UserFlowContext';
+import { useLocation } from "react-router-dom";
+import translations from "../../locales/translations";
 
-const inputs = [
-    {
-        name: "email",
-        type: "email",
-        label: "Enter your Email",
-        id: "emailInput",
-        col: "col-md-12"
-    },
-    {
-        name: "password",
-        type: "password",
-        label: "Enter your Password",
-        id: "passwordInput",
-        col: "col-md-12"
-    }
-];
 
 export default function Signin() {
+    const location = useLocation();
+    const language= location.state?.language || "en";
+    const t = translations[language];
+
+    const inputs = [
+        {
+            name: "email",
+            type: "email",
+            label: t.email,
+            id: "emailInput",
+            col: "col-md-12"
+        },
+        {
+            name: "password",
+            type: "password",
+            label: t.password,
+            id: "passwordInput",
+            col: "col-md-12"
+        }
+    ];
+
     const { setUserId } = useUserFlow();
     const [serverError, setServerError] = useState("");
     const { register, handleSubmit, setError, watch, formState: { errors, isSubmitting } } = useForm(
@@ -83,13 +89,18 @@ export default function Signin() {
     };
 
     return (
-        <div className={style.bg}>
+        <div className={style.bg} >
+            <div className={style.glowTopRight}></div>
+            <div className={style.glowBottomLeft}></div>
+
+            <div className={style.bgGrid} />
+
             <div className={style.left}>
                 <Link to="/" >
-                    <img src={logo} alt="logo" className={`${style.logo}`} />
+                    <img src={darklogo} alt="logo" className={`${style.logo}`} />
                 </Link>
-                <h3 >Welcome back !</h3>
-                <br />
+                <h3>                <b> {t.welcomeLogIn}</b>                </h3>
+                <p>{t.loginMessge}</p>
                 <form onSubmit={handleSubmit(submitForm)}>
                     {inputs.map((input) => (
                         <div key={input.id} className={`form-floating mb-3 ${input.name === 'email' ? 'mt-3' : ''}`}>
@@ -104,19 +115,15 @@ export default function Signin() {
 
                         </div>
                     ))}
-                    <input type="checkbox" id="remember" {...register("remember")} /> <label htmlFor="remember">Remember me</label>
 
-                    <br />
-                    <button type="submit" className={`${style.btn}`} disabled={isSubmitting}><b>Login</b></button>
+                    <button type="submit" className={`${style.btn}`} disabled={isSubmitting}><b>{t.login} </b></button>
                 </form>
                 <br />
-                <p> Don't have an account?<Link to="/signup" className={style.s}> <b>Sign Up</b> </Link> </p>
+                <p> {t.noAccount}<Link to="/signup" className={style.s} state={{ language }}> <b>{t.signup}</b> </Link> </p>
 
             </div>
 
-            <div className={style.right}>
-                <img src={sign} alt="Sign" />
-            </div>
+
         </div>
     )
 }

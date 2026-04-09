@@ -1,15 +1,20 @@
+
 .userDash {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 40px 20px 280px;
+    padding: 20px 40px 20px 300px;
 
 }
 
 .userDashAr {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 280px 20px 40px;
+    padding: 20px 300px 20px 40px;
 
+}
+
+.dashHeader { 
+    margin-bottom: 40px;
 }
 
 .cardsUserDash {
@@ -47,7 +52,7 @@
 
 .progressFill {
     height: 100%;
-    background-color: #1A83A8;
+    background: #F1416F;
     border-radius: 10px;
     transition: width 0.3s ease;
 }

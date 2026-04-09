@@ -8,6 +8,7 @@ const Input = ({ type, name, id, register, onChange, ...rest }) => {
         }
     };
     return (
+
         <input
             type={type}
             className="form-control"
@@ -19,7 +20,7 @@ const Input = ({ type, name, id, register, onChange, ...rest }) => {
             {...rest}
             style={{
                 borderRadius: "15px",
-                boxShadow: "5px 5px 3px #082F43"
+
             }}
         />
     );

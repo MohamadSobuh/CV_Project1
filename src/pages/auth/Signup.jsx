@@ -1,5 +1,4 @@
-import logo from "../../images/logo.png";
-import sign from "../../images/sign.png";
+import darklogo from "../../images/darklogo.png";
 import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,35 +9,39 @@ import Input from "../../components/ui/Input";
 import InputError from "../../components/ui/InputError";
 import { signupSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+import translations from "../../locales/translations";
 export default function Signup() {
+    const location = useLocation();
+    const language = location.state?.language || "en";
+    const t = translations[language];
 
     const inputs = [
         {
             name: "first_name",
             type: "text",
-            label: "First name",
+            label: t.firstNameLabel,
             id: "firstname",
             col: "col-md-6"
         },
         {
             name: "last_name",
             type: "text",
-            label: "Last name",
+            label: t.lastNameLabel,
             id: "lastname",
             col: "col-md-6"
         },
         {
             name: "email",
             type: "email",
-            label: "Enter your Email",
+            label:t.email,
             id: "emailInput",
             col: "col-md-12"
         },
         {
             name: "password",
             type: "password",
-            label: "Enter your Password",
+            label: t.password,
             id: "passwordInput",
             col: "col-md-12"
         }
@@ -97,47 +100,54 @@ export default function Signup() {
         }
     }
 
-
-
-
     return (
         <div className={style.bg}>
+            <div className={style.glowTopRight}></div>
+            <div className={style.glowBottomLeft}></div>
+            <div className={style.bgGrid} />
+
             <div className={style.left}>
                 <Link to="/" >
-                    <img src={logo} alt="logo" className={`${style.logo}`} />
+                    <img src={darklogo} alt="logo" className={`${style.logo}`} />
                 </Link>
-                <h3 >Sign up into CVision !</h3>
+                <h3 ><b>{t.signupTitle}</b></h3>
                 <br />
-                <form onSubmit={handleSubmit(submitForm)}>
+                <form onSubmit={handleSubmit(submitForm)} >
 
                     <div className="row">
-
-                        {inputs.map((input) => (
-                            <div key={input.id} className={`form-floating mb-3 mt-3 ${input.col}`} >
-
-
-                                <Input  {...input} register={register}
-                                    onChange={input.name === 'password' ? handlePasswordStrength : undefined} />
+                        {inputs.slice(0, 2).map((input) => (
+                            <div key={input.id} className={`form-floating mb-3 ${input.col}`}>
+                                <Input
+                                    {...input}
+                                    register={register}
+                                    onChange={input.name === 'password' ? handlePasswordStrength : undefined}
+                                />
                                 <label htmlFor={input.id}>{input.label}</label>
                                 {errors[input.name] && <InputError error={errors[input.name]} />}
-
-
-
                             </div>
                         ))}
 
                     </div>
 
-                    <button type="submit" className={`${style.btn}`}><b>Sign Up</b></button>
+                    {inputs.slice(2).map((input) => (
+                        <div key={input.id} className={`form-floating mb-3 mt-3 ${input.col}`}>
+                            <Input
+                                {...input}
+                                register={register}
+                                onChange={input.name === 'password' ? handlePasswordStrength : undefined}
+                            />
+                            <label htmlFor={input.id}>{input.label}</label>
+                            {errors[input.name] && <InputError error={errors[input.name]} />}
+                        </div>
+                    ))}
+
+                    <button type="submit" className={`${style.btn}`}> <b>{t.signup}</b>  </button>
                 </form>
                 <br />
-                <p> Already have an account?<Link to="/login" className={style.s}> <b>Log in</b> </Link>
+                <p> {t.haveAccount}<Link to="/login" className={style.s}> <b>{t.login}</b> </Link>
                 </p>
             </div>
 
-            <div className={style.right}>
-                <img src={sign} alt="Sign" />
-            </div>
         </div>
     )
 }

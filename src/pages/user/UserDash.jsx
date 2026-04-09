@@ -7,6 +7,8 @@ import translations from '../../locales/translations';
 
 export default function UserDash({ language }) {
     const [userInfo, setUserInfo] = useState({})
+    const [animatedProgress, setAnimatedProgress] = useState(0);
+
     useEffect(() => {
         setUserInfo({
             firstName: "Isra",
@@ -15,14 +17,29 @@ export default function UserDash({ language }) {
             Progress: "20%",
             TotalCVs: "1"
         });
+        let current = 0;
+        const target = 20;
+
+        const interval = setInterval(() => {
+            current += 1;
+            setAnimatedProgress(current);
+
+            if (current >= target) {
+                clearInterval(interval);
+            }
+        }, 50); 
+
     }, []);
 
     const t = translations[language];
 
     return (
         <div className={language === 'ar' ? style.userDashAr : style.userDash}>
-            <h3><b>{t.welcome}{userInfo.firstName} {userInfo.lastName}</b></h3>
-            <p>{t.quickLook}</p>
+            <div className={style.dashHeader}>
+                <h1><b>{t.welcome}{userInfo.firstName} {userInfo.lastName}</b></h1>
+                <p>{t.quickLook}</p>
+            </div>
+
             <div className='row'>
                 <div className={`${style.cardsUserDash} col-md-3`}>
                     <div className={style.cardHead}>
@@ -47,14 +64,14 @@ export default function UserDash({ language }) {
                                 <p>{t.currentPlan}</p>
                                 <h5>{userInfo.learningPlan}</h5>
                                 <div className={style.progressBar}>
-                                    <div className={style.progressFill} style={{ width: userInfo.Progress }}></div>
+                                    <div className={style.progressFill} style={{ width:  `${animatedProgress}%` }}></div>
                                 </div>
                                 <p> {userInfo.Progress} {t.completed}</p>
                                 <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
 
                             </>) : (<>
                                 <p>{t.noPlanYet}</p>
-                           
+
                             </>
 
                         )}

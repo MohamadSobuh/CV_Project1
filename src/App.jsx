@@ -27,6 +27,10 @@ import UserDash from './pages/user/UserDash';
 import { UserFlowProvider } from './context/UserFlowContext';
 import AnalysisReport from './pages/user/AnalysisReport';
 import AnalysisHistory from './pages/user/AnalysisHistory';
+import TaskAssQuiz from './pages/user/TaskAssQuiz';
+import QuizResult from './pages/user/QuizResult';
+import Topics from './pages/user/Topics';
+import Hero from './components/Hero';
 
 export default function App() {
   const [language, setLanguage] = useState("en");
@@ -86,11 +90,14 @@ export default function App() {
             <Route path='upload' element={<UploadCV language={language} />} />
             <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
             <Route path='analysisReport' element={<AnalysisReport language={language} />} />
-            
+            <Route path='quiz' element={<TaskAssQuiz language={language} />} />
+            <Route path='quizResult' element={<QuizResult language={language} />} />
+            <Route path='plan' element={<Topics language={language} />} />
+
+
           </Route>
 
           <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
-
             <Route path='dashboard' element={<AdminDash language={language} />} /> {/* ستفتح عند طلب /admin مباشرة */}
             <Route path='users' element={<Users language={language} />} />
             <Route path='tasks' element={<Tasks language={language} />} />

@@ -7,13 +7,15 @@ export const UserFlowProvider = ({ children }) => {
   const [history, setHistory] = useState([]);
   const [targetField, setTargetField] = useState('');
   const [analysisResult, setAnalysisResult] = useState({DesCV : "", strengths: [{ skill: "", description: "" }], weaknesses: [{ skill: "", description: "" }], score: 0 });
+  const [placementScore, setPlacementScore] = useState(0);
 
   return (
     <UserFlowContext.Provider value={{
       userId,setUserId,
       history, setHistory,
       targetField, setTargetField,
-      analysisResult,setAnalysisResult
+      analysisResult,setAnalysisResult,
+      placementScore,setPlacementScore
     }}>
       {children}
     </UserFlowContext.Provider>

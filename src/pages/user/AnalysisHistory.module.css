@@ -1,32 +1,37 @@
 .historyEn {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 40px 20px 280px;
+    padding: 20px 40px 20px 300px;
 }
 
 .historyAr {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 280px 20px 40px;
+    padding: 20px 300px 20px 40px;
 }
 
 .journey {
-    background-color: #1A83A8;
-    color: #E6F7F9;
+    background-color: #bedde8;
+    color: #1A83A8;
     border-radius: 25px;
     padding: 5px 10px;
     display: inline-block;
 }
 
+.historyHead {
+  margin-bottom: 50px;
+}
 .historyCard {
   background-color: white;
-  padding: 15px 20px;
+  padding: 15px 10px ;
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   margin-bottom: 20px;
+  width: 48%;
+
 }
 
 .historyCard:hover {
@@ -79,10 +84,30 @@
   background-color: #14607a;
 }
 
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+
 @media (max-width: 767px) {
     .historyEn,
     .historyAr {
         padding: 20px;
+    }
+
+      .historyCard {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 1225px)  {
+
+      .historyCard {
+        width: 100%;
     }
 
 }

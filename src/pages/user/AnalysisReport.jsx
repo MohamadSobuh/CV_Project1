@@ -4,13 +4,14 @@ import translations from '../../locales/translations';
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AnalysisReport({ language }) {
-    const { analysisResult, setAnalysisResult } = useUserFlow();
-    const { state } = useLocation();
+const { analysisResult, setAnalysisResult, targetField, placementScore } = useUserFlow();    const { state } = useLocation();
     const isNew = state?.mode === "new";
     const score = state?.score;
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const result = {
@@ -46,14 +47,16 @@ export default function AnalysisReport({ language }) {
 
     return (
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
-            <h1 className={style.reportTitle}><b>{t.reportTitle}</b></h1>
+
             <div className={`row ${style.headReport}`}>
+                <h1 className={style.reportTitle}><b>{t.reportTitle}</b></h1>
+                <p className={style.feildStyle}>Feild : <b>{targetField || "Not specified"}</b></p>
                 <div className='col-md-3'>
                     <CircularScore score={analysisResult.score} />
                 </div>
                 <div className={`col-md-8 ${style.headReportText}`}>
-                    <h2 style={{ "--score-color": getColor(analysisResult.score) }} className={style.ScoreText}>{getScoreDes(analysisResult.score)}</h2>
-                    <p>{analysisResult.DesCV}</p>
+                    <h2 style={{ "--score-color": getColor(analysisResult.score) }} className={language === 'ar' ? style.ScoreTextEn : style.ScoreText}>{getScoreDes(analysisResult.score)}</h2>
+                    <p className={language === 'ar' ? style.decCVEn : style.decCV}>{analysisResult.DesCV}</p>
                 </div>
             </div>
 
@@ -102,10 +105,15 @@ export default function AnalysisReport({ language }) {
                     : <> <h2>{t.readyToValidateF}</h2>
                         <p>{t.TakeAdaptiveQuizF}</p></>}
 
-                <button className={style.startAssessment}>
+                <button className={style.startAssessment} onClick={() => isNew && navigate('/user/quiz', {
+                    state: {
+                        weaknesses: analysisResult.weaknesses
+                    }
+                })} disabled={!isNew} >
+
                     {isNew
                         ? t.startQuiz
-                        : `Your Quiz Score: ${score}%`}
+                        : `Your Quiz Score: ${placementScore || 0}%`}
                 </button>
             </div>
         </div>
