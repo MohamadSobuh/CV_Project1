@@ -68,7 +68,7 @@ export default function App() {
           <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
             <Route path='profile' element={
               <ProfileContainer>
-                <UserProfile user={user} t={t} />
+                <UserProfile user={user} t={t} language={language}/>
               </ProfileContainer>
             } />
 

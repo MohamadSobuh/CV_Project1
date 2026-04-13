@@ -1,6 +1,6 @@
 import style from "./SidebarAdminUser.module.css";
 import { Link } from "react-router-dom";
-import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars } from "react-icons/fa";
+import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars , FaTimes} from "react-icons/fa";
 import Admin from "../images/Admin.jpg";
 import translations from "../locales/translations";
 import { useState, useEffect } from 'react';
@@ -23,7 +23,7 @@ export default function AdminSidebar({ language }) {
                 className={`${style.menuBtn} ${language === 'ar' ? style['menuBtn-rtl'] : ''}`}
                 onClick={() => setOpen(!open)}
             >
-                <FaBars />
+                {open ? <FaTimes /> : <FaBars />}
             </button>
 
             <nav className={`${style.nav} ${language === 'ar' ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}

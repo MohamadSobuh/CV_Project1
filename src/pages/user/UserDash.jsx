@@ -27,7 +27,7 @@ export default function UserDash({ language }) {
             if (current >= target) {
                 clearInterval(interval);
             }
-        }, 50); 
+        }, 50);
 
     }, []);
 
@@ -64,7 +64,7 @@ export default function UserDash({ language }) {
                                 <p>{t.currentPlan}</p>
                                 <h5>{userInfo.learningPlan}</h5>
                                 <div className={style.progressBar}>
-                                    <div className={style.progressFill} style={{ width:  `${animatedProgress}%` }}></div>
+                                    <div className={style.progressFill} style={{ width: `${animatedProgress}%` }}></div>
                                 </div>
                                 <p> {userInfo.Progress} {t.completed}</p>
                                 <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
@@ -78,16 +78,18 @@ export default function UserDash({ language }) {
                     </div>
                 </div>
 
-                <div className={`${style.cardsUserDash} col-md-4`}>
-                    <div className={style.cardHead}>
-                        <h5><b>{t.careerTips}</b></h5>
-                        <FaLightbulb className={style.headIcon} />
-                    </div>
-                    <ul>
-                        <li>{t.tip1}</li>
-                        <li>{t.tip2}</li>
-                        <li>{t.tip3}</li>
-                    </ul>
+                <div className={`${style.cardsUserDash} ${style.tips} col-md-4`}>
+                        <div className={style.cardHead}>
+                            <h5><b>{t.careerTips}</b></h5>
+                            <FaLightbulb className={style.headIcon} />
+                        </div>
+                        <ul>
+                            <li>{t.tip1}</li>
+                            <li>{t.tip2}</li>
+                            <li>{t.tip3}</li>
+                        </ul>
+    
+
                 </div>
 
             </div>

@@ -54,14 +54,14 @@ export default function EditProfile({ formData, t, user, handelChange, handelSav
                     </div>
 
                     <div className="d-flex gap-2 mt-4 p-2">
-                        <button type="button" className="btn btn-success w-50" onClick={onSave}>
+                        <button type="button" className="alert alert-danger w-50" onClick={onSave}>
                             <b>{t.save}</b>
                         </button>
-                        <button type='button' className="btn btn-secondary w-50" onClick={() => navigate(-1)}>
+                        <button type='button' className="alert alert-success w-50" onClick={() => navigate(-1)}>
                             <b>{t.cancel}</b>
                         </button>
                     </div>
-                    <hr className={style.hr} />
+
                 </form>
             </div>
         </div>

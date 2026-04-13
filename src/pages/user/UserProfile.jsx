@@ -3,11 +3,10 @@ import style from "./UserProfile.module.css";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
-export default function UserProfile({ user, t }) {
+export default function UserProfile({ user, t}) {
     if (!user || !t) return <div className="text-center p-5">Loading...</div>;
-
     return (
-        <div className={style.full}>
+      <div   className={style.full}>
             <div className={style.profile}>
                 <div className={style.center}>
                     <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />

@@ -16,11 +16,12 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background: white;
-    border-radius: 50px;
-    box-shadow: 0 0 15px #1A83A8;
+    background: #E6F7F9;
     color: #1A83A8;
     margin: 0 50px 0 50px;
+    border-radius: 25px;
+    box-shadow: 0 0 10px #1A83A8;
+
 }
 
 .logo {
@@ -30,7 +31,13 @@
 
 .navLinks {
     display: flex;
-    gap: 30px;
+    gap: 40px;
+    border-radius: 25px;
+    border: 1px solid #1A83A8;
+    padding: 10px 20px;
+    background-color: white;
+    box-shadow: 0 0 10px #1A83A8;
+
 }
 
 .navLinks a {
@@ -48,7 +55,7 @@
     left: 0;
     width: 0%;
     height: 2px;
-    background: linear-gradient(90deg, #082F43, #1A83A8 ,#a0d8dd);
+    background: linear-gradient(90deg, #082F43, #1A83A8, #a0d8dd);
     transition: 0.3s;
 }
 

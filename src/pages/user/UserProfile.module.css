@@ -3,8 +3,10 @@
     justify-content: center;
     align-items: center;
     background-color: #E6F7F9;
+
     min-height: calc(100vh - 80px);
 }
+
 
 .profile {
     width: 600px;

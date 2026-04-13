@@ -1,6 +1,6 @@
 import style from "./SidebarAdminUser.module.css";
 import { Link } from "react-router-dom";
-import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars  , FaThLarge} from "react-icons/fa";
+import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars  , FaThLarge ,FaTimes} from "react-icons/fa";
 import logo from "./../images/logo.png";
 import translations from "../locales/translations";
 import { useState } from 'react';
@@ -18,7 +18,8 @@ export default function Sidebar({ language }) {
         className={`${style.menuBtn} ${language === 'ar' ? style['menuBtn-rtl'] : ''}`}
         onClick={() => setOpen(!open)}
       >
-        <FaBars />
+          {open ? <FaTimes /> : <FaBars />}
+
       </button>
       <nav className={`${style.nav} ${language === "ar" ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}>
         <img src={logo} alt="logo" className={`${style.logo}`} />
