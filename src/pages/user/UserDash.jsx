@@ -10,9 +10,11 @@ export default function UserDash({ language }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
 
     useEffect(() => {
+        const storedFirstName = localStorage.getItem("userFirstName");
+        const storedLastName = localStorage.getItem("userLastName");
         setUserInfo({
-            firstName: "Isra",
-            lastName: "Shtaiwi",
+            firstName: storedFirstName || "Israa",
+            lastName: storedLastName || "Shtaiwi",
             learningPlan: "Front-end development",
             Progress: "20%",
             TotalCVs: "1"
@@ -79,16 +81,16 @@ export default function UserDash({ language }) {
                 </div>
 
                 <div className={`${style.cardsUserDash} ${style.tips} col-md-4`}>
-                        <div className={style.cardHead}>
-                            <h5><b>{t.careerTips}</b></h5>
-                            <FaLightbulb className={style.headIcon} />
-                        </div>
-                        <ul>
-                            <li>{t.tip1}</li>
-                            <li>{t.tip2}</li>
-                            <li>{t.tip3}</li>
-                        </ul>
-    
+                    <div className={style.cardHead}>
+                        <h5><b>{t.careerTips}</b></h5>
+                        <FaLightbulb className={style.headIcon} />
+                    </div>
+                    <ul>
+                        <li>{t.tip1}</li>
+                        <li>{t.tip2}</li>
+                        <li>{t.tip3}</li>
+                    </ul>
+
 
                 </div>
 

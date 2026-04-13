@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 export default function Header({ language, setLanguage }) {
     const [user, setUser] = useState({ firstname: "", lastname: "", image: "" });
     useEffect(() => {
+        const storedFirstName = localStorage.getItem("userFirstName");
+        const storedLastName = localStorage.getItem("userLastName");
         setUser({
-            firstname: "Israa",
-            lastname: "Shtaiwi",
+            firstname: storedFirstName || "Israa",
+            lastname: storedLastName || "Shtaiwi",
             image: profileImg
         });
     }, []);

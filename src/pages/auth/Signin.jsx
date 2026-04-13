@@ -64,6 +64,8 @@ export default function Signin() {
             localStorage.setItem("userRole", userRole);
             setUserId(userId);
             localStorage.setItem("userId", userId);
+            localStorage.setItem("userFirstName", response.data.user.first_name);
+            localStorage.setItem("userLastName", response.data.user.last_name);
 
             console.log("Login Successful! Token stored.");
             console.log("Success:", response.data);

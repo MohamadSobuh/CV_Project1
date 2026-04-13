@@ -180,7 +180,7 @@ export default function Users({ language }) {
                                         <td>
                                             <div className={style.progressContainer}>
                                                 <div className={style.progressBar}>
-                                                    <div className={style.progressFill} style={{ width: user.Progress }}></div>
+                                                    <div className={style.progressFill} style={{ width: `${user.Progress}%` }}></div>
                                                 </div>
                                                 <span>{user.Progress}</span>
                                             </div>
