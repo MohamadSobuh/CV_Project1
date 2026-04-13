@@ -16,7 +16,7 @@ import translations from "../../locales/translations";
 
 export default function Signin() {
     const location = useLocation();
-    const language= location.state?.language || "en";
+    const language = location.state?.language || "en";
     const t = translations[language];
 
     const inputs = [
@@ -46,9 +46,9 @@ export default function Signin() {
     const navigate = useNavigate();
     const checker = () => {
         if (localStorage.getItem("userRole") === "admin") {
-            navigate("/admin");
+            navigate("/admin/dashboard");
         } else {
-            navigate("/user");
+            navigate("/user/dashboard");
         }
     }
 

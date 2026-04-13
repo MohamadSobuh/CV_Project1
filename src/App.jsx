@@ -25,11 +25,12 @@ import UploadCV from './pages/user/UploadCV';
 import UserDash from './pages/user/UserDash';
 
 import { UserFlowProvider } from './context/UserFlowContext';
+import { AdminFlowProvider } from './context/AdminFlowContext';
 import AnalysisReport from './pages/user/AnalysisReport';
 import AnalysisHistory from './pages/user/AnalysisHistory';
 import TaskAssQuiz from './pages/user/TaskAssQuiz';
 import QuizResult from './pages/user/QuizResult';
-import Topics from './pages/user/Topics';
+import Plan from './pages/user/Plan';
 import Hero from './components/Hero';
 
 export default function App() {
@@ -52,64 +53,66 @@ export default function App() {
   }, [language]);
 
   return (
-    <UserFlowProvider>
+    <AdminFlowProvider>
+      <UserFlowProvider>
 
-      <div>
-        {/* <AdminSidebar language={language} /> */}
-        {/* <Signin/> */}
-        {/* <Sidebar language={language} />*/}
-        {/* <Header language={language} setLanguage={setLanguage} /> */}
-
-
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />
-          <Route path="/login" element={<Signin />} />
-          <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
-            <Route path='profile' element={
-              <ProfileContainer>
-                <UserProfile user={user} t={t} language={language}/>
-              </ProfileContainer>
-            } />
-
-            <Route path='profile/edit' element={
-              <ProfileContainer user={user} setUser={setUser}>
-                {(profileProps) => (
-                  <EditProfile
-                    user={user}
-                    t={t}
-                    formData={profileProps.formData}
-                    handelChange={profileProps.handelChange}
-                    handelSave={profileProps.handelSave}
-                  />
-                )}
-              </ProfileContainer>
-            } />
-
-            <Route path='dashboard' element={<UserDash language={language} />}></Route>
-            <Route path='upload' element={<UploadCV language={language} />} />
-            <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
-            <Route path='analysisReport' element={<AnalysisReport language={language} />} />
-            <Route path='quiz' element={<TaskAssQuiz language={language} />} />
-            <Route path='quizResult' element={<QuizResult language={language} />} />
-            <Route path='plan' element={<Topics language={language} />} />
+        <div>
+          {/* <AdminSidebar language={language} /> */}
+          {/* <Signin/> */}
+          {/* <Sidebar language={language} />*/}
+          {/* <Header language={language} setLanguage={setLanguage} /> */}
 
 
-          </Route>
+          <Routes>
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />
+            <Route path="/login" element={<Signin />} />
+            <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
+              <Route path='profile' element={
+                <ProfileContainer>
+                  <UserProfile user={user} t={t} />
+                </ProfileContainer>
+              } />
 
-          <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
-            <Route path='dashboard' element={<AdminDash language={language} />} /> {/* ستفتح عند طلب /admin مباشرة */}
-            <Route path='users' element={<Users language={language} />} />
-            <Route path='tasks' element={<Tasks language={language} />} />
-            <Route path="topics" element={<TopicsPage language={language} />} >
+              <Route path='profile/edit' element={
+                <ProfileContainer user={user} setUser={setUser}>
+                  {(profileProps) => (
+                    <EditProfile
+                      user={user}
+                      t={t}
+                      formData={profileProps.formData}
+                      handelChange={profileProps.handelChange}
+                      handelSave={profileProps.handelSave}
+                    />
+                  )}
+                </ProfileContainer>
+              } />
+
+              <Route path='dashboard' element={<UserDash language={language} />}></Route>
+              <Route path='upload' element={<UploadCV language={language} />} />
+              <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
+              <Route path='analysisReport' element={<AnalysisReport language={language} />} />
+              <Route path='quiz' element={<TaskAssQuiz language={language} />} />
+              <Route path='quizResult' element={<QuizResult language={language} />} />
+              <Route path='plan' element={<Plan language={language} />} />
+
+
             </Route>
-            <Route path="quiz" element={<QuizQuestions language={language} />} />
-            <Route path="settings" element={<Settings language={language} />} />
-          </Route>
-        </Routes>
 
-      </div >
-    </UserFlowProvider>
+            <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
+              <Route path='dashboard' element={<AdminDash language={language} />} /> {/* ستفتح عند طلب /admin مباشرة */}
+              <Route path='users' element={<Users language={language} />} />
+              <Route path='tasks' element={<Tasks language={language} />} />
+              <Route path="topics" element={<TopicsPage language={language} />} >
+              </Route>
+              <Route path="quiz" element={<QuizQuestions language={language} />} />
+              <Route path="settings" element={<Settings language={language} />} />
+            </Route>
+          </Routes>
+
+        </div >
+      </UserFlowProvider>
+    </AdminFlowProvider>
 
   )
 }
