@@ -15,6 +15,7 @@ export const UserFlowProvider = ({ children }) => {
   const [analysisResult, setAnalysisResult] = useState({ DesCV: "", strengths: [{ skill: "", description: "" }], weaknesses: [{ skill: "", description: "" }], score: 0 });
   const [placementScore, setPlacementScore] = useState(0);
   const [topics, setTopics] = useState([])
+  const [activeTask, setActiveTask] = useState(null)
 
   return (
     <UserFlowContext.Provider value={{
@@ -24,6 +25,7 @@ export const UserFlowProvider = ({ children }) => {
       analysisResult, setAnalysisResult,
       placementScore, setPlacementScore,
       topics, setTopics,
+      activeTask, setActiveTask,
     }}>
       {children}
     </UserFlowContext.Provider>

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import style from "./Plan.module.css";
 import TopicList from "./TopicList";
 import TaskList from "./TaskList";
+import { useUserFlow } from '../../context/UserFlowContext';
+
 
 export default function Plan({ language }) {
     const [planData, setPlanData] = useState([
@@ -40,6 +42,7 @@ export default function Plan({ language }) {
     ]);
 
     const [activeTopicId, setActiveTopicId] = useState(1);
+    const { setActiveTask } = useUserFlow()
     const t = translations[language];
     const navigate = useNavigate();
 
@@ -56,6 +59,11 @@ export default function Plan({ language }) {
     const overallProgressPercent = totalAssignedTasks === 0 ? 0 : Math.round((totalCompletedTasks / totalAssignedTasks) * 100);
 
     const selectedTopic = planData.find(t => t.id === activeTopicId);
+
+    const handleTaskClick = (task) => {
+        setActiveTask(task)
+        navigate("/user/task")
+    }
 
     return (
         <div className={language === 'ar' ? style.planContainerAr : style.planContainerEn}>
@@ -93,7 +101,7 @@ export default function Plan({ language }) {
                         />
                         <TaskList
                             activeTopic={selectedTopic}
-                            onTaskClick={(task) => console.log('Task clicked:', task)}
+                            onTaskClick={handleTaskClick}
                         />
                     </div>
                 </>

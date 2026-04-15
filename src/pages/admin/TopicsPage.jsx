@@ -216,6 +216,7 @@ const TopicsPage = ({ language = 'en' }) => {
                     </div>
                 </div>
             )}
+
         </div>
     );
 };

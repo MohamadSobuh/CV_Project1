@@ -32,6 +32,8 @@ import TaskAssQuiz from './pages/user/TaskAssQuiz';
 import QuizResult from './pages/user/QuizResult';
 import Plan from './pages/user/Plan';
 import Hero from './components/Hero';
+import TaskContent from './pages/user/TaskContent';
+
 
 export default function App() {
   const [language, setLanguage] = useState("en");
@@ -95,6 +97,7 @@ export default function App() {
               <Route path='quiz' element={<TaskAssQuiz language={language} />} />
               <Route path='quizResult' element={<QuizResult language={language} />} />
               <Route path='plan' element={<Plan language={language} />} />
+              <Route path='task' element={<TaskContent language={language} />} />
 
 
             </Route>
