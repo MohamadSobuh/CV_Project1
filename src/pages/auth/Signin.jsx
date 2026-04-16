@@ -36,7 +36,7 @@ export default function Signin() {
         }
     ];
 
-    const { setUserId } = useUserFlow();
+    const { setUserId, setUser } = useUserFlow();
     const [serverError, setServerError] = useState("");
     const { register, handleSubmit, setError, watch, formState: { errors, isSubmitting } } = useForm(
         {
@@ -63,6 +63,8 @@ export default function Signin() {
 
             localStorage.setItem("userRole", userRole);
             setUserId(userId);
+            setUser(response.data.user);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("userId", userId);
             localStorage.setItem("userFirstName", response.data.user.first_name);
             localStorage.setItem("userLastName", response.data.user.last_name);

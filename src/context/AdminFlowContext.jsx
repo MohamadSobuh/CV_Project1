@@ -6,11 +6,17 @@ const AdminFlowContext = createContext({
   setTopics: () => { },
   fetchTopics: async () => { },
   loadingTopics: false,
+  activeTask: null,
+  setActiveTask: () => { },
+  editTask: null,
+  setEditTask: () => { },
 });
 
 export const AdminFlowProvider = ({ children }) => {
   const [topics, setTopics] = useState([]);
   const [loadingTopics, setLoadingTopics] = useState(false);
+  const [activeTask, setActiveTask] = useState(null);
+  const [editTask, setEditTask] = useState(null);
 
   const fetchTopics = async () => {
     setLoadingTopics(true);
@@ -34,7 +40,7 @@ export const AdminFlowProvider = ({ children }) => {
   return (
     <AdminFlowContext.Provider value={{
       topics, setTopics,
-      fetchTopics, loadingTopics
+      fetchTopics, loadingTopics, activeTask, setActiveTask, editTask, setEditTask
     }}>
       {children}
     </AdminFlowContext.Provider>

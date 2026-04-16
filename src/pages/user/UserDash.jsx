@@ -4,21 +4,19 @@ import style from "./UserDash.module.css";
 import { FaLightbulb, FaFile, FaCloudUploadAlt, FaAngleRight } from "react-icons/fa";
 import { FaListCheck } from "react-icons/fa6";
 import translations from '../../locales/translations';
+import { useUserFlow } from '../../context/UserFlowContext';
 
 export default function UserDash({ language }) {
-    const [userInfo, setUserInfo] = useState({})
     const [animatedProgress, setAnimatedProgress] = useState(0);
+    const { user } = useUserFlow();
+    let firstName = user?.first_name || localStorage.getItem("userFirstName") || "Israa";
+    let lastName = user?.last_name || localStorage.getItem("userLastName") || "Shtaiwi";
+    let learningPlan = "Front-end development"
+    let Progress = "20%"
+    let TotalCVs = "1"
+
 
     useEffect(() => {
-        const storedFirstName = localStorage.getItem("userFirstName");
-        const storedLastName = localStorage.getItem("userLastName");
-        setUserInfo({
-            firstName: storedFirstName || "Israa",
-            lastName: storedLastName || "Shtaiwi",
-            learningPlan: "Front-end development",
-            Progress: "20%",
-            TotalCVs: "1"
-        });
         let current = 0;
         const target = 20;
 
@@ -31,14 +29,15 @@ export default function UserDash({ language }) {
             }
         }, 50);
 
-    }, []);
+    }, [user]);
+    console.log(user);
 
     const t = translations[language];
 
     return (
         <div className={language === 'ar' ? style.userDashAr : style.userDash}>
             <div className={style.dashHeader}>
-                <h1><b>{t.welcome}{userInfo.firstName} {userInfo.lastName}</b></h1>
+                <h1><b>{t.welcome}{firstName} {lastName}</b></h1>
                 <p>{t.quickLook}</p>
             </div>
 
@@ -50,7 +49,7 @@ export default function UserDash({ language }) {
                     </div>
                     <div className={style.cardContent}>
                         <h5>{t.totalCVs}</h5>
-                        <h5>{userInfo.TotalCVs}</h5>
+                        <h5>{TotalCVs}</h5>
                     </div>
                 </div>
 
@@ -61,14 +60,14 @@ export default function UserDash({ language }) {
                     </div>
 
                     <div className={style.cardContent}>
-                        {userInfo.learningPlan ? (
+                        {learningPlan ? (
                             <>
                                 <p>{t.currentPlan}</p>
-                                <h5>{userInfo.learningPlan}</h5>
+                                <h5>{learningPlan}</h5>
                                 <div className={style.progressBar}>
                                     <div className={style.progressFill} style={{ width: `${animatedProgress}%` }}></div>
                                 </div>
-                                <p> {userInfo.Progress} {t.completed}</p>
+                                <p> {Progress} {t.completed}</p>
                                 <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
 
                             </>) : (<>

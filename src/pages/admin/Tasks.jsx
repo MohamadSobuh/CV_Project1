@@ -11,6 +11,9 @@ import { signupSchemaForTasks } from "../../utils/validationSchema";
 import EmptyPage from "../../components/ui/EmptyPage";
 import axios from 'axios';
 import { useAdminFlow } from '../../context/AdminFlowContext';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 
 export default function Tasks({ language }) {
@@ -21,6 +24,9 @@ export default function Tasks({ language }) {
     const tasksPerPage = 4;
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const { topics, fetchTopics, loadingTopics } = useAdminFlow();
+    const navigate = useNavigate();
+    const { setActiveTask } = useAdminFlow();
+
 
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -54,8 +60,31 @@ export default function Tasks({ language }) {
         fetchTasks();
         fetchTopics();
     }, []);
+    //  const handleEditChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setEditData(prev => ({ ...prev, [name]: value }));
+    // };
 
+    // const handleSave = () => {
+    //     // هون ال
+    //     setTaskData(editData);
+    //     setIsEditing(false);
+    // };
 
+    // const handleCancel = () => {
+    //     setEditData(taskData);
+    //     setIsEditing(false);
+    // };
+    const handleShowEditPage = async (data) => {
+        setActiveTask(data);
+        navigate('/admin/editTask');
+    }
+    const handleView = (task) => {
+        console.log("View task", task);
+        // Could navigate to a view page or open a modal:
+        // setActiveTask(task);
+        // navigate('/admin/viewTask');
+    };
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -182,8 +211,10 @@ export default function Tasks({ language }) {
                                             </div>
                                         </td>
                                         <td>
+
                                             <FaEye className={style.actionIcon} onClick={() => handleView(task.id)} style={{ color: "#1A83A8" }} />
-                                            <FaEdit className={style.actionIcon} onClick={() => handleEdit(task.id)} style={{ color: "#1A83A8" }} />
+
+                                            <FaEdit className={style.actionIcon} onClick={() => handleShowEditPage(task)} style={{ color: "#1A83A8" }} />
                                             <FaTrash className={style.actionIcon} onClick={() => setShowDeleteModal(task.id)} style={{ color: "red" }} />
                                         </td>
                                     </tr>

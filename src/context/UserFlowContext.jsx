@@ -9,17 +9,22 @@ const UserFlowContext = createContext({
 });
 
 export const UserFlowProvider = ({ children }) => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
   const [history, setHistory] = useState([]);
   const [targetField, setTargetField] = useState('');
   const [analysisResult, setAnalysisResult] = useState({ DesCV: "", strengths: [{ skill: "", description: "" }], weaknesses: [{ skill: "", description: "" }], score: 0 });
   const [placementScore, setPlacementScore] = useState(0);
-  const [topics, setTopics] = useState([])
-  const [activeTask, setActiveTask] = useState(null)
+  const [topics, setTopics] = useState([]);
+  const [activeTask, setActiveTask] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   return (
     <UserFlowContext.Provider value={{
       userId, setUserId,
+      user, setUser,
       history, setHistory,
       targetField, setTargetField,
       analysisResult, setAnalysisResult,

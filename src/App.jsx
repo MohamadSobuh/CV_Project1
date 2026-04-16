@@ -14,7 +14,6 @@ import TopicsPage from './pages/admin/TopicsPage';
 import QuizQuestions from './pages/admin/QuizQuestions';
 import Settings from './pages/admin/Settings';
 import EditProfile from './pages/user/EditProfile';
-import ProfileContainer from './pages/user/ProfileContainer';
 import translations from './locales/translations';
 import profileImg from "./images/profileImg.png";
 import Home from './components/Home';
@@ -33,6 +32,8 @@ import QuizResult from './pages/user/QuizResult';
 import Plan from './pages/user/Plan';
 import Hero from './components/Hero';
 import TaskContent from './pages/user/TaskContent';
+import TaskItem from './pages/user/TaskItem';
+import AdminTaskContent from './pages/admin/AdminTaskContent';
 
 
 export default function App() {
@@ -71,23 +72,15 @@ export default function App() {
             <Route path="/login" element={<Signin />} />
             <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
               <Route path='profile' element={
-                <ProfileContainer>
-                  <UserProfile user={user} t={t} />
-                </ProfileContainer>
+                <UserProfile user={user} t={t} />
               } />
 
               <Route path='profile/edit' element={
-                <ProfileContainer user={user} setUser={setUser}>
-                  {(profileProps) => (
-                    <EditProfile
-                      user={user}
-                      t={t}
-                      formData={profileProps.formData}
-                      handelChange={profileProps.handelChange}
-                      handelSave={profileProps.handelSave}
-                    />
-                  )}
-                </ProfileContainer>
+                <EditProfile
+                  user={user}
+                  setUser={setUser}
+                  t={t}
+                />
               } />
 
               <Route path='dashboard' element={<UserDash language={language} />}></Route>
@@ -106,6 +99,7 @@ export default function App() {
               <Route path='dashboard' element={<AdminDash language={language} />} /> {/* ستفتح عند طلب /admin مباشرة */}
               <Route path='users' element={<Users language={language} />} />
               <Route path='tasks' element={<Tasks language={language} />} />
+              <Route path='editTask' element={<AdminTaskContent language={language} />} />
               <Route path="topics" element={<TopicsPage language={language} />} >
               </Route>
               <Route path="quiz" element={<QuizQuestions language={language} />} />

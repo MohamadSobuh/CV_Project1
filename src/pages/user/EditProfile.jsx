@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import style from "./UserProfile.module.css";
 import { FaSave, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-export default function EditProfile({ formData, t, user, handelChange, handelSave }) {
+export default function EditProfile({ t, user, setUser }) {
     const navigate = useNavigate();
+    const [formData, setFormData] = useState(user || {});
+
+    useEffect(() => {
+        if (user) setFormData(user);
+    }, [user]);
+
+    const handelChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handelSave = () => {
+        setUser(formData);
+    };
 
     const onSave = () => {
         handelSave();

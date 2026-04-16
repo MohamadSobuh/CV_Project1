@@ -295,6 +295,18 @@ const translations = {
         planEmptyTitle: "Start Your Personalized Plan",
         planEmptyMessage: "To create your plan, please upload your CV, complete the analysis,  and take the initial quiz.\n We’ll identify your strengths and weaknesses to build the perfect learning path for you.",
 
+        /* Edit Task */
+        editTaskTitle: "Edit Task",
+        editTaskDesc: "Update task details",
+        editTaskName: "Task Name",
+        editTaskTopic: "Topic",
+        editTaskContent: "Content",
+        editTaskVideoUrl: "Video URL (optional)",
+        editTaskImageUrl: "Image URL (optional)",
+        editTaskSave: "Save Changes",
+        editTaskCancel: "Cancel",
+        topicSection: "Topic Section",
+        selectTopic: "Select the appropriate topic for this task.",
 
     },
     ar: {
@@ -592,6 +604,20 @@ const translations = {
         /* Topics Page */
         planEmptyTitle: "ابدأ خطتك الشخصية",
         planEmptyMessage: "لإنشاء خطتك، قم برفع السيرة الذاتية، إتمام التحليل، ثم اجتياز الاختبار الأولي. \n سنحدد نقاط قوتك وضعفك لنبني لك خطة تعلم مناسبة.",
+
+        /* Edit Task */
+        editTaskTitle: "تعديل المهمة",
+        editTaskDesc: "تحديث تفاصيل المهمة",
+        editTaskName: "اسم المهمة",
+        editTaskTopic: "الموضوع",
+        editTaskContent: "المحتوى",
+        editTaskVideoUrl: "رابط الفيديو (اختياري)",
+        editTaskImageUrl: "رابط الصورة (اختياري)",
+        editTaskSave: "حفظ التغييرات",
+        editTaskCancel: "إلغاء",
+        topicSection: "قسم الموضوع",
+        selectTopic: "اختر الموضوع المناسب لهذه المهمة",
+
 
     }
 };

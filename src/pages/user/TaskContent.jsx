@@ -13,19 +13,21 @@ export default function TaskContent({ language }) {
     const { activeTask } = useUserFlow();
     const [taskData, setTaskData] = useState(null);
 
+
     const testData = {
         "lesson_number": "01",
         "title": "HTML Fundamentals",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
         "image_url": "/media/tasks/html_fund.png",
         "video_url": "https://www.youtube.com/embed/ok-plXXHlWw",
-        "next_quiz_id": 5,
+        "quiz_id": 5,
         "is_completed": true
     };
 
     useEffect(() => {
         const fetchTaskData = async () => {
             try {
+                console.log(activeTask);
                 setTaskData(testData);
             } catch (error) {
                 console.error('Error fetching task data:', error);
