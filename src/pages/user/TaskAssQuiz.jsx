@@ -8,6 +8,8 @@ import translations from '../../locales/translations';
 export default function TaskAssQuiz({ language }) {
     const navigate = useNavigate();
     const t = translations[language];
+    const { state } = useLocation();
+    const mode = state?.mode;
 
     const questions = [
         {
@@ -140,7 +142,13 @@ export default function TaskAssQuiz({ language }) {
 
     return (
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >
-            <h1><b>{t.titleQuizPage}</b></h1>
+            <h1>
+                <b>
+                    {mode === "task"
+                        ? t.taskQuiz
+                        : t.titleQuizPage}
+                </b>
+            </h1>
 
             <div className="row">
                 <div className={`col-md-8 ${style.qA}`}>

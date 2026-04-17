@@ -4,6 +4,26 @@
 }
 
 
+.ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl :global(.form-floating > label) {
+    right: 0;
+    left: auto;
+    text-align: right;
+}
+
+.rtl :global(.form-control) {
+    text-align: right;
+}
+
 .glowTopRight {
     position: absolute;
     top: 100px;

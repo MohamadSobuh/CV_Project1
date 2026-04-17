@@ -13,7 +13,6 @@ export default function TaskContent({ language }) {
     const { activeTask } = useUserFlow();
     const [taskData, setTaskData] = useState(null);
 
-
     const testData = {
         "lesson_number": "01",
         "title": "HTML Fundamentals",
@@ -39,7 +38,7 @@ export default function TaskContent({ language }) {
     if (!activeTask || !taskData) return <div>Loading...</div>;
 
     return (
-        <div className={styles.container}>
+        <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
             <div className={styles.banner}>
                 <div className={styles.bannerIconWrapper}>
                     <FiBookOpen size={42} className={styles.bookIcon} />
@@ -67,6 +66,7 @@ export default function TaskContent({ language }) {
                             allowFullScreen
                             title="Task Video"
                             referrerPolicy="strict-origin-when-cross-origin"
+                            className={styles.videoFrame}
                         ></iframe>
                         <span className={styles.mediaTextVid}>Video support</span>
                     </div>
@@ -78,7 +78,11 @@ export default function TaskContent({ language }) {
                     <HiOutlineArrowLeft size={24} />
                     <span>Back to Plan</span>
                 </button>
-                <button className={styles.navButtonRight} onClick={() => navigate('/user/quiz')}>
+                <button className={styles.navButtonRight} onClick={() => navigate('/user/quiz', {
+                    state: {
+                        mode: "task"
+                    }
+                })}>
                     <span>Go to Quiz</span>
                     <HiOutlineArrowRight size={24} />
                 </button>

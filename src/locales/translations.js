@@ -308,6 +308,31 @@ const translations = {
         topicSection: "Topic Section",
         selectTopic: "Select the appropriate topic for this task.",
 
+        /* Plan Page */
+        planTitle: "Learning Plan",
+        planSubtitle: "Based on your analysis of the selected field",
+        overallProgress: "Overall Progress",
+        startLearn: "Start Learn",
+        completed: "Completed",
+        pending: "Pending",
+
+        /* End Of Plan */
+        planCompleted: "PLAN COMPLETED",
+        congratulations: "Congratulations!",
+        descriptionLine1: "You've successfully completed your learning journey.",
+        descriptionLine2: "Keep growing and never stop learning!",
+        tasks: "TASKS",
+        quizzes: "QUIZZES",
+        score: "SCORE",
+        returnDashboard: "Return to Dashboard",
+
+        /* End Of Topic */
+        topicCompleted: "TOPIC COMPLETED",
+        topicMessage1: "You’ve successfully finished",
+        tasksCompleted: "Tasks Completed",
+        backToPlan: "Back To Plan"
+
+
     },
     ar: {
 
@@ -617,6 +642,30 @@ const translations = {
         editTaskCancel: "إلغاء",
         topicSection: "قسم الموضوع",
         selectTopic: "اختر الموضوع المناسب لهذه المهمة",
+
+        /* Plan Page */
+        planTitle: "الخطة التعليمية",
+        planSubtitle: "بناءً على تحليلك للمجال المحدد",
+        overallProgress: "التقدم العام",
+        startLearn: "ابدأ التعلم",
+        completed: "مكتمل",
+        pending: "قيد التنفيذ",
+
+        /* End Of Plan */
+        planCompleted: "تم إنهاء الخطة",
+        congratulations: "تهانينا!",
+        descriptionLine1: "لقد أنهيت رحلتك التعليمية بنجاح.",
+        descriptionLine2: "استمر في التعلم ولا تتوقف أبدًا!",
+        tasks: "المهام",
+        quizzes: "الاختبارات",
+        score: "النتيجة",
+        returnDashboard: "العودة للوحة التحكم",
+
+        /* End Of Topic */
+        topicCompleted: "تم إنهاء الموضوع",
+        topicMessage1: "لقد أنهيت بنجاح",
+        tasksCompleted: "المهام المكتملة",
+        backToPlan: "العودة للخطة"
 
 
     }

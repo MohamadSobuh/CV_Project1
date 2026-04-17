@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import planEmpty from "../../images/planEmpty.png";
 import translations from '../../locales/translations';
 import EmptyPage from "../../components/ui/EmptyPage";
@@ -15,9 +15,9 @@ export default function Plan({ language }) {
             id: 1, title: 'HTML & CSS', difficulty: 'Easy',
             description: 'Explanation of the topic as a general idea 1',
             tasks: [
-                { id: 101, title: 'Task#1 Name', status: 'completed' },
-                { id: 102, title: 'Task#2 Name', status: 'completed' },
-                { id: 103, title: 'Task#3 Name', status: 'completed' },
+                { id: 101, title: 'Task#1 Name', status: 'completed', quizScore: 80 },
+                { id: 102, title: 'Task#2 Name', status: 'completed', quizScore: 90 },
+                { id: 103, title: 'Task#3 Name', status: 'completed', quizScore: 100 },
                 { id: 104, title: 'Task#4 Name', status: 'pending' },
 
             ]
@@ -26,7 +26,7 @@ export default function Plan({ language }) {
             id: 2, title: 'Java Script', difficulty: 'Medium',
             description: 'Explanation of the topic as a general idea 2',
             tasks: [
-                { id: 201, title: 'Task#1 Name', status: 'completed' },
+                { id: 201, title: 'Task#1 Name', status: 'completed', quizScore: 100 },
                 { id: 202, title: 'Task#2 Name', status: 'pending' },
             ]
         },
@@ -65,6 +65,36 @@ export default function Plan({ language }) {
         navigate("/user/task")
     }
 
+    let totalQuizScore = 0;
+    let totalQuizzes = 0;
+
+    planData.forEach(topic => {
+        topic.tasks.forEach(task => {
+            if (task.quizScore !== undefined) {
+                totalQuizScore += task.quizScore;
+                totalQuizzes++;
+            }
+        });
+    });
+
+    const averageScore = totalQuizzes === 0 ? 0 : Math.round(totalQuizScore / totalQuizzes);
+
+    const planStats = {
+        totalTasks: totalAssignedTasks,
+        completedTasks: totalCompletedTasks,
+        score: averageScore
+    };
+
+    useEffect(() => {
+        if (overallProgressPercent === 100) {
+            navigate("/user/endPlan", {
+                state: {
+                    stats: planStats
+                }
+            });
+        }
+    }, [overallProgressPercent]);
+
     return (
         <div className={language === 'ar' ? style.planContainerAr : style.planContainerEn}>
             {planData.length === 0 ? (
@@ -78,12 +108,12 @@ export default function Plan({ language }) {
             ) : (
                 <>
                     <h1 className={style.planTitle}>{t.planTitle || "Learning plan"}</h1>
-                    <p className={style.planSubtitle}>Based on your analysis of the **** field</p>
+                    <p className={style.planSubtitle}>{t.planSubtitle}</p>
 
                     <div className={style.overallProgressContainer}>
                         <div className={style.progressLabelRow}>
-                            <span>Overall Progress</span>
-                            <span>{totalCompletedTasks}/{totalAssignedTasks} tasks</span>
+                            <span>{t.overallProgress}</span>
+                            <span>{totalCompletedTasks}/{totalAssignedTasks} {t.tasks}</span>
                         </div>
                         <div className={style.progressBarContainer}>
                             <div className={style.progressBarFill} style={{ width: `${overallProgressPercent}%` }} />
@@ -102,10 +132,15 @@ export default function Plan({ language }) {
                         <TaskList
                             activeTopic={selectedTopic}
                             onTaskClick={handleTaskClick}
+                            language={language}
+
                         />
                     </div>
+
+
                 </>
             )}
+
         </div>
     );
 }

@@ -3,7 +3,6 @@ import translations from "../locales/translations";
 import {FaRegFileAlt, FaBrain, FaList} from "react-icons/fa";
 
 const steps = [
-
     {
         color: "#F1416F",
         shadowColor: "rgba(241,65,111,.4)",
@@ -53,7 +52,6 @@ export default function WhyCVison({ language }) {
         <section id="how" className={style.whyCVision}>
             <span className={style.sectionLabel}>{t.navFeatures}</span>
             <h2 className={style.sectionTitle}>{t.whyTitle}</h2>
-            <p className={style.sectionSub}>{t.howWorksSub}</p>
 
             <div className={style.fan}>
                 {steps.map((step, i) => {

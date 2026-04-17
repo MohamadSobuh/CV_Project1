@@ -12,7 +12,7 @@ export default function QuizResult({ language }) {
     const { placementScore } = useUserFlow();
     const score = placementScore;
     return (
-        <div className={style.quizResultEn}>
+        <div className={language === 'ar' ? style.quizResultAr : style.quizResultEn}>
             <CircularScore score={score} />
 
             <div className={style.card}>

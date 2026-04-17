@@ -107,7 +107,8 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
 
                 <button className={style.startAssessment} onClick={() => isNew && navigate('/user/quiz', {
                     state: {
-                        weaknesses: analysisResult.weaknesses
+                        weaknesses: analysisResult.weaknesses,
+                         mode: "assessment"
                     }
                 })} disabled={!isNew} >
 
