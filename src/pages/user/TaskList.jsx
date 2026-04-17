@@ -2,8 +2,9 @@ import React from 'react';
 import TaskItem from './TaskItem';
 import { FaHtml5, FaJs, FaReact, FaSlack, FaPython } from 'react-icons/fa';
 import style from './Plan.module.css';
+import translations from '../../locales/translations';
 
-export default function TaskList({ activeTopic, onTaskClick }) {
+export default function TaskList({ activeTopic, onTaskClick , language }) {
     if (!activeTopic) {
         return (
             <div className={style.taskListColumn}>
@@ -49,7 +50,7 @@ export default function TaskList({ activeTopic, onTaskClick }) {
 
             <div className={style.tasksContainer}>
                 {tasks && tasks.map((task, index) => (
-                    <TaskItem key={task.id || index} index={index} task={task} onTaskClick={onTaskClick} />
+                    <TaskItem key={task.id || index} index={index} task={task} onTaskClick={onTaskClick}  language={language}/>
                 ))}
             </div>
         </div>

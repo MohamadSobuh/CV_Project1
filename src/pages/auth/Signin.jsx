@@ -93,7 +93,7 @@ export default function Signin() {
     };
 
     return (
-        <div className={style.bg} >
+        <div className={`${style.bg} ${language === "ar" ? style.rtl : style.ltr}`}>
             <div className={style.glowTopRight}></div>
             <div className={style.glowBottomLeft}></div>
 
@@ -111,6 +111,7 @@ export default function Signin() {
                             <Input
                                 {...input}
                                 register={register}
+                                
                             />
                             <label htmlFor={input.id}>{input.label}</label>
 

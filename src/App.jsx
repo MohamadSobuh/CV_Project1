@@ -34,6 +34,8 @@ import Hero from './components/Hero';
 import TaskContent from './pages/user/TaskContent';
 import TaskItem from './pages/user/TaskItem';
 import AdminTaskContent from './pages/admin/AdminTaskContent';
+import EndOfPlan from './pages/user/EndOfPlan';
+import EndOfTopic from './pages/user/EndOfTopic';
 
 
 export default function App() {
@@ -72,7 +74,7 @@ export default function App() {
             <Route path="/login" element={<Signin />} />
             <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
               <Route path='profile' element={
-                <UserProfile user={user} t={t} />
+                <UserProfile user={user} t={t} language={language} />
               } />
 
               <Route path='profile/edit' element={
@@ -80,6 +82,8 @@ export default function App() {
                   user={user}
                   setUser={setUser}
                   t={t}
+                  language={language}
+
                 />
               } />
 
@@ -91,6 +95,8 @@ export default function App() {
               <Route path='quizResult' element={<QuizResult language={language} />} />
               <Route path='plan' element={<Plan language={language} />} />
               <Route path='task' element={<TaskContent language={language} />} />
+              <Route path='endPlan' element={<EndOfPlan language={language} />} />
+              <Route path='endTopic' element={<EndOfTopic language={language} />} />
 
 
             </Route>

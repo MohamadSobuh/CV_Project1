@@ -286,3 +286,24 @@
 .startBtn:hover {
     background-color: #082F43;
 }
+
+@media (max-width: 1024px) {
+    .planContainerEn {
+        padding: 20px 20px; 
+    }
+
+    .planContainerAr {
+        padding: 20px 20px; 
+    }
+}
+
+@media (max-width: 680px) {
+    .mainContent {
+        flex-direction: column; 
+    }
+
+    .topicListColumn,
+    .taskListColumn {
+        width: 100%;
+    }
+}

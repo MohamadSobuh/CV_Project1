@@ -3,7 +3,7 @@ import style from "./UserProfile.module.css";
 import { FaSave, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-export default function EditProfile({ t, user, setUser }) {
+export default function EditProfile({ t, user, setUser  , language}) {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(user || {});
 
@@ -28,7 +28,7 @@ export default function EditProfile({ t, user, setUser }) {
     if (!formData || !t) return <div className="text-center p-5">Loading...</div>;
 
     return (
-        <div className={style.full}>
+        <div className={language === 'ar' ? style.fullAr : style.fullEn}>
             <div className={style.profile}>
                 <div className={style.center}>
                     <img src={user?.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />

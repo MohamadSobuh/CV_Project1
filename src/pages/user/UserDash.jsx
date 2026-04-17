@@ -68,7 +68,7 @@ export default function UserDash({ language }) {
                                     <div className={style.progressFill} style={{ width: `${animatedProgress}%` }}></div>
                                 </div>
                                 <p> {Progress} {t.completed}</p>
-                                <Link className={style.goLink}><b>{t.goToPlan}<FaAngleRight /> </b></Link>
+                                <Link className={style.goLink} to="/user/plan"><b>{t.goToPlan}<FaAngleRight /> </b></Link>
 
                             </>) : (<>
                                 <p>{t.noPlanYet}</p>
