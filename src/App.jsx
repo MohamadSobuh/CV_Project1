@@ -34,6 +34,7 @@ import Hero from './components/Hero';
 import TaskContent from './pages/user/TaskContent';
 import TaskItem from './pages/user/TaskItem';
 import AdminTaskContent from './pages/admin/AdminTaskContent';
+import ViewTaskContent from './pages/admin/ViewTaskContent';
 
 
 export default function App() {
@@ -104,6 +105,7 @@ export default function App() {
               </Route>
               <Route path="quiz" element={<QuizQuestions language={language} />} />
               <Route path="settings" element={<Settings language={language} />} />
+              <Route path='viewTaskContent' element={<ViewTaskContent language={language} />} />
             </Route>
           </Routes>
 

@@ -39,7 +39,7 @@ export default function AdminTaskContent({ language }) {
                 task: activeTask.task,
                 topic: activeTask.topic_id,
                 content: activeTask.content,
-                videoUrl: activeTask.video_url,
+                videoUrl: getEmbedUrl(activeTask.video_url),
                 imageUrl: activeTask.image_url,
             });
         } else {
@@ -54,7 +54,7 @@ export default function AdminTaskContent({ language }) {
             title: data.task,
             topic_id: Number(data.topic),
             content: data.content,
-            video_url: data.videoUrl,
+            video_url: getEmbedUrl(data.videoUrl),
             image_url: data.imageUrl,
         };
 

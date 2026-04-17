@@ -32,6 +32,16 @@ export default function Tasks({ language }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchemaForTasks)
     });
+    const getEmbedUrl = (url) => {
+        if (!url) return "";
+        if (url.includes("watch?v=")) {
+            return url.replace("watch?v=", "embed/");
+        }
+        if (url.includes("m.youtube.com")) {
+            return url.replace("m.youtube.com/", "www.youtube.com/embed/");
+        }
+        return url;
+    };
 
 
     const t = translations[language];
@@ -80,10 +90,8 @@ export default function Tasks({ language }) {
         navigate('/admin/editTask');
     }
     const handleView = (task) => {
-        console.log("View task", task);
-        // Could navigate to a view page or open a modal:
-        // setActiveTask(task);
-        // navigate('/admin/viewTask');
+        setActiveTask(task);
+        navigate('/admin/viewTaskContent');
     };
     const handleDelete = async () => {
         try {
@@ -125,7 +133,7 @@ export default function Tasks({ language }) {
             title: data.task,
             topic_id: Number(data.topic),
             content: data.content,
-            video_url: data.videoUrl,
+            video_url: getEmbedUrl(data.videoUrl),
             image_url: data.imageUrl,
         };
         console.log("Payload to be sent:", payload);
@@ -212,7 +220,7 @@ export default function Tasks({ language }) {
                                         </td>
                                         <td>
 
-                                            <FaEye className={style.actionIcon} onClick={() => handleView(task.id)} style={{ color: "#1A83A8" }} />
+                                            <FaEye className={style.actionIcon} onClick={() => handleView(task)} style={{ color: "#1A83A8" }} />
 
                                             <FaEdit className={style.actionIcon} onClick={() => handleShowEditPage(task)} style={{ color: "#1A83A8" }} />
                                             <FaTrash className={style.actionIcon} onClick={() => setShowDeleteModal(task.id)} style={{ color: "red" }} />
