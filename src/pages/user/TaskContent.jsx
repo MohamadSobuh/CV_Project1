@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import htmlFund from '../../components/media/tasks/html_fund.png';
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function TaskContent({ language }) {
         "lesson_number": "01",
         "title": "HTML Fundamentals",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-        "image_url": "/media/tasks/html_fund.png",
+        "image_url":  htmlFund,
         "video_url": "https://www.youtube.com/embed/ok-plXXHlWw",
         "quiz_id": 5,
         "is_completed": true
@@ -55,7 +56,7 @@ export default function TaskContent({ language }) {
 
                 <div className={styles.mediaRow}>
                     <div className={styles.mediaBoxImage}>
-                        {taskData.image_url && <img src={taskData.image_url} alt="Task" />}
+                        {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img}/>}
                         <span className={styles.mediaTextImg}>Image support</span>
                     </div>
 
