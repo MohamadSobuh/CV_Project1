@@ -12,6 +12,7 @@ import EmptyPage from "../../components/ui/EmptyPage";
 import { FaQuestionCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaFilter } from "react-icons/fa";
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
@@ -22,6 +23,15 @@ const QuizQuestions = ({ language = 'en' }) => {
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [tasksFromDB, setTasksFromDB] = useState([]);
+    const [filterTopic, setFilterTopic] = useState('');
+    const [filterQuestionType, setFilterQuestionType] = useState('');
+    const [filterTask, setFilterTask] = useState('');
+    const [questionsFilter, setQuestionsFilter] = useState([]);
+    const [topics, setTopics] = useState([]);
+
+
+
+
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(questionSchema)
@@ -167,13 +177,54 @@ const QuizQuestions = ({ language = 'en' }) => {
 
         setShowAddModal(false);
     };
+    useEffect(() => {
+        const fetchTopics = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token || token === "undefined") {
+                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    return;
+                }
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                });
 
-    const totalPages = Math.ceil(questions.length / questionsPerPage) || 1;
-    const indexOfLast = currentPage * questionsPerPage;
-    const indexOfFirst = indexOfLast - questionsPerPage;
-    const currentQuestions = questions.slice(indexOfFirst, indexOfLast);
+                console.log(response.data);
+                setTopics(response.data);
+            } catch (err) {
+                console.error("Error fetching topics:", err);
+            }
 
-    const handleNext = () => currentPage < totalPages && setCurrentPage(prev => prev + 1);
+
+
+        };
+        fetchTopics();
+
+    }, []);
+
+    const handleFilter = () => {
+        const filteredQuestions = questions.filter((question) => {
+            return (
+                question.topic.toLowerCase().includes(filterTopic.toLowerCase()) &&
+                question.type.toLowerCase().includes(filterQuestionType.toLowerCase()) &&
+                question.task.toLowerCase().includes(filterTask.toLowerCase())
+            );
+        });
+        setQuestionsFilter(filteredQuestions);
+    };
+    useEffect(() => {
+        handleFilter();
+        console.log(filterQuestionType);
+    }, [filterTopic, filterQuestionType, filterTask, questions]);
+
+    const totalPagesFilter = Math.ceil(questionsFilter.length / questionsPerPage);
+    const indexOfLastQuestionFilter = currentPage * questionsPerPage;
+    const indexOfFirstQuestionFilter = indexOfLastQuestionFilter - questionsPerPage;
+    const currentQuestionsFilter = questionsFilter.slice(indexOfFirstQuestionFilter, indexOfLastQuestionFilter);
+
+    const handleNext = () => currentPage < totalPagesFilter && setCurrentPage(prev => prev + 1);
     const handlePrev = () => currentPage > 1 && setCurrentPage(prev => prev - 1);
 
     return (
@@ -190,18 +241,73 @@ const QuizQuestions = ({ language = 'en' }) => {
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
                         <div className='col-md-6'>
-                            <h1>{t.quizTitle || "Quiz Questions"}</h1>
-                            <p>{t.quizSub || "Manage quiz questions"}</p>
+                            <h1>{t.quizTitle}</h1>
+                            <p>{t.quizSub}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                             <button onClick={() => setShowAddModal(true)} className={style.btnAdd}>
-                                + {t.addQuestion || "Add Question"}
+                                + {t.addQuestion}
                             </button>
+                        </div>
+                        <div className="col-md-12">
+                            <div className="row g-3">
+                                <div className="col-md-4">
+                                    <div className={style.filterSelectContainer}>
+                                        <FaFilter className={style.filterIcon} />
+                                        <select
+                                            className={style.customSelect}
+                                            value={filterTopic}
+                                            onChange={(e) => setFilterTopic(e.target.value)}
+                                        >
+                                            <option value="">{t.allTopics}</option>
+                                            {topics.map((topic) => (
+                                                <option key={topic.id} value={topic.title}>
+                                                    {topic.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-4">
+                                    <div className={style.filterSelectContainer}>
+                                        <FaFilter className={style.filterIcon} />
+                                        <select
+                                            className={style.customSelect}
+                                            value={filterQuestionType}
+                                            onChange={(e) => setFilterQuestionType(e.target.value)}
+                                        >
+                                            <option value="">{t.allTypesQuestions}</option>
+                                            <option value="task quiz">{t.taskQuiz}</option>
+                                            <option value="placement test">{t.placementTest}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-4">
+                                    <div className={style.filterSelectContainer}>
+                                        <FaFilter className={style.filterIcon} />
+                                        <select
+                                            className={style.customSelect}
+                                            value={filterTask}
+                                            onChange={(e) => setFilterTask(e.target.value)}
+                                        >
+                                            <option value="">{t.allTasks}</option>
+                                            {tasksFromDB.map((task) => (
+                                                <option key={task.id} value={task.task}>
+                                                    {task.task}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
                     <div className='row'>
-                        {currentQuestions.map((q) => (
+                        {currentQuestionsFilter.map((q) => (
                             <div key={q.id} className='col-lg-6 mb-4'>
                                 <QuestionCard
                                     question={q}
@@ -235,7 +341,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                 </div>
             )}
 
-            {totalPages > 1 && (
+            {totalPagesFilter > 1 && (
 
                 <div className={style.foot}>
                     <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>

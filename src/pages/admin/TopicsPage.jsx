@@ -13,11 +13,15 @@ import { FaBookOpen } from 'react-icons/fa';
 import { Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { FaSearch } from 'react-icons/fa';
 const TopicsPage = ({ language = 'en' }) => {
     const t = translations[language];
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
+    const [filterInput, setFilterInput] = useState('');
+    const [topicsFilter, setTopicsFilter] = useState([]);
+
 
     const [topics, setTopics] = useState([]);
     useEffect(() => {
@@ -153,6 +157,15 @@ const TopicsPage = ({ language = 'en' }) => {
             alert("فشل التحديث: " + JSON.stringify(error.response?.data));
         }
     };
+    const handleFilter = () => {
+        const filtered = topics.filter(topic =>
+            topic.title.toLowerCase().includes(filterInput.toLowerCase())
+        );
+        setTopicsFilter(filtered);
+    };
+    useEffect(() => {
+        handleFilter();
+    }, [filterInput, topics]);
 
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -181,10 +194,22 @@ const TopicsPage = ({ language = 'en' }) => {
                                 + {t.addTopic}
                             </button>
                         </div>
+                        <div className="col-md-6">
+                            <div className={style.searchContainer}>
+                                <FaSearch className={style.searchIcon} />
+                                <input
+                                    type="text"
+                                    className={style.searchInput}
+                                    placeholder={t.searchPlaceholder}
+                                    value={filterInput}
+                                    onChange={(e) => setFilterInput(e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div className='row'>
-                        {topics.map((topic) => (
+                        {topicsFilter.map((topic) => (
                             <div key={topic.id} className='col-lg-4 col-md-6 mb-4'>
                                 <TopicCard topic={topic}
                                     onEditClick={(topic) => setShowEditModal(topic)}

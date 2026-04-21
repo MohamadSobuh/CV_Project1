@@ -359,6 +359,38 @@
     font-size: 1.1rem;
 }
 
+.searchContainer {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    max-width: 350px;
+    direction: inherit;
+}
+
+.searchContainer:focus-within {
+    border-color: #1a738b;
+    box-shadow: 0 0 8px rgba(26, 115, 139, 0.2);
+}
+
+.searchInput {
+    flex: 1;
+    border: none !important;
+    outline: none !important;
+    padding: 10px;
+    font-size: 14px;
+    background-color: transparent !important;
+}
+
+.searchIcon {
+    color: #888;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
 @media (max-width: 1024px) {
 
     .dash,

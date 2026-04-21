@@ -193,6 +193,10 @@ const translations = {
         selectCorrectAnswer: "Select correct answer",
         addQuestionBtn: "Add Question",
         cancel: "Cancel",
+        allTypesQuestions: "All Types of Questions",
+        allTasks: "All Tasks",
+        allTopics: "All Topics",
+        allUsers: "All Users",
         // settings
         settingsTitle: "Settings",
         settingsSub: "Configure system settings",
@@ -530,6 +534,10 @@ const translations = {
         selectCorrectAnswer: "اختر الإجابة الصحيحة",
         addQuestionBtn: "إضافة سؤال",
         cancel: "إلغاء",
+        allTypesQuestions: "جميع أنواع الاسئلة",
+        allTasks: "جميع المهام",
+        allTopics: "جميع المواضيع",
+        allUsers: "جميع المستخدمين",
         // settings
         settingsTitle: "الإعدادات",
         settingsSub: "إعدادات النظام",

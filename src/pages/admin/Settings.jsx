@@ -39,14 +39,14 @@ const Settings = ({ language = 'en' }) => {
                 if (response.data) {
                     setSiteSettings(prev => ({
                         ...prev,
-                        siteName: response.data.siteName || response.data.site_name || prev.siteName,
-                        defaultLanguage: response.data.defaultLanguage || response.data.default_language || prev.defaultLanguage
+                        siteName: response.data.siteName || prev.siteName,
+                        defaultLanguage: response.data.defaultLanguage || prev.defaultLanguage
                     }));
 
                     setSecuritySettings(prev => ({
                         ...prev,
-                        sessionTimeout: response.data.sessionTimeout || response.data.session_timeout || prev.sessionTimeout,
-                        twoFactorAuth: response.data.twoFactorAuth !== undefined ? response.data.twoFactorAuth : (response.data.two_factor_auth !== undefined ? response.data.two_factor_auth : prev.twoFactorAuth)
+                        sessionTimeout: response.data.sessionTimeout || prev.sessionTimeout,
+                        twoFactorAuth: response.data.twoFactorAuth !== undefined ? response.data.twoFactorAuth : prev.twoFactorAuth
                     }));
                 }
             } catch (error) {
@@ -89,7 +89,7 @@ const Settings = ({ language = 'en' }) => {
             console.error("Error updating settings:", error.response?.data || error);
         }
         console.log("Saving Settings:", { ...siteSettings, ...securitySettings });
-        alert(language === 'ar' ? "تم حفظ الإعدادات بنجاح!" : "Settings saved successfully!");
+        alert("تم حفظ الإعدادات بنجاح");
     };
 
     if (loading) {

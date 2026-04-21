@@ -13,6 +13,9 @@ import axios from 'axios';
 import { useAdminFlow } from '../../context/AdminFlowContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { FaSearch } from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
+
 
 
 
@@ -26,6 +29,13 @@ export default function Tasks({ language }) {
     const { topics, fetchTopics, loadingTopics } = useAdminFlow();
     const navigate = useNavigate();
     const { setActiveTask } = useAdminFlow();
+    const [filterInput, setFilterInput] = useState('');
+    const [tasksFilter, setTasksFilter] = useState([]);
+    const [filterTopic, setFilterTopic] = useState('');
+
+
+
+
 
 
 
@@ -113,19 +123,32 @@ export default function Tasks({ language }) {
         }
     };
 
-    const totalPages = Math.ceil(tasks.length / tasksPerPage);
+    const totalPagesFilter = Math.ceil(tasksFilter.length / tasksPerPage);
+    const indexOfLastTaskFilter = currentPage * tasksPerPage;
+    const indexOfFirstTaskFilter = indexOfLastTaskFilter - tasksPerPage;
+    const currentTasksFilter = tasksFilter.slice(indexOfFirstTaskFilter, indexOfLastTaskFilter);
 
     const handleNext = () => setCurrentPage(prev => (
-        prev < totalPages ? prev + 1 : prev
+        prev < totalPagesFilter ? prev + 1 : prev
     ));
 
     const handlePrev = () => setCurrentPage(prev => (
         prev > 1 ? prev - 1 : prev
     ));
+    const handleFilter = () => {
+        const filteredTasks = tasks.filter(task => {
+            const matchesInput = task.task.toLowerCase().includes(filterInput.toLowerCase());
+            const matchesTopic = task.topic.toString().includes(filterTopic);
+            return matchesInput && matchesTopic;
+        });
+        setTasksFilter(filteredTasks);
+    };
+    useEffect(() => {
+        handleFilter();
+        console.log(filterTopic);
+    }, [filterInput, filterTopic, tasks]);
 
-    const indexOfLast = currentPage * tasksPerPage;
-    const indexOfFirst = indexOfLast - tasksPerPage;
-    const currentTasks = tasks.slice(indexOfFirst, indexOfLast);
+
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -187,6 +210,36 @@ export default function Tasks({ language }) {
                                 <b>{t.addTaskbtn}</b>
                             </button>
                         </div>
+                        <div className="col-md-6">
+                            <div className={style.searchContainer}>
+                                <FaSearch className={style.searchIcon} />
+                                <input
+                                    type="text"
+                                    placeholder={t.searchPlaceholder}
+                                    className={style.searchInput}
+                                    value={filterInput}
+                                    onChange={(e) => setFilterInput(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div className={style.filterContainer}>
+                                <FaFilter className={style.filterIcon} />
+
+                                <select
+                                    className={style.filterSelect}
+                                    value={filterTopic}
+                                    onChange={(e) => setFilterTopic(e.target.value)}
+                                >
+                                    <option value="">{t.allTopics}</option>
+                                    {topics.map(topic => (
+                                        <option key={topic.id} value={topic.title}>
+                                            {topic.title}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={style.ForTasks}>
@@ -200,7 +253,7 @@ export default function Tasks({ language }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentTasks.map(task => (
+                                {currentTasksFilter.map(task => (
                                     <tr key={task.id}>
                                         <td>
                                             <div className={style.taskInfo}>

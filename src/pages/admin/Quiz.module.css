@@ -190,6 +190,7 @@
     direction: rtl;
     transition: padding 0.3s ease;
 }
+
 .modalContent label {
     display: block;
     margin-bottom: 5px;
@@ -201,6 +202,56 @@
     justify-content: flex-end;
     margin: 10px;
     gap: 10px;
+}
+
+.filterSelectContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    width: 100%;
+    direction: inherit;
+}
+
+.filterSelectContainer:focus-within {
+    border-color: #1a738b;
+    box-shadow: 0 0 8px rgba(26, 115, 139, 0.2);
+}
+
+.customSelect {
+    flex: 1;
+    width: 100%;
+    padding: 10px;
+    padding-inline-start: 5px;
+    padding-inline-end: 25px;
+    border: none !important;
+    outline: none !important;
+    font-size: 14px;
+    background: transparent;
+    color: #444;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.filterIcon {
+    color: #1a738b;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.filterSelectContainer::after {
+    content: '▼';
+    font-size: 8px;
+    color: #888;
+    position: absolute;
+    pointer-events: none;
+    inset-inline-end: 12px;
 }
 
 @media (max-width: 1024px) {
@@ -229,4 +280,3 @@
 .btnAdd:hover {
     background-color: #07526B;
 }
-

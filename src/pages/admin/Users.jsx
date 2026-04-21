@@ -10,12 +10,15 @@ import InputError from "../../components/ui/InputError";
 import EmptyPage from "../../components/ui/EmptyPage";
 import { signupSchema } from "../../utils/validationSchema";
 import axios from 'axios';
+import { FaSearch } from 'react-icons/fa';
 export default function Users({ language }) {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const usersPerPage = 4;
     const [showDeleteModal, setShowDeleteModal] = useState(null);
+    const [filterInput, setFilterInput] = useState("");
+    const [usersFilter, setUsersFilter] = useState([]);
 
     const t = translations[language];
 
@@ -45,6 +48,7 @@ export default function Users({ language }) {
         };
         fetchUsers();
 
+
     }, []);
 
     const handleDelete = async () => {
@@ -67,17 +71,29 @@ export default function Users({ language }) {
             console.error("Error deleting user:", err);
         }
     };
-    const totalPages = Math.ceil(users.length / usersPerPage);
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+    const totalPagesFilter = Math.ceil(usersFilter.length / usersPerPage);
+    const indexOfLastUserFilter = currentPage * usersPerPage;
+    const indexOfFirstUserFilter = indexOfLastUserFilter - usersPerPage;
+    const currentUsersFilter = usersFilter.slice(indexOfFirstUserFilter, indexOfLastUserFilter);
 
     const handleNext = () => setCurrentPage(prev => (
-        prev < totalPages ? prev + 1 : prev
+        prev < totalPagesFilter ? prev + 1 : prev
     ));
     const handlePrev = () => setCurrentPage(prev => (
         prev > 1 ? prev - 1 : prev
     ));
+
+    const handleFilter = () => {
+        const filteredUsers = users.filter(user => {
+            const fullName = `${user.first_name || ""} ${user.last_name || ""}`.toLowerCase();
+            const searchInput = filterInput.toLowerCase();
+            return fullName.includes(searchInput);
+        });
+        setUsersFilter(filteredUsers);
+    };
+    useEffect(() => {
+        handleFilter();
+    }, [filterInput, users]);
 
     const onSubmit = async (data) => {
         const name = data.first_name + " " + data.last_name;
@@ -123,6 +139,8 @@ export default function Users({ language }) {
         setShowModal(false);
     };
     console.log("Validation Errors:", errors);
+    console.log("Users Filter:", usersFilter);
+    console.log("Users:", users);
 
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
@@ -150,6 +168,18 @@ export default function Users({ language }) {
                                 <b>{t.addUser}</b>
                             </button>
                         </div>
+                        <div className="col-md-6">
+                            <div className={style.searchContainer}>
+                                <FaSearch className={language === 'ar' ? style.searchIconAr : style.searchIcon} />
+                                <input
+                                    type="text"
+                                    className={`${style.searchInput} ${language === 'ar' ? style.searchInputAr : ''}`}
+                                    placeholder={t.searchPlaceholder}
+                                    value={filterInput}
+                                    onChange={(e) => setFilterInput(e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div className={style.ForUsers}>
@@ -165,7 +195,7 @@ export default function Users({ language }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentUsers.map(user => (
+                                {currentUsersFilter.map(user => (
                                     <tr key={user.id}>
                                         <td>
                                             <div className={style.userInfo}>
