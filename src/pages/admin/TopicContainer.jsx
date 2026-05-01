@@ -9,7 +9,7 @@ const TopicContainer = ({ children }) => {
     const [formData, setFormData] = useState(null);
 
     useEffect(() => {
-        const topicToEdit = topics.find(t => t.id === parseInt(id));
+        const topicToEdit = topics.find(topic => topic.id === parseInt(id));
         if (topicToEdit) {
             setFormData(topicToEdit);
         }

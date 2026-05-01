@@ -10,12 +10,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { signupSchemaForTasks } from "../../utils/validationSchema";
 import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
-import translations from "../../locales/translations";
+import { useTranslation } from "react-i18next";
 
 export default function AdminTaskContent({ language }) {
     const navigate = useNavigate();
     const { activeTask, topics } = useAdminFlow();
-    const t = translations[language] || translations["en"];
+    const { t, i18n } = useTranslation();
 
     // embed youtube video
     const getEmbedUrl = (url) => {
@@ -108,8 +108,8 @@ export default function AdminTaskContent({ language }) {
                             <h3 className={styles.cardTitle}>{taskData.title}</h3>
                         </div>
                         <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t.editTaskName}</label>
-                            <AdminInput type="text" name="task" placeholder={t.editTaskTitle} registerProps={register("task")} />
+                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskName')}</label>
+                            <AdminInput type="text" name="task" placeholder={t('editTaskTitle')} registerProps={register("task")} />
                             <InputError error={errors.task} />
                         </div>
                     </div>
@@ -119,18 +119,18 @@ export default function AdminTaskContent({ language }) {
                             <p className={styles.cardDescription}>{taskData.description}</p>
                         </div>
                         <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t.editTaskContent}</label>
-                            <textarea {...register("content")} rows={6} placeholder={t.editTaskContent} style={{ width: "100%", borderRadius: "8px", border: "1px solid #1A83A8", padding: "12px", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", boxSizing: "border-box", fontSize: "14px", fontFamily: "inherit", resize: "vertical" }} />
+                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskContent')}</label>
+                            <textarea {...register("content")} rows={6} placeholder={t('editTaskContent')} style={{ width: "100%", borderRadius: "8px", border: "1px solid #1A83A8", padding: "12px", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", boxSizing: "border-box", fontSize: "14px", fontFamily: "inherit", resize: "vertical" }} />
                             <InputError error={errors.content} />
                         </div>
                     </div>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginBottom: '40px' }}>
                         <div style={{ flex: '1 1 40%' }}>
-                            <p className={styles.cardDescription} style={{ marginBottom: 0 }}><strong>{t.topicSection}</strong><br />{t.selectTopic}</p>
+                            <p className={styles.cardDescription} style={{ marginBottom: 0 }}><strong>{t('topicSection')}</strong><br />{t('selectTopic')}</p>
                         </div>
                         <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t.topic}</label>
+                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('topic')}</label>
                             <select {...register("topic")} defaultValue="" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1A83A8", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", fontSize: "14px" }}>
                                 <option value={activeTask.topic_id} disabled hidden>{activeTask.topic}</option>
                                 {topics && topics.map((topic) => (
@@ -179,10 +179,10 @@ export default function AdminTaskContent({ language }) {
                 <div className={styles.footerNav} style={{ marginTop: '24px' }}>
                     <button type="button" className={styles.navButtonLeft} onClick={() => navigate('/admin/tasks')}>
                         <HiOutlineArrowLeft size={24} />
-                        <span>{t.cancel}</span>
+                        <span>{t('cancel')}</span>
                     </button>
                     <button type="submit" style={{ backgroundColor: '#1A83A8', color: 'white', border: 'none', padding: '12px 32px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', transition: 'background-color 0.3s' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#07526B'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1A83A8'}>
-                        <span>{t.saveChanges}</span>
+                        <span>{t('saveChanges')}</span>
                     </button>
                 </div>
             </form>

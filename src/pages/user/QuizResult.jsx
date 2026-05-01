@@ -2,10 +2,12 @@ import style from "./TaskAssQuiz.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 
 export default function QuizResult({ language }) {
-        const t = translations[language];
+        const { t, i18n } = useTranslation();
+
 
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -17,16 +19,16 @@ export default function QuizResult({ language }) {
 
             <div className={style.card}>
                 <div className={style.emoji}>📚</div>
-                <h2 className={style.title}><b>{t.quizResultTitle}</b></h2>
-                <p className={style.description}> {t.descriptionQuizResult}</p>
+                <h2 className={style.title}><b>{t('quizResultTitle')}</b></h2>
+                <p className={style.description}> {t('descriptionQuizResult')}</p>
             </div>
 
             <div className={style.buttons}>
                 <button className={style.planBtn} onClick={() => navigate('/user/plan')}>
-                    <b>{t.viewPlan}</b>
+                    <b>{t('viewPlan')}</b>
                 </button>
                 <button className={style.dashBtn} onClick={() => navigate('/user/dashboard')}>
-                    {t.dash}
+                    {t('dash')}
                 </button>
             </div>
         </div>

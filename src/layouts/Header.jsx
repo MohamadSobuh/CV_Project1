@@ -3,11 +3,20 @@ import style from "./Header.module.css";
 import profileImg from "../images/profileImg.PNG";
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 export default function Header({ language, setLanguage }) {
+    const { t, i18n } = useTranslation();
     const [user, setUser] = useState({ firstname: "", lastname: "", image: "" });
+
+    useEffect(() => {
+        document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
+    }, [language, i18n.language]);
+
     useEffect(() => {
         const storedFirstName = localStorage.getItem("userFirstName");
         const storedLastName = localStorage.getItem("userLastName");
+
         setUser({
             firstname: storedFirstName || "Israa",
             lastname: storedLastName || "Shtaiwi",
@@ -15,10 +24,20 @@ export default function Header({ language, setLanguage }) {
         });
     }, []);
 
+    const handleLanguageChange = (e) => {
+        const newLang = e.target.value;
+        i18n.changeLanguage(newLang);
+        localStorage.setItem("language", newLang);
+        if (setLanguage) {
+            setLanguage(newLang);
+        }
+        console.log("Language changed to:", newLang);
+    };
+
     return (
         <header className={`${style.header}`}>
             <div className={`${style.headerContent}`}>
-                <select name='lang' className={`${style.selectLang}`} value={language} onChange={(e) => setLanguage(e.target.value)}>
+                <select name='lang' className={`${style.selectLang}`} value={language || i18n.language || 'en'} onChange={handleLanguageChange}>
                     <option value="en">ENG</option>
                     <option value="ar">AR</option>
                 </select>

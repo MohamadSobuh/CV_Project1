@@ -14,7 +14,8 @@ import TopicsPage from './pages/admin/TopicsPage';
 import QuizQuestions from './pages/admin/QuizQuestions';
 import Settings from './pages/admin/Settings';
 import EditProfile from './pages/user/EditProfile';
-import translations from './locales/translations';
+import { useTranslation } from "react-i18next";
+
 import profileImg from "./images/profileImg.png";
 import Home from './components/Home';
 import UserProfile from './pages/user/UserProfile';
@@ -40,9 +41,10 @@ import ViewTaskContent from './pages/admin/ViewTaskContent';
 
 
 export default function App() {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
   const [user, setUser] = useState(null);
-  const t = translations[language];
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
 
     setUser({
@@ -55,9 +57,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    i18n.changeLanguage(language);
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  }, [language]);
-
+  }, [language, i18n]);
   return (
     <AdminFlowProvider>
       <UserFlowProvider>
@@ -104,7 +106,7 @@ export default function App() {
             </Route>
 
             <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
-              <Route path='dashboard' element={<AdminDash language={language} />} /> {/* ستفتح عند طلب /admin مباشرة */}
+              <Route path='dashboard' element={<AdminDash language={language} />} />
               <Route path='users' element={<Users language={language} />} />
               <Route path='tasks' element={<Tasks language={language} />} />
               <Route path='editTask' element={<AdminTaskContent language={language} />} />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import style from "./AnalysisReport.module.css";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
@@ -43,13 +44,14 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
         return "#84f4a8";
     }
 
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     return (
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
 
             <div className={`row ${style.headReport}`}>
-                <h1 className={style.reportTitle}><b>{t.reportTitle}</b></h1>
+                <h1 className={style.reportTitle}><b>{t('reportTitle')}</b></h1>
                 <p className={style.feildStyle}>Feild : <b>{targetField || "Not specified"}</b></p>
                 <div className='col-md-3'>
                     <CircularScore score={analysisResult.score} />
@@ -66,7 +68,7 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
                     <div className={style.strengths}>
                         <div className={style.strengtWeakhHeader}>
                             <FaCheckCircle className={style.headIcons} />
-                            <h3>{t.strengths}</h3>
+                            <h3>{t('strengths')}</h3>
                         </div>
 
                         {analysisResult.strengths.map((item) => (
@@ -82,7 +84,7 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
                     <div className={style.weaknesses}>
                         <div className={style.strengtWeakhHeader}>
                             <FaExclamationCircle className={style.headIcons} />
-                            <h3>{t.weaknesses}</h3>
+                            <h3>{t('weaknesses')}</h3>
                         </div>
 
                         {analysisResult.weaknesses.map((item) => (
@@ -99,11 +101,11 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
             <div className={style.startAssessQuiz}>
                 <FaLightbulb className={style.iconForStartAssessment} />
                 {isNew ? <>
-                    <h2>{t.readyToValidate}</h2>
-                    <p>{t.TakeAdaptiveQuiz}</p>
+                    <h2>{t('readyToValidate')}</h2>
+                    <p>{t('TakeAdaptiveQuiz')}</p>
                 </>
-                    : <> <h2>{t.readyToValidateF}</h2>
-                        <p>{t.TakeAdaptiveQuizF}</p></>}
+                    : <> <h2>{t('readyToValidateF')}</h2>
+                        <p>{t('TakeAdaptiveQuizF')}</p></>}
 
                 <button className={style.startAssessment} onClick={() => isNew && navigate('/user/quiz', {
                     state: {
@@ -113,7 +115,7 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
                 })} disabled={!isNew} >
 
                     {isNew
-                        ? t.startQuiz
+                        ? t('startQuiz')
                         : `Your Quiz Score: ${placementScore || 0}%`}
                 </button>
             </div>

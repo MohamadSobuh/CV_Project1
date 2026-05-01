@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import style from "./AnalysisHistory.module.css";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import { FaFileAlt, FaUsers } from "react-icons/fa"; import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
 import EmptyPage from "../../components/ui/EmptyPage";
@@ -10,7 +11,8 @@ export default function AnalysisHistory({ language }) {
     const { history } = useUserFlow(); /*  هاد رح نستخدمها بس يكون الربط كلو شغال*/
     const [fakeHistory, setFakeHistory] = useState([]);
     const navigate = useNavigate();
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     useEffect(() => {
         setFakeHistory([
@@ -25,17 +27,17 @@ export default function AnalysisHistory({ language }) {
             {fakeHistory.length === 0 ? (
                 <EmptyPage
                     icon={<img src={emptyHistory} width="200" height="150" />}
-                    title={t.emptyHistoryTitle}
-                    message={t.emptyHistoryMessage}
-                    btnText={t.upload}
+                    title={t('emptyHistoryTitle')}
+                    message={t('emptyHistoryMessage')}
+                    btnText={t('upload')}
                     onClick={() => navigate("/user/upload")}
                 />
             ) : (<>
 
                 <div className={style.historyHead}>
-                    <p className={style.journey}>{t.journey}</p>
-                    <h1><b>{t.analysisHistoryTitle}</b></h1>
-                    <p>{t.analysisHistoryDesc}</p>
+                    <p className={style.journey}>{t('journey')}</p>
+                    <h1><b>{t('analysisHistoryTitle')}</b></h1>
+                    <p>{t('analysisHistoryDesc')}</p>
                 </div>
 
                 <div className={style.cards}>
@@ -65,7 +67,7 @@ export default function AnalysisHistory({ language }) {
                                         }
                                     })
                                 }>
-                                {t.viewFullAnalysis}
+                                {t('viewFullAnalysis')}
                             </button>
                         </div>
                     ))}

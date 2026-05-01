@@ -16,7 +16,7 @@ export default function TopicSection({ topic, isActive, onClick }) {
 
 
 
-    const completedCount = tasks ? tasks.filter(t => t.status === 'completed').length : 0;
+    const completedCount = tasks ? tasks.filter(task => task.status === 'completed').length : 0;
     const totalCount = tasks ? tasks.length : 0;
     const progressPercent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 

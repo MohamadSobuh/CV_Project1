@@ -11,26 +11,28 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useLocation } from "react-router-dom";
-import translations from "../../locales/translations";
+import { useTranslation } from "react-i18next";
+
 
 
 export default function Signin() {
     const location = useLocation();
     const language = location.state?.language || "en";
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     const inputs = [
         {
             name: "email",
             type: "email",
-            label: t.email,
+            label: t('email'),
             id: "emailInput",
             col: "col-md-12"
         },
         {
             name: "password",
             type: "password",
-            label: t.password,
+            label: t('password'),
             id: "passwordInput",
             col: "col-md-12"
         }
@@ -103,8 +105,8 @@ export default function Signin() {
                 <Link to="/" >
                     <img src={darklogo} alt="logo" className={`${style.logo}`} />
                 </Link>
-                <h3>                <b> {t.welcomeLogIn}</b>                </h3>
-                <p>{t.loginMessge}</p>
+                <h3>                <b> {t('welcomeLogIn')}</b>                </h3>
+                <p>{t('loginMessge')}</p>
                 <form onSubmit={handleSubmit(submitForm)}>
                     {inputs.map((input) => (
                         <div key={input.id} className={`form-floating mb-3 ${input.name === 'email' ? 'mt-3' : ''}`}>
@@ -121,10 +123,10 @@ export default function Signin() {
                         </div>
                     ))}
 
-                    <button type="submit" className={`${style.btn}`} disabled={isSubmitting}><b>{t.login} </b></button>
+                    <button type="submit" className={`${style.btn}`} disabled={isSubmitting}><b>{t('login')} </b></button>
                 </form>
                 <br />
-                <p> {t.noAccount}<Link to="/signup" className={style.s} state={{ language }}> <b>{t.signup}</b> </Link> </p>
+                <p> {t('noAccount')}<Link to="/signup" className={style.s} state={{ language }}> <b>{t('signup')}</b> </Link> </p>
 
             </div>
 

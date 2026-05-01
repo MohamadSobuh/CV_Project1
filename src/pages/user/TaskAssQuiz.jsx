@@ -3,11 +3,13 @@ import style from "./TaskAssQuiz.module.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUserFlow } from '../../context/UserFlowContext';
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 
 export default function TaskAssQuiz({ language }) {
     const navigate = useNavigate();
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
     const { state } = useLocation();
     const mode = state?.mode;
 
@@ -145,8 +147,8 @@ export default function TaskAssQuiz({ language }) {
             <h1>
                 <b>
                     {mode === "task"
-                        ? t.taskQuiz
-                        : t.titleQuizPage}
+                        ? t('taskQuiz')
+                        : t('titleQuizPage')}
                 </b>
             </h1>
 
@@ -168,13 +170,13 @@ export default function TaskAssQuiz({ language }) {
                     ))}
 
                     <div className={style.btn}>
-                        <button className={style.prev} onClick={prev}> <FaArrowLeft /> {t.prev} </button>
-                        <button className={style.next} onClick={next}>{t.next} <FaArrowRight /> </button>
+                        <button className={style.prev} onClick={prev}> <FaArrowLeft /> {t('prev')} </button>
+                        <button className={style.next} onClick={next}>{t('next')} <FaArrowRight /> </button>
                     </div>
                 </div>
 
                 <div className={`col-md-3 ${style.qCard}`}>
-                    <p><b>{t.questionsCard}</b></p>
+                    <p><b>{t('questionsCard')}</b></p>
                     {questions.map((q, index) => (
                         <div
                             key={q.id}
@@ -191,7 +193,7 @@ export default function TaskAssQuiz({ language }) {
                     <br />
 
                     <p className={style.progressText}>
-                        {answeredCount} / {questions.length} {t.answeredLabel}
+                        {answeredCount} / {questions.length} {t('answeredLabel')}
                     </p>
                     <div className={style.progressContainer}>
                         <div className={style.progressBar} style={{ width: `${progress}%` }}></div>
@@ -199,21 +201,21 @@ export default function TaskAssQuiz({ language }) {
                     <hr style={{ color: "#4E6A54" }} />
                     <div className={style.item}>
                         <div className={style.current}></div>
-                        <p>{t.current}</p>
+                        <p>{t('current')}</p>
                     </div>
 
                     <div className={style.item}>
                         <div className={style.answered}></div>
-                        <p>{t.answered}</p>
+                        <p>{t('answered')}</p>
                     </div>
 
                     <div className={style.item}>
                         <div className={style.notAnswered}></div>
-                        <p>{t.notAnswered}</p>
+                        <p>{t('notAnswered')}</p>
                     </div>
 
                     <div className={style.submitContainer} onClick={handleFinish}>
-                        <button className={style.submit} > {t.finish} </button>
+                        <button className={style.submit} > {t('finish')} </button>
                     </div>
                 </div>
             </div>

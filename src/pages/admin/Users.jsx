@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import style from "./AdminTables.module.css";
 import Admin from "../../images/Admin.jpg";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import { FaTrash, FaUsers } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,8 +20,10 @@ export default function Users({ language }) {
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [filterInput, setFilterInput] = useState("");
     const [usersFilter, setUsersFilter] = useState([]);
+    // const [imgSrc, setImgSrc] = useState(user.image);
 
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchema)
@@ -142,14 +145,15 @@ export default function Users({ language }) {
     console.log("Users Filter:", usersFilter);
     console.log("Users:", users);
 
+
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
             {users.length === 0 ? (
                 <EmptyPage
                     icon={<FaUsers />}
-                    title={t.emptyUsersTitle}
-                    message={t.emptyUsersMessage}
-                    btnText={t.addUser}
+                    title={t('emptyUsersTitle')}
+                    message={t('emptyUsersMessage')}
+                    btnText={t('addUser')}
                     onClick={() => setShowModal(true)}
                 />
             ) : (
@@ -157,15 +161,15 @@ export default function Users({ language }) {
 
                     <div className='row align-items-center justify-content-between mb-4'>
                         <div className='col-md-6'>
-                            <h1>{t.title}</h1>
-                            <p>{t.descriptionUsersPage}</p>
+                            <h1>{t('title')}</h1>
+                            <p>{t('descriptionUsersPage')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                             <button
                                 className={language === 'ar' ? style.addUserbtnAr : style.addUserbtn}
                                 onClick={() => setShowModal(true)}
                             >
-                                <b>{t.addUser}</b>
+                                <b>{t('addUser')}</b>
                             </button>
                         </div>
                         <div className="col-md-6">
@@ -174,7 +178,7 @@ export default function Users({ language }) {
                                 <input
                                     type="text"
                                     className={`${style.searchInput} ${language === 'ar' ? style.searchInputAr : ''}`}
-                                    placeholder={t.searchPlaceholder}
+                                    placeholder={t('search')}
                                     value={filterInput}
                                     onChange={(e) => setFilterInput(e.target.value)}
                                 />
@@ -186,12 +190,12 @@ export default function Users({ language }) {
                         <table className={style.usersTable}>
                             <thead>
                                 <tr>
-                                    <th>{t.user}</th>
-                                    <th>{t.learningPlan}</th>
-                                    <th>{t.progress}</th>
-                                    <th>{t.cvs}</th>
-                                    <th>{t.joinDate}</th>
-                                    <th>{t.actions}</th>
+                                    <th>{t('user')}</th>
+                                    <th>{t('learningPlan')}</th>
+                                    <th>{t('progress')}</th>
+                                    <th>{t('cvs')}</th>
+                                    <th>{t('joinDate')}</th>
+                                    <th>{t('actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -199,7 +203,7 @@ export default function Users({ language }) {
                                     <tr key={user.id}>
                                         <td>
                                             <div className={style.userInfo}>
-                                                <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                                                <img src={user.image || `https://robohash.org/${user.id}.png?set=set1`} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                                                 <div className={style.userText}>
                                                     <b>{user.first_name} {user.last_name}</b>
                                                     <span>{user.email}</span>
@@ -231,9 +235,9 @@ export default function Users({ language }) {
                         </table>
 
                         <div className={style.foot}>
-                            <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                            <button className={style.btnOutline} onClick={handlePrev}>{t('prev')}</button>
                             <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
-                            <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                            <button className={style.btnOutline} onClick={handleNext}>{t('next')}</button>
                         </div>
                     </div>
                 </>
@@ -243,25 +247,25 @@ export default function Users({ language }) {
             {showModal && (
                 <div className={style.modalOverlay}>
                     <div className={style.modalContent}>
-                        <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>{t.addForm}</h2>
+                        <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>{t('addForm')}</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={style.formRow}>
                                 <div style={{ flex: 1 }}>
-                                    <label>{t.firstNameLabel}</label>
+                                    <label>{t('firstNameLabel')}</label>
                                     <AdminInput
                                         type="text"
                                         name="first_name"
-                                        placeholder={t.enterFirstName}
+                                        placeholder={t('enterFirstName')}
                                         registerProps={register("first_name")}
                                     />
                                     <InputError error={errors.first_name} />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <label>{t.lastNameLabel}</label>
+                                    <label>{t('lastNameLabel')}</label>
                                     <AdminInput
                                         type="text"
                                         name="last_name"
-                                        placeholder={t.enterLastName}
+                                        placeholder={t('enterLastName')}
                                         registerProps={register("last_name")}
                                     />
                                     <InputError error={errors.last_name} />
@@ -269,29 +273,29 @@ export default function Users({ language }) {
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label>{t.emailLabel}</label>
+                                <label>{t('emailLabel')}</label>
                                 <AdminInput
                                     type="email"
                                     name="email"
-                                    placeholder={t.email}
+                                    placeholder={t('email')}
                                     registerProps={register("email")}
                                 />
                                 <InputError error={errors.email} />
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label>{t.pass}</label>
+                                <label>{t('pass')}</label>
                                 <AdminInput
                                     type="password"
                                     name="password"
-                                    placeholder={t.pass}
+                                    placeholder={t('pass')}
                                     registerProps={register("password")}
                                 />
                                 <InputError error={errors.password} />
                             </div>
 
                             <div style={{ marginBottom: "15px" }}>
-                                <label>{t.role}</label>
+                                <label>{t('role')}</label>
                                 <select
                                     {...register("role")}
                                     style={{
@@ -303,16 +307,16 @@ export default function Users({ language }) {
                                         width: "100%",
                                     }}
                                 >
-                                    <option value="user">{t.user}</option>
-                                    <option value="admin">{t.admin}</option>
+                                    <option value="user">{t('user')}</option>
+                                    <option value="admin">{t('admin')}</option>
                                 </select>
                             </div>
 
                             <div className={style.modalButtons}>
                                 <button type="button" className={style.btnOutline} onClick={() => setShowModal(false)}>
-                                    {t.cancel}
+                                    {t('cancel')}
                                 </button>
-                                <button type="submit" className={style.btnActive}>{t.save}</button>
+                                <button type="submit" className={style.btnActive}>{t('save')}</button>
                             </div>
                         </form>
                     </div>
@@ -322,12 +326,12 @@ export default function Users({ language }) {
             {showDeleteModal && (
                 <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)} >
                     <div className={style.modalContent} onClick={(e) => e.stopPropagation()} >
-                        <h2 className={style.modalTitle}>{t.confirm}</h2>
-                        <p>{t.confirmDeleteDesc}</p>
+                        <h2 className={style.modalTitle}>{t('confirm')}</h2>
+                        <p>{t('confirmDeleteDesc')}</p>
 
                         <div className={style.modalButtons}>
                             <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>
-                                {t.confirmDeleteCancel}
+                                {t('confirmDeleteCancel')}
                             </button>
 
                             <button className={style.btnActive} style={{ backgroundColor: "red", borderColor: "red" }}
@@ -335,7 +339,7 @@ export default function Users({ language }) {
                                     handleDelete(showDeleteModal);
                                     setShowDeleteModal(null);
                                 }} >
-                                {t.confirmDeleteBtn}
+                                {t('confirmDeleteBtn')}
                             </button>
                         </div>
                     </div>

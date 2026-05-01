@@ -37,14 +37,14 @@ export default function FileUploadZone({ file, setFile, setError, t }) {
             {!file ? (
                 <>
                     <FaFileArrowUp className={style.uploadIcon} />
-                    <p><b>{t.uploadText}</b></p>
-                    <p>{t.uploadHint}</p>
+                    <p><b>{t('uploadText')}</b></p>
+                    <p>{t('uploadHint')}</p>
                 </>
             ) : (
                 <>
                     <FaFileArrowUp className={style.uploadIcon} />
                     <p className={style.fileName}><b>{file.name}</b></p>
-                    <p className={style.successMsg}>{t.fileSelected}</p>
+                    <p className={style.successMsg}>{t('fileSelected')}</p>
                 </>
             )}
 

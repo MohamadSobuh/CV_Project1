@@ -2,7 +2,8 @@ import style from "./SidebarAdminUser.module.css";
 import { Link } from "react-router-dom";
 import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars , FaTimes} from "react-icons/fa";
 import Admin from "../images/Admin.jpg";
-import translations from "../locales/translations";
+import { useTranslation } from "react-i18next";
+
 import { useState, useEffect } from 'react';
 export default function AdminSidebar({ language }) {
 
@@ -15,7 +16,8 @@ export default function AdminSidebar({ language }) {
         });
     }, []);
 
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     return (
         <>
@@ -34,34 +36,34 @@ export default function AdminSidebar({ language }) {
                 </Link>
 
                 <Link className={style.links} to="/admin/dashboard">
-                    <FaThLarge className="m-3" />{t.dash}
+                    <FaThLarge className="m-3" />{t('dash')}
                 </Link>
 
                 <Link className={style.links} to="/admin/users">
-                    <FaUsers className="m-3" />{t.user}
+                    <FaUsers className="m-3" />{t('user')}
                 </Link>
 
                 <Link className={style.links} to="/admin/topics">
-                    <FaBookOpen className="m-3" />{t.topic}
+                    <FaBookOpen className="m-3" />{t('topic')}
                 </Link>
 
                 <Link className={style.links} to="/admin/tasks">
-                    <FaListUl className="m-3" />{t.task}
+                    <FaListUl className="m-3" />{t('task')}
                 </Link>
 
                 <Link className={style.links} to="/admin/quiz">
-                    <FaQuestionCircle className="m-3" />{t.quiz}
+                    <FaQuestionCircle className="m-3" />{t('quiz')}
                 </Link>
 
                 <div className={style.bottomLinks}>
                     <hr />
 
                     <Link className={style.links} to="/admin/settings">
-                        <FaCog className="m-3" />{t.setting}
+                        <FaCog className="m-3" />{t('setting')}
                     </Link>
 
                     <Link className={`${style.links} ${style.logout}`} to="/">
-                        {t.logout}<FaSignOutAlt className="m-3" />
+                        {t('logout')}<FaSignOutAlt className="m-3" />
                     </Link>
                 </div>
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import style from "./AdminDash.module.css";
 import { FaUsers, FaListUl, FaQuestionCircle } from "react-icons/fa";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import axios from 'axios';
 export default function AdminDash({ language }) {
   const [totalusers, setTotalUsers] = useState(0);
@@ -47,17 +48,18 @@ export default function AdminDash({ language }) {
     fetchLatestUsers();
   }, []);
 
-  const t = translations[language];
+  const { t, i18n } = useTranslation();
+
 
   return (
     <div className={language === 'ar' ? style.dashArabic : style.dash}>
-      <h1>{t.dash}</h1>
-      <p>{t.overview}</p>
+      <h1>{t('dash')}</h1>
+      <p>{t('overview')}</p>
       <br />
       <div className='row'>
         <div className={`${style.card} col-md-3`}>
           <div>
-            <p>{t.totalUsers}</p>
+            <p>{t('totalUsers')}</p>
             <b>{totalusers}</b>
           </div>
           <FaUsers className={style.iconStats} style={{ color: "#F1416F", background: "#fce1e6" }} />
@@ -65,7 +67,7 @@ export default function AdminDash({ language }) {
 
         <div className={`${style.card} col-md-3`}>
           <div>
-            <p>{t.totalTasks}</p>
+            <p>{t('totalTasks')}</p>
             <b>{totaltasks}</b>
           </div>
           <FaListUl className={style.iconStats} style={{ color: "#3FB48D", background: "#ccf3e3" }} />
@@ -73,7 +75,7 @@ export default function AdminDash({ language }) {
 
         <div className={`${style.card} col-md-3`}>
           <div>
-            <p>{t.quizQuestions}</p>
+            <p>{t('quizQuestions')}</p>
             <b>{questions}</b>
           </div>
           <FaQuestionCircle className={style.iconStats} style={{ color: "#F76D2F", background: "#FEE9DA" }} />
@@ -81,13 +83,13 @@ export default function AdminDash({ language }) {
       </div>
 
       <div className={style.lastUsers}>
-        <h3>{t.latestUsers}</h3>
+        <h3>{t('latestUsers')}</h3>
         <table className={`${style.tableLastUsers}`}>
           <thead>
             <tr>
-              <th>{t.name}</th>
-              <th>{t.email}</th>
-              <th>{t.learningPlan}</th>
+              <th>{t('name')}</th>
+              <th>{t('email')}</th>
+              <th>{t('learningPlan')}</th>
             </tr>
           </thead>
 

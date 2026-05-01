@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import planEmpty from "../../images/planEmpty.png";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import EmptyPage from "../../components/ui/EmptyPage";
 import { useNavigate } from "react-router-dom";
 import style from "./Plan.module.css";
@@ -43,7 +44,8 @@ export default function Plan({ language }) {
 
     const [activeTopicId, setActiveTopicId] = useState(1);
     const { setActiveTask } = useUserFlow()
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
     const navigate = useNavigate();
 
     let totalAssignedTasks = 0;
@@ -52,13 +54,13 @@ export default function Plan({ language }) {
     planData.forEach(topic => {
         if (topic.tasks) {
             totalAssignedTasks += topic.tasks.length;
-            totalCompletedTasks += topic.tasks.filter(t => t.status === 'completed').length;
+            totalCompletedTasks += topic.tasks.filter(task => task.status === 'completed').length;
         }
     });
 
     const overallProgressPercent = totalAssignedTasks === 0 ? 0 : Math.round((totalCompletedTasks / totalAssignedTasks) * 100);
 
-    const selectedTopic = planData.find(t => t.id === activeTopicId);
+    const selectedTopic = planData.find(topic => topic.id === activeTopicId);
 
     const handleTaskClick = (task) => {
         setActiveTask(task)
@@ -100,20 +102,20 @@ export default function Plan({ language }) {
             {planData.length === 0 ? (
                 <EmptyPage
                     icon={<img src={planEmpty} width="200" />}
-                    title={t.planEmptyTitle}
-                    message={t.planEmptyMessage}
-                    btnText={t.upload}
+                    title={t('planEmptyTitle')}
+                    message={t('planEmptyMessage')}
+                    btnText={t('upload')}
                     onClick={() => navigate("/user/upload")}
                 />
             ) : (
                 <>
-                    <h1 className={style.planTitle}>{t.planTitle || "Learning plan"}</h1>
-                    <p className={style.planSubtitle}>{t.planSubtitle}</p>
+                    <h1 className={style.planTitle}>{t('planTitle') || "Learning plan"}</h1>
+                    <p className={style.planSubtitle}>{t('planSubtitle')}</p>
 
                     <div className={style.overallProgressContainer}>
                         <div className={style.progressLabelRow}>
-                            <span>{t.overallProgress}</span>
-                            <span>{totalCompletedTasks}/{totalAssignedTasks} {t.tasks}</span>
+                            <span>{t('overallProgress')}</span>
+                            <span>{totalCompletedTasks}/{totalAssignedTasks} {t('tasks')}</span>
                         </div>
                         <div className={style.progressBarContainer}>
                             <div className={style.progressBarFill} style={{ width: `${overallProgressPercent}%` }} />

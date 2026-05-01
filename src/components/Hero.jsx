@@ -1,6 +1,7 @@
 import styles from "./CVAnalyzerHero.module.css";
 import { useEffect, useRef } from "react";
-import translations from "../locales/translations";
+import { useTranslation } from "react-i18next";
+
 import { Link } from "react-router-dom";
 
 const PARTICLE_COLORS = [
@@ -55,7 +56,7 @@ const particles = generateParticles(22);
 
 export default function Hero({ language }) {
     const btnRef = useRef(null);
-    const t = translations[language] || translations["en"];
+    const { t, i18n } = useTranslation();
 
     return (
         <div className={styles.cvAnalyzerRoot} >
@@ -67,14 +68,14 @@ export default function Hero({ language }) {
                 
                 <div className={styles.heroText}>
 
-                    <div className={styles.badge}> <span className={styles.badgeDot} /> {t.desWeb} </div>
+                    <div className={styles.badge}> <span className={styles.badgeDot} /> {t('desWeb')} </div>
 
-                    <h1 className={styles.headline}> <b>{t.heroTitle1}</b><br />
-                        <span className={styles.highlight}><b>{t.heroTitle2}</b></span>
+                    <h1 className={styles.headline}> <b>{t('heroTitle1')}</b><br />
+                        <span className={styles.highlight}><b>{t('heroTitle2')}</b></span>
                     </h1>
 
                     <p className={styles.subtext}>
-                        {t.heroDesc}
+                        {t('heroDesc')}
                     </p>
 
                     <div className={styles.ctaWrap}>
@@ -83,7 +84,7 @@ export default function Hero({ language }) {
                             state={{ language }}
                             className={styles.btnPrimary}
                         >
-                            {t.getStarted}
+                            {t('getStarted')}
                         </Link>
                     </div>
                 </div>

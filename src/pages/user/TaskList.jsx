@@ -2,7 +2,8 @@ import React from 'react';
 import TaskItem from './TaskItem';
 import { FaHtml5, FaJs, FaReact, FaSlack, FaPython } from 'react-icons/fa';
 import style from './Plan.module.css';
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 
 export default function TaskList({ activeTopic, onTaskClick , language }) {
     if (!activeTopic) {
@@ -26,7 +27,7 @@ export default function TaskList({ activeTopic, onTaskClick , language }) {
     const Icon = getIcon();
 
 
-    const completedCount = tasks ? tasks.filter(t => t.status === 'completed').length : 0;
+    const completedCount = tasks ? tasks.filter(task => task.status === 'completed').length : 0;
     const totalCount = tasks ? tasks.length : 0;
     const progressPercent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 

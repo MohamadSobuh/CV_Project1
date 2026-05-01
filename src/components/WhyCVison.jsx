@@ -1,5 +1,6 @@
 import style from "./WhyCVison.module.css";
-import translations from "../locales/translations";
+import { useTranslation } from "react-i18next";
+
 import {FaRegFileAlt, FaBrain, FaList} from "react-icons/fa";
 
 const steps = [
@@ -45,13 +46,13 @@ const steps = [
 ];
 
 export default function WhyCVison({ language }) {
-    const t = translations[language] || translations["en"];
+    const { t, i18n } = useTranslation();
     const isRTL = language === "ar";
 
     return (
         <section id="how" className={style.whyCVision}>
-            <span className={style.sectionLabel}>{t.navFeatures}</span>
-            <h2 className={style.sectionTitle}>{t.whyTitle}</h2>
+            <span className={style.sectionLabel}>{t('navFeatures')}</span>
+            <h2 className={style.sectionTitle}>{t('whyTitle')}</h2>
 
             <div className={style.fan}>
                 {steps.map((step, i) => {

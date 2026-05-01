@@ -75,15 +75,15 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
         <div className={style.modalOverlay} onClick={onClose}>
             <div className={style.modalContent} onClick={(e) => e.stopPropagation()}>
                 <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>
-                    {formData?.id ? t.editQuestion : t.addQuestion}
+                    {formData?.id ? t('editQuestion') : t('addQuestion')}
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
                         <div style={{ flex: 1 }}>
-                            <label className={style.labelStyle}>{t.questionType}</label>
+                            <label className={style.labelStyle}>{t('questionType')}</label>
                             <select {...register("questionType")} className={style.selectStyle} defaultValue="">
-                                <option value="" disabled hidden>{t.selectQuestionType}</option>
+                                <option value="" disabled hidden>{t('selectQuestionType')}</option>
                                 {questionTypes.map(questionType => (
                                     <option key={questionType.id} value={questionType.name}>
                                         {questionType.name}
@@ -93,9 +93,9 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                             <InputError error={errors.questionType} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <label className={style.labelStyle}>{t.associatedTask}</label>
+                            <label className={style.labelStyle}>{t('associatedTask')}</label>
                             <select {...register("associatedTask")} className={style.selectStyle} defaultValue="">
-                                <option value="" disabled hidden>{t.selectTask}</option>
+                                <option value="" disabled hidden>{t('selectTask')}</option>
                                 {tasksFromDB?.map((task) => (
                                     <option key={task.id} value={task.task}>{task.task}</option>
                                 ))}
@@ -105,10 +105,10 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                     </div>
 
                     <div style={{ marginBottom: "20px" }}>
-                        <label className={style.c}>{t.questionText}</label>
+                        <label className={style.c}>{t('questionText')}</label>
                         <textarea
                             {...register("questionText")}
-                            placeholder={t.enterQuestionText}
+                            placeholder={t('enterQuestionText')}
                             rows={3}
                             className={style.textareaStyle}
                         />
@@ -116,7 +116,7 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                     </div>
 
                     <div style={{ marginBottom: "20px" }}>
-                        <label className={style.labelStyle}>{t.answerOptions}</label>
+                        <label className={style.labelStyle}>{t('answerOptions')}</label>
                         {[1, 2, 3, 4].map((num) => (
                             <div key={num} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
                                 <input
@@ -128,7 +128,7 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
                                 <div style={{ flex: 1 }}>
                                     <AdminInput
                                         type="text"
-                                        placeholder={`${t.option} ${num}`}
+                                        placeholder={`${t('option')} ${num}`}
                                         registerProps={register(`option${num}`)}
                                     />
                                 </div>
@@ -139,10 +139,10 @@ const AddQuestionsForm = ({ t, formData = null, onClose, handleAdd, handleEdit, 
 
                     <div className={style.modalButtons} style={{ justifyContent: "flex-end" }}>
                         <button type="button" className={style.btnOutline} onClick={handleClose}>
-                            {t.cancel}
+                            {t('cancel')}
                         </button>
                         <button type="submit" className={style.btnActive}>
-                            {formData?.id ? t.saveChanges : t.save}
+                            {formData?.id ? t('saveChanges') : t('save')}
                         </button>
                     </div>
                 </form>

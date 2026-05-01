@@ -26,7 +26,7 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
                         <FaBookOpen />
                     </div>
                     <span className={`${style.difficultyBadge} ${topic.difficulty?.toLowerCase() === 'easy' ? style.diffEasy : topic.difficulty?.toLowerCase() === 'medium' ? style.diffMedium : style.diffHard}`}>
-                        {topic.difficulty?.toLowerCase() === 'easy' ? t.easy : topic.difficulty?.toLowerCase() === 'medium' ? t.medium : t.hard}
+                        {topic.difficulty?.toLowerCase() === 'easy' ? t('easy') : topic.difficulty?.toLowerCase() === 'medium' ? t('medium') : t('hard')}
                     </span>
                 </div>
 
@@ -43,14 +43,14 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
                                 onEditClick(topic);
                                 setShowMenu(false);
                             }}>
-                                <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} /> {t?.editTopic}
+                                <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} /> {t('editTopic')}
                             </button>
 
                             <button className={style.menuItem} onClick={() => {
                                 onDeleteClick(topic.id);
                                 setShowMenu(false);
                             }}>
-                                <FaTrash className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-danger`} /> {t?.delete}
+                                <FaTrash className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-danger`} /> {t('delete')}
                             </button>
                         </div>
                     )}

@@ -15,32 +15,32 @@ export default function UserProfile({ user, t , language }) {
                 <form>
                     <div className="row">
                         <div className="form-group col-md-6">
-                            <label className={style.text}><b>{t.firstNameLabel}</b></label>
+                            <label className={style.text}><b>{t('firstNameLabel')}</b></label>
                             <div className="form-control bg-light">{user.firstname}</div>
                         </div>
                         <div className="form-group col-md-6">
-                            <label className={style.text}><b>{t.lastNameLabel}</b></label>
+                            <label className={style.text}><b>{t('lastNameLabel')}</b></label>
                             <div className="form-control bg-light">{user.lastname}</div>
                         </div>
                     </div>
 
                     <div className="form-group mt-3">
-                        <label className={style.text}><b>{t.emailLabel}</b></label>
+                        <label className={style.text}><b>{t('emailLabel')}</b></label>
                         <div className="form-control bg-light">{user.email}</div>
                     </div>
 
                     <div className="form-group mt-3">
-                        <label className={style.text}><b>{t.fieldLabel}</b></label>
+                        <label className={style.text}><b>{t('fieldLabel')}</b></label>
                         <div className="form-control bg-light">{user.field}</div>
                     </div>
                 </form>
 
                 <Link to="edit" className="alert alert-info w-100 mt-4 p-2 d-flex align-items-center justify-content-center text-decoration-none">
-                    <FaEdit className="me-2" /> <b>{t.edit}</b>
+                    <FaEdit className="me-2" /> <b>{t('edit')}</b>
                 </Link>
                 <hr className={style.hr} />
                 <button className='alert alert-danger w-100 p-2 d-flex align-items-center justify-content-center'>
-                    <FaTrash className="me-2" /> <b>{t.delete}</b>
+                    <FaTrash className="me-2" /> <b>{t('delete')}</b>
                 </button>
             </div>
         </div>

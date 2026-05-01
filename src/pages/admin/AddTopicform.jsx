@@ -48,34 +48,34 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
         <div className={style.modalOverlay} onClick={handleClose}>
             <div className={style.modalContent} onClick={e => e.stopPropagation()}>
                 <h2 style={{ marginBottom: "20px", color: "#1A83A8" }}>
-                    {formData?.id ? t.editTopic || "Edit Topic" : t.addNewTopic || "Add Topic"}
+                    {formData?.id ? t('editTopic') || "Edit Topic" : t('addNewTopic') || "Add Topic"}
                 </h2>
 
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div style={{ marginBottom: "15px" }}>
-                        <label>{t.topicTitleLabel}</label>
+                        <label>{t('topicTitleLabel')}</label>
                         <AdminInput
                             registerProps={register("title")}
-                            placeholder={t.topicPlaceholder}
+                            placeholder={t('topicPlaceholder')}
                         />
                         <InputError error={errors.title} />
                     </div>
 
                     <div style={{ marginBottom: "15px" }}>
-                        <label>{t.description}</label>
+                        <label>{t('description')}</label>
                         <textarea
                             {...register("desc")}
                             className={style.textareaStyle}
                             rows="4"
-                            placeholder={t.descPlaceholder}
+                            placeholder={t('descPlaceholder')}
                         />
                         <InputError error={errors.desc} />
                     </div>
 
                     <div style={{ marginBottom: "15px" }}>
-                        <label>{t.careerFieldLabel}</label>
+                        <label>{t('careerFieldLabel')}</label>
                         <select {...register("category")} className={style.selectStyle} defaultValue="">
-                            <option value="" disabled hidden>{t.selectField}</option>
+                            <option value="" disabled hidden>{t('selectField')}</option>
                             {categories.map(category => (
                                 <option key={category.id} value={category.name}>
                                     {category.name}
@@ -85,9 +85,9 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
                         <InputError error={errors.category} />
                     </div>
                     <div style={{ marginBottom: "15px" }}>
-                        <label>{t.difficultyLabel}</label>
+                        <label>{t('difficultyLabel')}</label>
                         <select {...register("difficulty")} className={style.selectStyle} defaultValue="">
-                            <option value="" disabled hidden>{t.selectDifficulty}</option>
+                            <option value="" disabled hidden>{t('selectDifficulty')}</option>
                             {difficulties.map(difficulty => (
                                 <option key={difficulty.id} value={difficulty.name.toLowerCase()}>
                                     {difficulty.name}
@@ -99,10 +99,10 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
 
                     <div className={style.modalButtons}>
                         <button type="button" className={style.btnOutline} onClick={handleClose}>
-                            {t.cancel}
+                            {t('cancel')}
                         </button>
                         <button type="submit" className={style.btnActive}>
-                            {formData?.id ? t.saveChanges || "Save Changes" : t.save || "Add Topic"}
+                            {formData?.id ? t('saveChanges') || "Save Changes" : t('save') || "Add Topic"}
                         </button>
                     </div>
                 </form>

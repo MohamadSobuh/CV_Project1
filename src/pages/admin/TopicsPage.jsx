@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import style from "./AddTopics.module.css";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import TopicCard from "../../components/ui/TopicCard";
 import AdminInput from "../../components/ui/AdminInput";
 import InputError from "../../components/ui/InputError";
@@ -15,7 +16,8 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 const TopicsPage = ({ language = 'en' }) => {
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
@@ -146,7 +148,7 @@ const TopicsPage = ({ language = 'en' }) => {
                 };
 
                 setTopics(prevTopics =>
-                    prevTopics.map(t => t.id === showEditModal.id ? updatedTopic : t)
+                    prevTopics.map(topic => topic.id === showEditModal.id ? updatedTopic : topic)
                 );
 
                 setShowEditModal(null);
@@ -177,21 +179,21 @@ const TopicsPage = ({ language = 'en' }) => {
             {topics.length === 0 ? (
                 <EmptyPage
                     icon={<FaBookOpen />}
-                    title={t.emptyTopicsTitle}
-                    message={t.emptyTopicsMessage}
-                    btnText={t.addTopic}
+                    title={t('emptyTopicsTitle')}
+                    message={t('emptyTopicsMessage')}
+                    btnText={t('addTopic')}
                     onClick={() => setShowAddModal(true)}
                 />
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
                         <div className='col-md-6'>
-                            <h1>{t.topicsTitle}</h1>
-                            <p>{t.topicsSub}</p>
+                            <h1>{t('topicsTitle')}</h1>
+                            <p>{t('topicsSub')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                             <button className={style.btnAdd} onClick={() => setShowAddModal(true)}>
-                                + {t.addTopic}
+                                + {t('addTopic')}
                             </button>
                         </div>
                         <div className="col-md-6">
@@ -200,7 +202,7 @@ const TopicsPage = ({ language = 'en' }) => {
                                 <input
                                     type="text"
                                     className={style.searchInput}
-                                    placeholder={t.searchPlaceholder}
+                                    placeholder={t('search')}
                                     value={filterInput}
                                     onChange={(e) => setFilterInput(e.target.value)}
                                 />
@@ -232,11 +234,11 @@ const TopicsPage = ({ language = 'en' }) => {
             {showDeleteModal && (
                 <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)}>
                     <div className={style.modalContent} onClick={e => e.stopPropagation()}>
-                        <h2 className={style.modalTitle}>{t.confirm}</h2>
-                        <p>{t.confirmDeleteDesc}</p>
+                        <h2 className={style.modalTitle}>{t('confirm')}</h2>
+                        <p>{t('confirmDeleteDesc')}</p>
                         <div className={style.modalButtons}>
-                            <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t.confirmDeleteCancel}</button>
-                            <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t.confirmDeleteBtn}</button>
+                            <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t('confirmDeleteCancel')}</button>
+                            <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('confirmDeleteBtn')}</button>
                         </div>
                     </div>
                 </div>

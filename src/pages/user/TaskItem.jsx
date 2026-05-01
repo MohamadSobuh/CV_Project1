@@ -1,10 +1,11 @@
 import React from 'react';
 import { FaCheckCircle, FaCheck } from 'react-icons/fa';
 import style from './Plan.module.css';
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 
 export default function TaskItem({ task, index, onTaskClick, language }) {
-const t = translations[language] || translations.en;
+const { t, i18n } = useTranslation();
     if (task.status === 'completed') {
         return (
             <div className={style.taskItemCompleted}>
@@ -26,7 +27,7 @@ console.log("language in TaskItem:", language);
                 <span className={style.pendingTaskTitle}>{task.title}</span>
             </div>
             <button className={style.startBtn} onClick={() => onTaskClick && onTaskClick(task)} >
-                {t.startLearn}
+                {t('startLearn')}
             </button>
         </div>
     );

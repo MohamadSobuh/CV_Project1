@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import style from "./Quiz.module.css";
 import QuestionCard from "../../components/ui/QuestionCard";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { questionSchema } from "../../utils/validationSchema";
@@ -79,7 +80,8 @@ const QuizQuestions = ({ language = 'en' }) => {
         }
     };
 
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -207,9 +209,9 @@ const QuizQuestions = ({ language = 'en' }) => {
     const handleFilter = () => {
         const filteredQuestions = questions.filter((question) => {
             return (
-                question.topic.toLowerCase().includes(filterTopic.toLowerCase()) &&
-                question.type.toLowerCase().includes(filterQuestionType.toLowerCase()) &&
-                question.task.toLowerCase().includes(filterTask.toLowerCase())
+                question.topic?.toLowerCase().includes(filterTopic.toLowerCase()) &&
+                question.type?.toLowerCase().includes(filterQuestionType.toLowerCase()) &&
+                question.task?.toLowerCase().includes(filterTask.toLowerCase())
             );
         });
         setQuestionsFilter(filteredQuestions);
@@ -232,21 +234,21 @@ const QuizQuestions = ({ language = 'en' }) => {
             {questions.length === 0 ? (
                 <EmptyPage
                     icon={<FaQuestionCircle />}
-                    title={t.emptyQuestionsTitle}
-                    message={t.emptyQuestionsMessage}
-                    btnText={t.addQuestion}
+                    title={t('emptyQuestionsTitle')}
+                    message={t('emptyQuestionsMessage')}
+                    btnText={t('addQuestion')}
                     onClick={() => setShowAddModal(true)}
                 />
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
                         <div className='col-md-6'>
-                            <h1>{t.quizTitle}</h1>
-                            <p>{t.quizSub}</p>
+                            <h1>{t('quizTitle')}</h1>
+                            <p>{t('quizSub')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                             <button onClick={() => setShowAddModal(true)} className={style.btnAdd}>
-                                + {t.addQuestion}
+                                + {t('addQuestion')}
                             </button>
                         </div>
                         <div className="col-md-12">
@@ -259,7 +261,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                                             value={filterTopic}
                                             onChange={(e) => setFilterTopic(e.target.value)}
                                         >
-                                            <option value="">{t.allTopics}</option>
+                                            <option value="">{t('allTopics')}</option>
                                             {topics.map((topic) => (
                                                 <option key={topic.id} value={topic.title}>
                                                     {topic.title}
@@ -277,9 +279,9 @@ const QuizQuestions = ({ language = 'en' }) => {
                                             value={filterQuestionType}
                                             onChange={(e) => setFilterQuestionType(e.target.value)}
                                         >
-                                            <option value="">{t.allTypesQuestions}</option>
-                                            <option value="task quiz">{t.taskQuiz}</option>
-                                            <option value="placement test">{t.placementTest}</option>
+                                            <option value="">{t('allTypesQuestions')}</option>
+                                            <option value="task quiz">{t('taskQuiz')}</option>
+                                            <option value="placement test">{t('placementTest')}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -292,7 +294,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                                             value={filterTask}
                                             onChange={(e) => setFilterTask(e.target.value)}
                                         >
-                                            <option value="">{t.allTasks}</option>
+                                            <option value="">{t('allTasks')}</option>
                                             {tasksFromDB.map((task) => (
                                                 <option key={task.id} value={task.task}>
                                                     {task.task}
@@ -331,11 +333,11 @@ const QuizQuestions = ({ language = 'en' }) => {
             {showDeleteModal && (
                 <div className={style.modalOverlay} onClick={() => setShowDeleteModal(null)}>
                     <div className={style.modalContent} onClick={e => e.stopPropagation()}>
-                        <h2 className={style.modalTitle}>{t.confirm}</h2>
-                        <p>{t.confirmDeleteDesc}</p>
+                        <h2 className={style.modalTitle}>{t('confirm')}</h2>
+                        <p>{t('confirmDeleteDesc')}</p>
                         <div className={style.modalButtons}>
-                            <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t.confirmDeleteCancel}</button>
-                            <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t.confirmDeleteBtn}</button>
+                            <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t('confirmDeleteCancel')}</button>
+                            <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('confirmDeleteBtn')}</button>
                         </div>
                     </div>
                 </div>
@@ -344,9 +346,9 @@ const QuizQuestions = ({ language = 'en' }) => {
             {totalPagesFilter > 1 && (
 
                 <div className={style.foot}>
-                    <button className={style.btnOutline} onClick={handlePrev}>{t.prev}</button>
+                    <button className={style.btnOutline} onClick={handlePrev}>{t('prev')}</button>
                     <button className={style.btnActive} style={{ background: "#1A83A8" }}>{currentPage}</button>
-                    <button className={style.btnOutline} onClick={handleNext}>{t.next}</button>
+                    <button className={style.btnOutline} onClick={handleNext}>{t('next')}</button>
                 </div>
             )}
         </div>

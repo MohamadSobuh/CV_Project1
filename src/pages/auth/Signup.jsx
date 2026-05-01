@@ -10,38 +10,40 @@ import InputError from "../../components/ui/InputError";
 import { signupSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import translations from "../../locales/translations";
+import { useTranslation } from "react-i18next";
+
 export default function Signup() {
     const location = useLocation();
     const language = location.state?.language || "en";
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     const inputs = [
         {
             name: "first_name",
             type: "text",
-            label: t.firstNameLabel,
+            label: t('firstNameLabel'),
             id: "firstname",
             col: "col-md-6"
         },
         {
             name: "last_name",
             type: "text",
-            label: t.lastNameLabel,
+            label: t('lastNameLabel'),
             id: "lastname",
             col: "col-md-6"
         },
         {
             name: "email",
             type: "email",
-            label:t.email,
+            label:t('email'),
             id: "emailInput",
             col: "col-md-12"
         },
         {
             name: "password",
             type: "password",
-            label: t.password,
+            label: t('password'),
             id: "passwordInput",
             col: "col-md-12"
         }
@@ -110,7 +112,7 @@ export default function Signup() {
                 <Link to="/" >
                     <img src={darklogo} alt="logo" className={`${style.logo}`} />
                 </Link>
-                <h3 ><b>{t.signupTitle}</b></h3>
+                <h3 ><b>{t('signupTitle')}</b></h3>
                 <br />
                 <form onSubmit={handleSubmit(submitForm)} >
 
@@ -141,10 +143,10 @@ export default function Signup() {
                         </div>
                     ))}
 
-                    <button type="submit" className={`${style.btn}`}> <b>{t.signup}</b>  </button>
+                    <button type="submit" className={`${style.btn}`}> <b>{t('signup')}</b>  </button>
                 </form>
                 <br />
-                <p> {t.haveAccount}<Link to="/login" className={style.s}> <b>{t.login}</b> </Link>
+                <p> {t('haveAccount')}<Link to="/login" className={style.s}> <b>{t('login')}</b> </Link>
                 </p>
             </div>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import style from "./UploadCV.module.css";
-import translations from '../../locales/translations';
+import { useTranslation } from "react-i18next";
+
 import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
 import { useUserFlow } from '../../context/UserFlowContext';
@@ -26,17 +27,17 @@ export default function UploadCV({ language }) {
 
     const handleAnalysis = () => {
         if (!file && !selectedField) {
-            setError(t.errorBoth);
+            setError(t('errorBoth'));
             return;
         }
 
         if (!file) {
-            setError(t.errorFile);
+            setError(t('errorFile'));
             return;
         }
 
         if (!selectedField) {
-            setError(t.errorField);
+            setError(t('errorField'));
             return;
         }
 
@@ -47,14 +48,14 @@ export default function UploadCV({ language }) {
         ];
 
         if (!allowedTypes.includes(file.type)) {
-            setError(t.errorType);
+            setError(t('errorType'));
             return;
         }
 
         const maxSize = 5 * 1024 * 1024;
 
         if (file.size > maxSize) {
-            setError(t.errorSize);
+            setError(t('errorSize'));
             return;
         }
 
@@ -77,13 +78,14 @@ export default function UploadCV({ language }) {
         });
     };
 
-    const t = translations[language];
+    const { t, i18n } = useTranslation();
+
 
     return (
         <div className={style.uploadPage}>
             <div className={style.uploadCard}>
-                <h4>{t.uploadCVtitle}</h4>
-                <p className={style.center}>{t.uploadCVdescription}</p>
+                <h4>{t('uploadCVtitle')}</h4>
+                <p className={style.center}>{t('uploadCVdescription')}</p>
 
                 <FileUploadZone
                     file={file}
@@ -92,9 +94,9 @@ export default function UploadCV({ language }) {
                     t={t}
                 />
 
-                <p><b>{t.chooseField}</b></p>
+                <p><b>{t('chooseField')}</b></p>
                 <select value={selectedField} onChange={(e) => setSelectedField(e.target.value)} className={style.selectField}>
-                    <option value="" disabled hidden>{t.selectPlaceholder}</option>
+                    <option value="" disabled hidden>{t('selectPlaceholder')}</option>
                     {fields.map(field => (
                         <option key={field.id} value={field.name}>
                             {field.name}
@@ -104,7 +106,7 @@ export default function UploadCV({ language }) {
 
                 <UploadPageError error={error} />
 
-                <button className={style.analysisBtn} onClick={handleAnalysis}>{t.analysisBtn}</button>
+                <button className={style.analysisBtn} onClick={handleAnalysis}>{t('analysisBtn')}</button>
             </div>
         </div >
     );

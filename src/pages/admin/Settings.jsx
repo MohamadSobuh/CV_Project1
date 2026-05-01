@@ -4,19 +4,27 @@ import axios from 'axios';
 import style from "./Settings.module.css";
 import SettingsCard from "../../components/ui/SettingsCard";
 import { FaGlobe, FaLock, FaSave } from "react-icons/fa";
-import translations from "../../locales/translations";
-const Settings = ({ language = 'en' }) => {
-    const t = translations[language];
+import { useTranslation } from "react-i18next";
+
+const Settings = () => {
+    const { t, i18n } = useTranslation();
+    const language = i18n.language;
     const navigate = useNavigate();
+    const direction = language === 'ar' ? 'rtl' : 'ltr';
+    const handleLanguageChange = (event) => {
+        const newLanguage = event.target.value;
+        console.log(newLanguage, "newLanguage");
+
+        i18n.changeLanguage(newLanguage);
+        document.documentElement.dir = newLanguage === 'ar' ? 'rtl' : 'ltr';
+        localStorage.setItem("language", newLanguage);
+    };
 
     const [siteSettings, setSiteSettings] = useState({
         siteName: "CVision",
-        defaultLanguage: "en"
-    });
-
-    const [securitySettings, setSecuritySettings] = useState({
+        defaultLanguage: "en",
         sessionTimeout: 30,
-        twoFactorAuth: false
+        twoFactorAuth: false,
     });
 
     const [loading, setLoading] = useState(true);
@@ -40,14 +48,11 @@ const Settings = ({ language = 'en' }) => {
                     setSiteSettings(prev => ({
                         ...prev,
                         siteName: response.data.siteName || prev.siteName,
-                        defaultLanguage: response.data.defaultLanguage || prev.defaultLanguage
-                    }));
-
-                    setSecuritySettings(prev => ({
-                        ...prev,
+                        defaultLanguage: response.data.defaultLanguage || prev.defaultLanguage,
                         sessionTimeout: response.data.sessionTimeout || prev.sessionTimeout,
                         twoFactorAuth: response.data.twoFactorAuth !== undefined ? response.data.twoFactorAuth : prev.twoFactorAuth
                     }));
+
                 }
             } catch (error) {
                 console.error("Error fetching settings:", error.response?.data || error);
@@ -66,7 +71,7 @@ const Settings = ({ language = 'en' }) => {
 
     const handleSecurityChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setSecuritySettings(prev => ({
+        setSiteSettings(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
@@ -79,17 +84,21 @@ const Settings = ({ language = 'en' }) => {
             return;
         }
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/settings/", { ...siteSettings, ...securitySettings }, {
+            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/settings/", { ...siteSettings }, {
                 headers: {
                     Authorization: `Token ${token}`
                 }
             });
             console.log(response.data, "response");
+            if (response.data.defaultLanguage) {
+                handleLanguageChange({ target: { value: response.data.defaultLanguage } });
+
+            }
         } catch (error) {
             console.error("Error updating settings:", error.response?.data || error);
         }
-        console.log("Saving Settings:", { ...siteSettings, ...securitySettings });
-        alert("تم حفظ الإعدادات بنجاح");
+        console.log("Saving Settings:", { ...siteSettings });
+        alert(language === 'ar' ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully");
     };
 
     if (loading) {
@@ -106,12 +115,12 @@ const Settings = ({ language = 'en' }) => {
         <div className={language === 'ar' ? style.settingsPageAr : style.settingsPage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <div className="row align-items-center mb-4">
                 <div className='col-md-6'>
-                    <h1 className="fw-bold" style={{ color: '#082F43' }}>{t.settingsTitle}</h1>
-                    <p style={{ color: '#546e7a' }}>{t.settingsSub}</p>
+                    <h1 className="fw-bold" style={{ color: '#082F43' }}>{t('settingsTitle')}</h1>
+                    <p style={{ color: '#546e7a' }}>{t('settingsSub')}</p>
                 </div>
                 <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>
                     <button className={style.btnAdd} onClick={handleSave}>
-                        <FaSave className="me-2" /> {t.saveSettings}
+                        <FaSave className="me-2" /> {t('saveSettings')}
                     </button>
                 </div>
             </div>
@@ -119,12 +128,12 @@ const Settings = ({ language = 'en' }) => {
             <div className="row g-4">
                 <div className="col-lg-6">
                     <SettingsCard
-                        title={t.generalSettings}
-                        subTitle={t.generalSettingsSub}
+                        title={t('generalSettings')}
+                        subTitle={t('generalSettingsSub')}
                         icon={FaGlobe}
                     >
                         <div className="mb-3">
-                            <label className={style.label}>{t.siteNameLabel}</label>
+                            <label className={style.label}>{t('siteNameLabel')}</label>
                             <input
                                 type="text"
                                 name="siteName"
@@ -134,15 +143,15 @@ const Settings = ({ language = 'en' }) => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label className={style.label}>{t.defaultLanguageLabel}</label>
+                            <label className={style.label}>{t('defaultLanguageLabel')}</label>
                             <select
                                 name="defaultLanguage"
                                 className={`form-select ${style.inputField}`}
                                 value={siteSettings.defaultLanguage}
                                 onChange={handleSiteChange}
                             >
-                                <option value="en">English</option>
-                                <option value="ar">العربية</option>
+                                <option value="en">{t('english')}</option>
+                                <option value="ar">{t('arabic')}</option>
                             </select>
                         </div>
                     </SettingsCard>
@@ -150,17 +159,17 @@ const Settings = ({ language = 'en' }) => {
 
                 <div className="col-lg-6">
                     <SettingsCard
-                        title={t.securitySettings}
-                        subTitle={t.securitySettingsSub}
+                        title={t('securitySettings')}
+                        subTitle={t('securitySettingsSub')}
                         icon={FaLock}
                     >
                         <div className="mb-3">
-                            <label className={style.label}>{t.sessionTimeoutLabel}</label>
+                            <label className={style.label}>{t('sessionTimeoutLabel')}</label>
                             <input
                                 type="number"
                                 name="sessionTimeout"
                                 className={`form-control ${style.inputField}`}
-                                value={securitySettings.sessionTimeout}
+                                value={siteSettings.sessionTimeout}
                                 onChange={handleSecurityChange}
                             />
                         </div>
@@ -168,10 +177,10 @@ const Settings = ({ language = 'en' }) => {
                         <div className={`d-flex align-items-center justify-content-between ${style.toggleSection}`}>
                             <div>
                                 <h6 className="mb-0 fw-bold" style={{ fontSize: '0.9rem', color: '#082F43' }}>
-                                    {t.twoFactorAuth}
+                                    {t('twoFactorAuth')}
                                 </h6>
                                 <small style={{ fontSize: '0.75rem', color: '#546e7a' }}>
-                                    {t.twoFactorDesc}
+                                    {t('twoFactorDesc')}
                                 </small>
                             </div>
                             <div className="form-check form-switch">
@@ -180,7 +189,7 @@ const Settings = ({ language = 'en' }) => {
                                     type="checkbox"
                                     role="switch"
                                     name="twoFactorAuth"
-                                    checked={securitySettings.twoFactorAuth}
+                                    checked={siteSettings.twoFactorAuth}
                                     onChange={handleSecurityChange}
                                     style={{ cursor: 'pointer', borderColor: '#CFE9EC' }}
                                 />
