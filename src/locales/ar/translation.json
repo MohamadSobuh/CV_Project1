@@ -286,5 +286,12 @@
     "topicMessage1": "لقد أنهيت بنجاح",
     "tasksCompleted": "المهام المكتملة",
     "backToPlan": "العودة للخطة",
-    "search": "بحث"
+    "search": "بحث",
+    "sessionExpiredTitle": "انتهت الجلسة",
+    "sessionExpiredMessage": "انتهت صلاحية جلستك بسبب عدم النشاط. يرجى تسجيل الدخول مرة أخرى للمتابعة.",
+    "returnToLogin": "انا مش هون",
+    "upload": "رفع السيرة الذاتية",
+    "history": "سجل التحليلات",
+    "plan": "الخطة التعليمية",
+    "dash": "لوحة التحكم"
 }

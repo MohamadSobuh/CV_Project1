@@ -1,16 +1,26 @@
 import style from "./SidebarAdminUser.module.css";
 import { Link } from "react-router-dom";
-import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars  , FaThLarge ,FaTimes} from "react-icons/fa";
+import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars, FaThLarge, FaTimes } from "react-icons/fa";
 import logo from "./../images/logo.png";
 import { useTranslation } from "react-i18next";
-
+import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 
 export default function Sidebar({ language }) {
   const [open, setOpen] = useState(false);
-
+  const navigate = useNavigate();
 
   const { t, i18n } = useTranslation();
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userFirstName");
+    localStorage.removeItem("userLastName");
+
+    navigate("/");
+  }
 
 
   return (
@@ -20,7 +30,7 @@ export default function Sidebar({ language }) {
         className={`${style.menuBtn} ${language === 'ar' ? style['menuBtn-rtl'] : ''}`}
         onClick={() => setOpen(!open)}
       >
-          {open ? <FaTimes /> : <FaBars />}
+        {open ? <FaTimes /> : <FaBars />}
 
       </button>
       <nav className={`${style.nav} ${language === "ar" ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}>
@@ -32,7 +42,7 @@ export default function Sidebar({ language }) {
         <Link className={`${style.links}`} to="/user/plan"> <FaClipboardList className="m-3" />{t('plan')}</Link>
         <div className={style.bottomLinks}>
           <div className={style.bottomLinks}>
-            <Link className={`${style.links} ${style.logout}`} to="/">
+            <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>
               {t('logout')}
               <FaSignOutAlt className="m-3" />
             </Link>

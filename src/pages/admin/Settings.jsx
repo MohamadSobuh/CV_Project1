@@ -150,8 +150,8 @@ const Settings = () => {
                                 value={siteSettings.defaultLanguage}
                                 onChange={handleSiteChange}
                             >
-                                <option value="en">{t('english')}</option>
-                                <option value="ar">{t('arabic')}</option>
+                                <option value="en" selected={siteSettings.defaultLanguage === "en"}>{t('english')}</option>
+                                <option value="ar" selected={siteSettings.defaultLanguage === "ar"}>{t('arabic')}</option>
                             </select>
                         </div>
                     </SettingsCard>

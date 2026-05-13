@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import style from "./Home.module.css";
 import { FaCloudUploadAlt, FaSearch, FaClipboardList, FaChartLine, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Hero from "./Hero";
 import WhyCVison from './WhyCVison';
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -16,9 +17,28 @@ export default function Home({ language, setLanguage }) {
         e.preventDefault();
         alert("Thank you for subscribing!");
     };
+
     const [menuOpen, setMenuOpen] = useState(false);
     const { t, i18n } = useTranslation();
 
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/settings/");
+                if (response.data && response.data.defaultLanguage) {
+                    if (!localStorage.getItem("language")) {
+                        setLanguage(response.data.defaultLanguage);
+                        localStorage.setItem("language", response.data.defaultLanguage);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching settings:", error);
+            }
+        };
+
+        fetchSettings();
+    }, [setLanguage]);
 
     return (
         <div id="home" className={style.bg}>
@@ -49,7 +69,7 @@ export default function Home({ language, setLanguage }) {
                         {t('login')}
                     </Link>
                     <div className={style.menuIcon} onClick={() => setMenuOpen(!menuOpen)} style={{ color: "#082F43" }}>
-                        {menuOpen ? <FaTimes/> : <FaBars />}
+                        {menuOpen ? <FaTimes /> : <FaBars />}
                     </div>
                 </div>
 

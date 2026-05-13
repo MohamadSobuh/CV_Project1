@@ -53,8 +53,7 @@ export default function WhyCVison({ language }) {
         <section id="how" className={style.whyCVision}>
             <span className={style.sectionLabel}>{t('navFeatures')}</span>
             <h2 className={style.sectionTitle}>{t('whyTitle')}</h2>
-
-            <div className={style.fan}>
+            <div className={style.fan}>
                 {steps.map((step, i) => {
                     const { Icon } = step;
                     return (
@@ -72,7 +71,7 @@ export default function WhyCVison({ language }) {
                             }}
                         >
                             <div className={style.stepNum} style={{ color: step.numColor }}>
-                                {step.num}
+                                {`0${i + 1}`}
                             </div>
 
                             <div
@@ -82,9 +81,8 @@ export default function WhyCVison({ language }) {
                                 <Icon size={22} color={step.color} />
                             </div>
 
-                            <h3 className={style.cardTitle}>{t[step.titleKey]}</h3>
-                            <p className={style.cardDesc}>{t[step.descKey]}</p>
-
+                            <h3 className={style.cardTitle}>{t(step.titleKey)}</h3>
+                            <p className={style.cardDesc}>{t(step.descKey)}</p>
 
                         </div>
                     );

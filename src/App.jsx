@@ -23,6 +23,7 @@ import { useState, useEffect } from "react";
 import { Route, Routes } from 'react-router-dom';
 import UploadCV from './pages/user/UploadCV';
 import UserDash from './pages/user/UserDash';
+import SessionTimeout from './components/SessionTimeout';
 
 import { UserFlowProvider } from './context/UserFlowContext';
 import { AdminFlowProvider } from './context/AdminFlowContext';
@@ -69,7 +70,7 @@ export default function App() {
           {/* <Signin/> */}
           {/* <Sidebar language={language} />*/}
           {/* <Header language={language} setLanguage={setLanguage} /> */}
-
+          <SessionTimeout />
 
           <Routes>
             <Route path="/signup" element={<Signup />} />

@@ -264,6 +264,7 @@
     color: #082F43;
     margin-bottom: 200px;
 
+
 }
 
 .iconhowWorks {
@@ -287,10 +288,12 @@
 .step {
     gap: 130px;
     padding: 50px;
+    justify-content: center;
 }
 
 .allsteps {
-    margin-left: 180px;
+    margin: 0 auto;
+    max-width: 1200px;
 }
 
 
