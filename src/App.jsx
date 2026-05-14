@@ -38,6 +38,8 @@ import AdminTaskContent from './pages/admin/AdminTaskContent';
 import EndOfPlan from './pages/user/EndOfPlan';
 import EndOfTopic from './pages/user/EndOfTopic';
 import ViewTaskContent from './pages/admin/ViewTaskContent';
+import EditAdminProfile from './pages/admin/EditAdminProfile';
+import AdminProfile from './pages/admin/AdminProfile';
 
 
 export default function App() {
@@ -100,6 +102,16 @@ export default function App() {
               <Route path="quiz" element={<QuizQuestions language={language} />} />
               <Route path="settings" element={<Settings language={language} />} />
               <Route path='viewTaskContent' element={<ViewTaskContent language={language} />} />
+              <Route path='profile' element={
+                <AdminProfile t={t} language={language} />
+              } />
+
+              <Route path='profile/edit' element={
+                <EditAdminProfile
+                  t={t}
+                  language={language}
+                />
+              } />
             </Route>
           </Routes>
 

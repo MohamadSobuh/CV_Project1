@@ -62,7 +62,7 @@
     border-radius: 15px;
 }
 
-.links:not(.logout):focus {
+.activeLink {
     background-color: #07526B;
     color: #CDF6F9;
     border-radius: 15px;
@@ -75,10 +75,26 @@
 }
 
 .logout {
-    font-size: 18px;
-    color: red;
+    font-size: 16px;
+    color: #ff6b6b;
     align-self: center;
     justify-content: center;
+    background-color: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    width: 85%;
+}
+
+.logout:hover {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
 }
 
 .bottomLinks hr {

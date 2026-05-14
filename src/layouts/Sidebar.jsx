@@ -1,5 +1,5 @@
 import style from "./SidebarAdminUser.module.css";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars, FaThLarge, FaTimes } from "react-icons/fa";
 import logo from "./../images/logo.png";
 import { useTranslation } from "react-i18next";
@@ -36,10 +36,10 @@ export default function Sidebar({ language }) {
       <nav className={`${style.nav} ${language === "ar" ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}>
         <img src={logo} alt="logo" className={`${style.logo}`} />
 
-        <Link className={`${style.links}`} to="/user/dashboard"> <FaThLarge className="m-3" />{t('dash')}</Link>
-        <Link className={`${style.links}`} to="/user/upload"> <FaUpload className="m-3" />{t('upload')}</Link>
-        <Link className={`${style.links}`} to="/user/analysisHistory"> <FaHistory className="m-3" />{t('history')}</Link>
-        <Link className={`${style.links}`} to="/user/plan"> <FaClipboardList className="m-3" />{t('plan')}</Link>
+        <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/dashboard"> <FaThLarge className="m-3" />{t('dash')}</NavLink>
+        <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/upload"> <FaUpload className="m-3" />{t('upload')}</NavLink>
+        <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/analysisHistory"> <FaHistory className="m-3" />{t('history')}</NavLink>
+        <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/plan"> <FaClipboardList className="m-3" />{t('plan')}</NavLink>
         <div className={style.bottomLinks}>
           <div className={style.bottomLinks}>
             <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>

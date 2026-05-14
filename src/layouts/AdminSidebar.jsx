@@ -1,5 +1,5 @@
 import style from "./SidebarAdminUser.module.css";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars , FaTimes} from "react-icons/fa";
 import Admin from "../images/Admin.jpg";
 import { useTranslation } from "react-i18next";
@@ -35,32 +35,32 @@ export default function AdminSidebar({ language }) {
                     <img src={userImg.image} alt="adminImg" className={`${style.adimnImg} rounded-circle`} />
                 </Link>
 
-                <Link className={style.links} to="/admin/dashboard">
+                <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/dashboard">
                     <FaThLarge className="m-3" />{t('dash')}
-                </Link>
+                </NavLink>
 
-                <Link className={style.links} to="/admin/users">
+                <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/users">
                     <FaUsers className="m-3" />{t('user')}
-                </Link>
+                </NavLink>
 
-                <Link className={style.links} to="/admin/topics">
+                <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/topics">
                     <FaBookOpen className="m-3" />{t('topic')}
-                </Link>
+                </NavLink>
 
-                <Link className={style.links} to="/admin/tasks">
+                <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/tasks">
                     <FaListUl className="m-3" />{t('task')}
-                </Link>
+                </NavLink>
 
-                <Link className={style.links} to="/admin/quiz">
+                <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/quiz">
                     <FaQuestionCircle className="m-3" />{t('quiz')}
-                </Link>
+                </NavLink>
 
                 <div className={style.bottomLinks}>
                     <hr />
 
-                    <Link className={style.links} to="/admin/settings">
+                    <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/settings">
                         <FaCog className="m-3" />{t('setting')}
-                    </Link>
+                    </NavLink>
 
                     <Link className={`${style.links} ${style.logout}`} to="/">
                         {t('logout')}<FaSignOutAlt className="m-3" />

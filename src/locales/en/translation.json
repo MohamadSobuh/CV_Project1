@@ -289,5 +289,6 @@
     "videoSupport": "Video support",
     "videoUrl": "Video URL",
     "goToQuiz": "Go to Quiz",
-    "backToTasks": "Back to Tasks"
+    "backToTasks": "Back to Tasks",
+    "logout": "Logout"
 }
