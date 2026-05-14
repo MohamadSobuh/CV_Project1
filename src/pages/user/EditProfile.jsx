@@ -3,9 +3,11 @@ import style from "./UserProfile.module.css";
 import { FaSave, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-export default function EditProfile({ t, user, setUser  , language}) {
+export default function EditProfile({ t, user, setUser, language }) {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(user || {});
+    const [image, setImage] = useState(user?.image || "");
+    const fileInputRef = React.useRef(null);
 
     useEffect(() => {
         if (user) setFormData(user);
@@ -25,13 +27,39 @@ export default function EditProfile({ t, user, setUser  , language}) {
         navigate('/user/profile');
     };
 
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setImage(imageUrl);
+
+            setFormData({ ...formData, image: file });
+        }
+    };
     if (!formData || !t) return <div className="text-center p-5">Loading...</div>;
 
     return (
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
             <div className={style.profile}>
                 <div className={style.center}>
-                    <img src={user?.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                    <img
+                        src={image}
+                        alt="Profile"
+                        className={`${style.imgProfile} rounded-circle`}
+                        onClick={handleImageClick}
+                        style={{ cursor: "pointer" }}
+                    />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleImageChange}
+                    />
                     <p className={style.text}>{t('description')}</p>
                 </div>
 

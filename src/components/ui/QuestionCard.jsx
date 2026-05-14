@@ -43,7 +43,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                                 setShowMenu(false);
                             }}>
                                 <FaEdit className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-success`} />
-                                {t?.editQuestion}
+                                {t('edit')}
                             </button>
 
                             <button className={style.menuItem} onClick={() => {
@@ -51,7 +51,7 @@ const QuestionCard = ({ question, language, t, onEditClick, onDeleteClick }) => 
                                 setShowMenu(false);
                             }}>
                                 <FaTrash className={`${language === 'ar' ? 'ms-2' : 'me-2'} text-danger`} />
-                                {t?.delete}
+                                {t('delete')}
                             </button>
                         </div>
                     )}

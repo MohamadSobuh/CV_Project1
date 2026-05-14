@@ -1,10 +1,19 @@
-.container {
-  padding: 24px;
-  max-width: 1100px;
-  margin: 0 auto;
+
+
+.taskEn {
+    background-color: #E6F7F9;
+  padding: 20px 40px 20px 300px;
   font-family: inherit;
   box-sizing: border-box;
 }
+
+.taskAr {
+    background-color: #E6F7F9;
+  padding: 20px 300px 20px 40px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
 
 .banner {
   background-color: #082F43;

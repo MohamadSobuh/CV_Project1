@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAdminFlow } from '../../context/AdminFlowContext';
+import { useTranslation } from "react-i18next";
 
 export default function ViewTaskContent({ language }) {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeTask } = useAdminFlow();
     const [taskData, setTaskData] = useState(null);
-
 
     const Data = {
         "lesson_number": "01",
@@ -40,7 +41,7 @@ export default function ViewTaskContent({ language }) {
     if (!activeTask || !taskData) return <div>Loading...</div>;
 
     return (
-        <div className={styles.container}>
+        <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
             <div className={styles.banner}>
                 <div className={styles.bannerIconWrapper}>
                     <FiBookOpen size={42} className={styles.bookIcon} />
@@ -79,12 +80,18 @@ export default function ViewTaskContent({ language }) {
 
             <div className={styles.footerNav}>
                 <button className={styles.navButtonLeft} onClick={() => navigate('/admin/tasks')}>
-                    <HiOutlineArrowLeft size={24} />
-                    <span>Back to Tasks</span>
+                    {language === 'ar'
+                        ? <HiOutlineArrowRight size={24} />
+                        : <HiOutlineArrowLeft size={24} />
+                    }
+                    <span>{t('backToTasks')}</span>
                 </button>
                 <button className={styles.navButtonRight} onClick={() => navigate('/admin/quiz')}>
-                    <span>Go to Quiz</span>
-                    <HiOutlineArrowRight size={24} />
+                    <span>{t('goToQuiz')}</span>
+                    {language === 'ar'
+                        ? <HiOutlineArrowLeft size={24} />
+                        : <HiOutlineArrowRight size={24} />
+                    }
                 </button>
             </div>
         </div>

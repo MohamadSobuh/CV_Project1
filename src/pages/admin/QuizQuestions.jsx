@@ -252,6 +252,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                             </button>
                         </div>
                         <div className="col-md-12">
+                            <br />
                             <div className="row g-3">
                                 <div className="col-md-4">
                                     <div className={style.filterSelectContainer}>
@@ -335,7 +336,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                     <div className={style.modalContent} onClick={e => e.stopPropagation()}>
                         <h2 className={style.modalTitle}>{t('confirm')}</h2>
                         <p>{t('confirmDeleteDesc')}</p>
-                        <div className={style.modalButtons}>
+                        <div className={style.modalButtons}> 
                             <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t('confirmDeleteCancel')}</button>
                             <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('confirmDeleteBtn')}</button>
                         </div>

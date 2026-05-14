@@ -14,6 +14,7 @@
 
 }
 
+
 .addUserbtn,
 .addTaskbtn {
     background-color: #1A83A8;
@@ -52,7 +53,8 @@
     border-radius: 20px;
     width: 500px;
     max-width: 90%;
-    max-height: 90%;
+    max-height: 80vh;   
+    overflow-y: auto;   
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     animation: slideUp 0.3s ease-out;
 }
@@ -370,23 +372,18 @@
     color: white;
 }
 
-/* ====== شاشات أصغر من 1200px ====== */
 @media (max-width: 1200px) {
 
     .usersPage,
     .TasksPage {
-        padding-left: 250px;
-        /* إنجليزي يترك مسافة من اليسار */
+        padding-left: 300px;
         padding-right: 20px;
-        /* نعطي مساحة صغيرة من اليمين */
     }
 
     .usersPageArabic,
     .TasksPageArabic {
         padding-right: 250px;
-        /* عربي يترك مسافة من اليمين */
         padding-left: 20px;
-        /* مساحة صغيرة من اليسار */
     }
 
     .usersTable th,
@@ -398,15 +395,12 @@
     }
 }
 
-/* ====== شاشات أصغر من 992px ====== */
-@media (max-width: 992px) {
-
+@media (max-width: 1024px) {
     .usersPage,
     .usersPageArabic,
     .TasksPage,
     .TasksPageArabic {
         padding: 20px;
-        /* إزالة أي مسافات كبيرة من الجانبين */
     }
 
     .addAdminbtn,
@@ -429,7 +423,6 @@
     }
 }
 
-/* ====== شاشات أصغر من 768px ====== */
 @media (max-width: 768px) {
 
     .usersPage,
@@ -437,7 +430,6 @@
     .TasksPage,
     .TasksPageArabic {
         padding: 15px;
-        /* أقل padding للهواتف الصغيرة */
     }
 
     .usersTable th,
@@ -451,7 +443,6 @@
     .ForUsers,
     .ForTasks {
         overflow-x: auto;
-        /* السماح بالتمرير الأفقي للجدول */
         -webkit-overflow-scrolling: touch;
     }
 
@@ -459,9 +450,19 @@
         width: 32px;
         height: 32px;
     }
+
+     .addUserbtn,
+    .addUserbtnAr,
+    .addTaskbtnAr,
+    .addTaskbtn {
+        width: 100%;
+        float: none;   
+        margin: 10px 0; 
+        display: block;
+        text-align: center;
+    }
 }
 
-/* ====== شاشات أصغر من 480px ====== */
 @media (max-width: 480px) {
 
     .usersPage,
@@ -469,7 +470,15 @@
     .TasksPage,
     .TasksPageArabic {
         padding: 10px;
-        /* أقل مساحة ممكنة */
+    }
+
+      .addUserbtn,
+    .addUserbtnAr ,
+    .addTaskbtnAr,
+    .addTaskbtn {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
     }
 
     .addAdminbtn,

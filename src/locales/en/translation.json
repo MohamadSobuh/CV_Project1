@@ -282,5 +282,12 @@
     "topicMessage1": "You’ve successfully finished",
     "tasksCompleted": "Tasks Completed",
     "backToPlan": "Back To Plan",
-    "search": "Search"
+    "search": "Search",
+    "imageSupport": "Image support",
+    "imageUrl": "Image URL",
+    "videoSupport": "Video support",
+    "videoUrl": "Video URL",
+    "goToQuiz": "Go to Quiz",
+    "backToTasks": "Back to Tasks"
+    
 }

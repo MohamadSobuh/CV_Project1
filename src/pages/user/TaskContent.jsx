@@ -8,17 +8,19 @@ import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import htmlFund from '../../components/media/tasks/html_fund.png';
+import { useTranslation } from "react-i18next";
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
     const { activeTask } = useUserFlow();
+    const { t, i18n } = useTranslation();
     const [taskData, setTaskData] = useState(null);
 
     const testData = {
         "lesson_number": "01",
         "title": "HTML Fundamentals",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-        "image_url":  htmlFund,
+        "image_url": htmlFund,
         "video_url": "https://www.youtube.com/embed/ok-plXXHlWw",
         "quiz_id": 5,
         "is_completed": true
@@ -56,7 +58,7 @@ export default function TaskContent({ language }) {
 
                 <div className={styles.mediaRow}>
                     <div className={styles.mediaBoxImage}>
-                        {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img}/>}
+                        {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img} />}
                         <span className={styles.mediaTextImg}>Image support</span>
                     </div>
 
@@ -76,16 +78,22 @@ export default function TaskContent({ language }) {
 
             <div className={styles.footerNav}>
                 <button className={styles.navButtonLeft} onClick={() => navigate('/user/plan')}>
-                    <HiOutlineArrowLeft size={24} />
-                    <span>Back to Plan</span>
+                    {language === 'ar'
+                        ? <HiOutlineArrowRight size={24} />
+                        : <HiOutlineArrowLeft size={24} />
+                    }
+                    <span>{t('backToPlan')}</span>
                 </button>
                 <button className={styles.navButtonRight} onClick={() => navigate('/user/quiz', {
                     state: {
                         mode: "task"
                     }
                 })}>
-                    <span>Go to Quiz</span>
-                    <HiOutlineArrowRight size={24} />
+                    <span>{t('goToQuiz')}</span>
+                    {language === 'ar'
+                        ? <HiOutlineArrowLeft size={24} />
+                        : <HiOutlineArrowRight size={24} />
+                    }
                 </button>
             </div>
         </div>
