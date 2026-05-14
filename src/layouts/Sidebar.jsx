@@ -1,6 +1,6 @@
 import style from "./SidebarAdminUser.module.css";
 import { NavLink, Link } from "react-router-dom";
-import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars, FaThLarge, FaTimes } from "react-icons/fa";
+import { FaUpload, FaHistory, FaClipboardList, FaSignOutAlt, FaBars, FaThLarge, FaTimes, FaFlag } from "react-icons/fa";
 import logo from "./../images/logo.png";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -41,12 +41,15 @@ export default function Sidebar({ language }) {
         <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/analysisHistory"> <FaHistory className="m-3" />{t('history')}</NavLink>
         <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/plan"> <FaClipboardList className="m-3" />{t('plan')}</NavLink>
         <div className={style.bottomLinks}>
-          <div className={style.bottomLinks}>
-            <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>
-              {t('logout')}
-              <FaSignOutAlt className="m-3" />
-            </Link>
-          </div>
+          <hr />
+
+          <Link className={style.links} to="/user/report">
+            <FaFlag className="m-3" />Report
+          </Link>
+          <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>
+            {t('logout')}
+            <FaSignOutAlt className="m-3" />
+          </Link>
         </div>
       </nav>
 

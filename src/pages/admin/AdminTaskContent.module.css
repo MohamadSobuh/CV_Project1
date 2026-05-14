@@ -224,3 +224,28 @@
     gap: 20px;
   }
 }
+@media (max-width: 1024px) {
+  .taskEn,
+  .taskAr {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .taskEn,
+  .taskAr {
+    padding: 15px;
+  }
+
+   .footerNav {
+    flex-direction: row;  
+    flex-wrap: nowrap;    
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .navButtonLeft,
+  .navButtonRight {
+    white-space: nowrap;   
+  }
+}
