@@ -10,6 +10,7 @@ import Input from "../../components/ui/Input";
 import InputError from "../../components/ui/InputError";
 import { editProfileSchema } from "../../utils/validationSchema";
 import { useForm } from "react-hook-form";
+import { useState } from 'react';
 
 export default function EditProfile({ t, language }) {
     const { user, setUser } = useUserFlow();
@@ -39,6 +40,19 @@ export default function EditProfile({ t, language }) {
             });
         }
     }, [user, reset]);
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setImage(imageUrl);
+
+            setFormData({ ...formData, image: file });
+        }
+    };
 
     const handlePasswordStrength = (e) => {
         const val = e.target.value;
