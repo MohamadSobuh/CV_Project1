@@ -25,6 +25,8 @@ export default function EditProfile({ t, language }) {
             password: ""
         }
     });
+    const [image, setImage] = useState(user?.image || "");
+    const fileInputRef = React.useRef(null);
 
     useEffect(() => {
         if (user) {
@@ -118,7 +120,20 @@ export default function EditProfile({ t, language }) {
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
             <div className={style.profile}>
                 <div className={style.center}>
-                    <img src={user?.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                    <img
+                        src={image}
+                        alt="Profile"
+                        className={`${style.imgProfile} rounded-circle`}
+                        onClick={handleImageClick}
+                        style={{ cursor: "pointer" }}
+                    />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleImageChange}
+                    />
                     <p className={style.text}>{t('description')}</p>
                 </div>
 

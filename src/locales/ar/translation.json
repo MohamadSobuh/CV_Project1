@@ -294,5 +294,11 @@
     "history": "سجل التحليلات",
     "plan": "الخطة التعليمية",
     "dash": "لوحة التحكم",
-    "passwordPlaceholder": "ادخل كلمة المرور الجديدة"
+    "passwordPlaceholder": "ادخل كلمة المرور الجديدة",
+    "imageSupport": "صورة داعمة",
+    "imageUrl": "رابط الصورة",
+    "videoSupport": "فيديو داعم",
+    "videoUrl": "رابط الفيديو",
+    "goToQuiz": "الذهاب إلى الاختبار",
+    "backToTasks": "العودة إلى المهام"
 }

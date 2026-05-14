@@ -1,7 +1,7 @@
 .dash {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 40px 20px 280px;
+    padding: 20px 40px 20px 300px;
     min-height: 100vh;
     box-sizing: border-box;
     direction: ltr;
@@ -12,7 +12,7 @@
 .dashArabic {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 280px 20px 40px;
+    padding: 20px 300px 20px 40px;
     min-height: 100vh;
     box-sizing: border-box;
     direction: rtl;
@@ -37,11 +37,13 @@
 }
 
 .modalContent {
-    background: #ffffff;
+      background-color: #fff;
     padding: 30px;
     border-radius: 20px;
-    width: 90%;
-    max-width: 550px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 80vh;   
+    overflow-y: auto;   
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     animation: slideUp 0.3s ease-out;
 }

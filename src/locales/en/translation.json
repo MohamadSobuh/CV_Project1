@@ -283,5 +283,11 @@
     "tasksCompleted": "Tasks Completed",
     "backToPlan": "Back To Plan",
     "search": "Search",
-    "passwordPlaceholder": "Enter new password"
+    "passwordPlaceholder": "Enter new password",
+    "imageSupport": "Image support",
+    "imageUrl": "Image URL",
+    "videoSupport": "Video support",
+    "videoUrl": "Video URL",
+    "goToQuiz": "Go to Quiz",
+    "backToTasks": "Back to Tasks"
 }

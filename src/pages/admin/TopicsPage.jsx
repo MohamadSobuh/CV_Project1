@@ -197,7 +197,9 @@ const TopicsPage = ({ language = 'en' }) => {
                                 + {t('addTopic')}
                             </button>
                         </div>
+                    
                         <div className="col-md-6">
+                            <br />
                             <div className={style.searchContainer}>
                                 <FaSearch className={style.searchIcon} />
                                 <input

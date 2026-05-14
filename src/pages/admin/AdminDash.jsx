@@ -56,7 +56,7 @@ export default function AdminDash({ language }) {
       <h1>{t('dash')}</h1>
       <p>{t('overview')}</p>
       <br />
-      <div className='row'>
+      <div className={`row ${style.cardsContainer}`}>
         <div className={`${style.card} col-md-3`}>
           <div>
             <p>{t('totalUsers')}</p>

@@ -169,12 +169,11 @@
     box-shadow: 0 0 0 3px rgba(26, 131, 168, 0.1);
 }
 
-/* --- كودك الأصلي مع إبقاء التعديلات اللازمة --- */
 
 .dash {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 40px 20px 280px;
+    padding: 20px 40px 20px 300px;
     min-height: 100vh;
     box-sizing: border-box;
     direction: ltr;
@@ -184,7 +183,7 @@
 .dashArabic {
     background-color: #E6F7F9;
     color: #082F43;
-    padding: 20px 280px 20px 40px;
+    padding: 20px 300px 20px 40px;
     min-height: 100vh;
     box-sizing: border-box;
     direction: rtl;
@@ -264,6 +263,26 @@
     .modalContent {
         width: 95%;
         padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .btnAdd {
+        width: 100%;
+        float: none;
+        margin: 10px 0;
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .btnAdd {
+        width: 100%;
+        float: none;
+        margin: 10px 0;
+        display: block;
+        text-align: center;
     }
 }
 

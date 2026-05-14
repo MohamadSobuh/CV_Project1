@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FiBookOpen } from "react-icons/fi";
-import { HiOutlineArrowLeft } from "react-icons/hi";
+import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import styles from './AdminTaskContent.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAdminFlow } from '../../context/AdminFlowContext';
@@ -89,7 +89,7 @@ export default function AdminTaskContent({ language }) {
     console.log(taskData);
 
     return (
-        <div className={styles.container}>
+        <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
             <div className={styles.banner}>
                 <div className={styles.bannerIconWrapper}>
                     <FiBookOpen size={42} className={styles.bookIcon} />
@@ -103,51 +103,52 @@ export default function AdminTaskContent({ language }) {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.mainCard}>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginBottom: '30px' }}>
-                        <div style={{ flex: '1 1 40%' }}>
-                            <h3 className={styles.cardTitle}>{taskData.title}</h3>
-                        </div>
-                        <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskName')}</label>
-                            <AdminInput type="text" name="task" placeholder={t('editTaskTitle')} registerProps={register("task")} />
-                            <InputError error={errors.task} />
-                        </div>
+                    <div style={{ flex: '1 1 40%' }}>
+                        <h3 className={styles.cardTitle}>{taskData.title}</h3>
+
+                    </div>
+                    <br />
+                    <div style={{ flex: '1 1 50%' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskName')}</label>
+                        <AdminInput type="text" name="task" placeholder={t('editTaskTitle')} registerProps={register("task")} />
+                        <InputError error={errors.task} />
                     </div>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginBottom: '30px' }}>
-                        <div style={{ flex: '1 1 40%' }}>
-                            <p className={styles.cardDescription}>{taskData.description}</p>
-                        </div>
-                        <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskContent')}</label>
-                            <textarea {...register("content")} rows={6} placeholder={t('editTaskContent')} style={{ width: "100%", borderRadius: "8px", border: "1px solid #1A83A8", padding: "12px", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", boxSizing: "border-box", fontSize: "14px", fontFamily: "inherit", resize: "vertical" }} />
-                            <InputError error={errors.content} />
-                        </div>
+
+                    <div style={{ flex: '1 1 40%' }}>
+                        <p className={styles.cardDescription}>{taskData.description}</p>
+                    </div>
+                    <div style={{ flex: '1 1 50%' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskContent')}</label>
+                        <textarea {...register("content")} rows={6} placeholder={t('editTaskContent')} style={{ width: "100%", borderRadius: "8px", border: "1px solid #1A83A8", padding: "12px", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", boxSizing: "border-box", fontSize: "14px", fontFamily: "inherit", resize: "vertical" }} />
+                        <InputError error={errors.content} />
                     </div>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginBottom: '40px' }}>
-                        <div style={{ flex: '1 1 40%' }}>
-                            <p className={styles.cardDescription} style={{ marginBottom: 0 }}><strong>{t('topicSection')}</strong><br />{t('selectTopic')}</p>
-                        </div>
-                        <div style={{ flex: '1 1 50%' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('topic')}</label>
-                            <select {...register("topic")} defaultValue="" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1A83A8", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", fontSize: "14px" }}>
-                                <option value={activeTask.topic_id} disabled hidden>{activeTask.topic}</option>
-                                {topics && topics.map((topic) => (
-                                    <option key={topic.id} value={topic.id}>{topic.title}</option>
-                                ))}
-                            </select>
-                            <InputError error={errors.topic} />
-                        </div>
+                    <br />
+                    <div style={{ flex: '1 1 40%' }}>
+                        <p className={styles.cardDescription} style={{ marginBottom: 10 }}><strong>{t('topicSection')}</strong><br />{t('selectTopic')}</p>
+                    </div>
+                    <div style={{ flex: '1 1 50%' }}>
+                        <select {...register("topic")} defaultValue="" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1A83A8", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", fontSize: "14px" }}>
+                            <option value={activeTask.topic_id} disabled hidden>{activeTask.topic}</option>
+                            {topics && topics.map((topic) => (
+                                <option key={topic.id} value={topic.id}>{topic.title}</option>
+                            ))}
+                        </select>
+                        <InputError error={errors.topic} />
                     </div>
 
+                    <br />
                     <div className={styles.mediaRow}>
                         <div className={styles.mediaBoxImage} style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', justifyContent: 'flex-start' }}>
                             {taskData.image_url && <img src={taskData.image_url} alt="Task" style={{ maxWidth: '100%', borderRadius: '8px' }} />}
-                            <span className={styles.mediaTextImg}>Image support</span>
+                            <span className={styles.mediaTextImg}>{t('imageSupport')}</span>
 
                             <div style={{ width: '100%', marginTop: 'auto' }}>
-                                <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500', textAlign: 'left' }}>Image URL</label>
+                                <label style={{
+                                    display: 'block', marginBottom: '8px', color: '#92A6E3', fontWeight: '500',
+                                    textAlign: i18n.language === 'ar' ? 'right' : 'left',
+                                }}>{t('imageUrl')}</label>
                                 <AdminInput type="url" name="imageUrl" placeholder="https://..." registerProps={register("imageUrl")} />
                                 <InputError error={errors.imageUrl} />
                             </div>
@@ -164,10 +165,13 @@ export default function AdminTaskContent({ language }) {
                                     style={{ width: '100%', borderRadius: '8px' }}
                                 ></iframe>
                             ) : null}
-                            <span className={styles.mediaTextVid}>Video support</span>
+                            <span className={styles.mediaTextVid}>{t('videoSupport')}</span>
 
                             <div style={{ width: '100%', marginTop: 'auto' }}>
-                                <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500', textAlign: 'left' }}>Video URL</label>
+                                <label style={{
+                                    display: 'block', marginBottom: '8px', color: '#D9AEFB', fontWeight: '500',
+                                    textAlign: i18n.language === 'ar' ? 'right' : 'left',
+                                }}>{t('videoUrl')}</label>
                                 <AdminInput type="url" name="videoUrl" placeholder="https://..." registerProps={register("videoUrl")} />
                                 <InputError error={errors.videoUrl} />
                             </div>
@@ -178,7 +182,10 @@ export default function AdminTaskContent({ language }) {
 
                 <div className={styles.footerNav} style={{ marginTop: '24px' }}>
                     <button type="button" className={styles.navButtonLeft} onClick={() => navigate('/admin/tasks')}>
-                        <HiOutlineArrowLeft size={24} />
+                        {language === 'ar'
+                            ? <HiOutlineArrowRight size={24} />
+                            : <HiOutlineArrowLeft size={24} />
+                        }
                         <span>{t('cancel')}</span>
                     </button>
                     <button type="submit" style={{ backgroundColor: '#1A83A8', color: 'white', border: 'none', padding: '12px 32px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', transition: 'background-color 0.3s' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#07526B'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1A83A8'}>
