@@ -282,5 +282,6 @@
     "topicMessage1": "You’ve successfully finished",
     "tasksCompleted": "Tasks Completed",
     "backToPlan": "Back To Plan",
-    "search": "Search"
+    "search": "Search",
+    "passwordPlaceholder": "Enter new password"
 }

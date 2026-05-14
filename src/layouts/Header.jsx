@@ -14,8 +14,13 @@ export default function Header({ language, setLanguage }) {
     }, [language, i18n.language]);
 
     useEffect(() => {
-        const storedFirstName = localStorage.getItem("userFirstName");
-        const storedLastName = localStorage.getItem("userLastName");
+        const userString = localStorage.getItem("user");
+
+        const user = userString ? JSON.parse(userString) : {};
+
+        const storedFirstName = user.firstname;
+        const storedLastName = user.lastname;
+        console.log(user)
 
         setUser({
             firstname: storedFirstName || "Israa",

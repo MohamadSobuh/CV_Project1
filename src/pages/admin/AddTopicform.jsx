@@ -10,6 +10,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(topicSchema)
     });
+    console.log("Form Data:", formData);
 
     useEffect(() => {
         if (formData?.id) {
@@ -23,6 +24,7 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
         if (formData?.id) {
             handleEdit({ ...data, id: formData.id });
         } else {
+            console.log("Data:", data);
             handleAdd(data);
         }
     };

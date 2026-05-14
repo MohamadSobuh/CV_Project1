@@ -132,6 +132,7 @@ const TopicsPage = ({ language = 'en' }) => {
             tasks: data.tasks,
             learning_plan: data.learning_plan || showEditModal.learning_plan
         };
+        // console.log(payload);
 
         try {
             const response = await axios.patch(`http://127.0.0.1:8000/api/dashboard/topics/${showEditModal.id}/`, payload, {

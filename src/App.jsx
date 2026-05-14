@@ -16,7 +16,6 @@ import Settings from './pages/admin/Settings';
 import EditProfile from './pages/user/EditProfile';
 import { useTranslation } from "react-i18next";
 
-import profileImg from "./images/profileImg.png";
 import Home from './components/Home';
 import UserProfile from './pages/user/UserProfile';
 import { useState, useEffect } from "react";
@@ -43,19 +42,7 @@ import ViewTaskContent from './pages/admin/ViewTaskContent';
 
 export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
-  const [user, setUser] = useState(null);
   const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-
-    setUser({
-      firstname: "Israa",
-      lastname: "Shtaiwi",
-      email: "isrash@gmail.com",
-      field: "Artificial Intelligence",
-      image: profileImg
-    });
-  }, []);
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -78,16 +65,13 @@ export default function App() {
             <Route path="/login" element={<Signin />} />
             <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
               <Route path='profile' element={
-                <UserProfile user={user} t={t} language={language} />
+                <UserProfile t={t} language={language} />
               } />
 
               <Route path='profile/edit' element={
                 <EditProfile
-                  user={user}
-                  setUser={setUser}
                   t={t}
                   language={language}
-
                 />
               } />
 

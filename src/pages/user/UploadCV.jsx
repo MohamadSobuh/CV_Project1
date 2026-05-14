@@ -6,6 +6,7 @@ import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function UploadCV({ language }) {
     const [fields, setFields] = useState([]);
@@ -24,6 +25,19 @@ export default function UploadCV({ language }) {
 
         setFields(data);
     }, []);
+    const uploadCV = async () => {
+        try {
+            const payload = new FormData();
+            payload.append("file", file);
+            payload.append("field", selectedField);
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.post("http://127.0.0.1:8000/api/user/upload-cv/", payload, { headers: { Authorization: `Token ${token}` } });
+            console.log(response.data);
+            alert("تم رفع السيرة الذاتية بنجاح");
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleAnalysis = () => {
         if (!file && !selectedField) {
@@ -76,6 +90,12 @@ export default function UploadCV({ language }) {
                 selectedField
             }
         });
+        if (error) {
+            return;
+        } else {
+            uploadCV();
+
+        }
     };
 
     const { t, i18n } = useTranslation();

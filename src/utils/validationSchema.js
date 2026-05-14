@@ -41,6 +41,28 @@ export const signupSchema = yup.object({
         .matches(/\d/, "Password must contain at least one number")
         .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
 });
+
+export const editProfileSchema = yup.object({
+    firstname: yup.string().required("First name is required"),
+    lastname: yup.string().required("Last name is required"),
+    email: emailValidation
+        .required("Email is required")
+        .email("Invalid email format")
+        .min(5, "Email is too short")
+        .max(50, "Email is too long"),
+
+    field: yup.string(),
+    password: yup.string()
+        .transform((value) => (value === '' ? undefined : value))
+        .notRequired()
+        .min(8, "Password must be at least 8 characters")
+        .max(20, "Password can't exceed 20 characters")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+        .matches(/\d/, "Password must contain at least one number")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+});
+
 export const questionSchema = yup.object().shape({
     questionType: yup
         .string()
@@ -67,7 +89,7 @@ export const questionSchema = yup.object().shape({
 export const topicSchema = yup.object().shape({
     title: yup.string().required("Topic title is required"),
     desc: yup.string().required("Description is required").min(10, "Description too short"),
-    tasks: yup.number().typeError("Must be a number").notRequired().positive().integer(),
+    tasks: yup.number().typeError("Must be a number").notRequired().min(0, "Tasks cannot be negative").integer(),
     category: yup.string().required("Please select a category"),
     difficulty: yup.string().required("Please select a difficulty"),
 });

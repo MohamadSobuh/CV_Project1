@@ -4,14 +4,30 @@ import style from "./UserDash.module.css";
 import { FaLightbulb, FaFile, FaCloudUploadAlt, FaAngleRight } from "react-icons/fa";
 import { FaListCheck } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-
 import { useUserFlow } from '../../context/UserFlowContext';
+import axios from "axios";
+
 
 export default function UserDash({ language }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
     const { user } = useUserFlow();
-    let firstName = user?.first_name || localStorage.getItem("userFirstName") || "Israa";
-    let lastName = user?.last_name || localStorage.getItem("userLastName") || "Shtaiwi";
+    const [userDash, setUserDash] = useState({
+        TotalCVs: 0,
+        total_learning_hours: 2.5,
+        learningPlan: [
+            {
+                id: 13,
+                name: "JavaScript Basics",
+                progress: 25
+            }
+        ]
+    });
+
+    ///مع هذا التعديل بقدر احذف ال userFirstName وال userLastName من local storage
+    const userString = localStorage.getItem("user");
+    const userObj = userString ? JSON.parse(userString) : {};
+    let firstName = userObj.firstname || "Israa";
+    let lastName = userObj.lastname || "Shtaiwi";
     let learningPlan = "Front-end development"
     let Progress = "20%"
     let TotalCVs = "1"
@@ -30,16 +46,33 @@ export default function UserDash({ language }) {
             }
         }, 50);
 
-    }, [user]);
+    }, [userDash.learningPlan]);
     console.log(user);
 
     const { t, i18n } = useTranslation();
+
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                return;
+            }
+            const response = await axios.get("http://127.0.0.1:8000/api/user/dashboard/", { headers: { Authorization: `Token ${token}` } });
+            console.log(response.data);
+            setUserDash(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        fetchUserData();
+    }, []);
 
 
     return (
         <div className={language === 'ar' ? style.userDashAr : style.userDash}>
             <div className={style.dashHeader}>
-                <h1><b>{t('welcome')}{firstName} {lastName}</b></h1>
+                <h1><b>{t('welcome')}{firstName}</b></h1>
                 <p>{t('quickLook')}</p>
             </div>
 
@@ -51,7 +84,7 @@ export default function UserDash({ language }) {
                     </div>
                     <div className={style.cardContent}>
                         <h5>{t('totalCVs')}</h5>
-                        <h5>{TotalCVs}</h5>
+                        <h5>{userDash.TotalCVs}</h5>
                     </div>
                 </div>
 
