@@ -38,6 +38,7 @@ import AdminTaskContent from './pages/admin/AdminTaskContent';
 import EndOfPlan from './pages/user/EndOfPlan';
 import EndOfTopic from './pages/user/EndOfTopic';
 import ViewTaskContent from './pages/admin/ViewTaskContent';
+import Report from './pages/user/Report';
 
 
 export default function App() {
@@ -85,6 +86,8 @@ export default function App() {
               <Route path='task' element={<TaskContent language={language} />} />
               <Route path='endPlan' element={<EndOfPlan language={language} />} />
               <Route path='endTopic' element={<EndOfTopic language={language} />} />
+              <Route path='report' element={<Report language={language} />} />
+
 
 
 
