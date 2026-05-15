@@ -59,7 +59,6 @@ export default function TaskContent({ language }) {
                 <div className={styles.mediaRow}>
                     <div className={styles.mediaBoxImage}>
                         {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img} />}
-                        <span className={styles.mediaTextImg}>Image support</span>
                     </div>
 
                     <div className={styles.mediaBoxVideo}>
@@ -71,7 +70,6 @@ export default function TaskContent({ language }) {
                             referrerPolicy="strict-origin-when-cross-origin"
                             className={styles.videoFrame}
                         ></iframe>
-                        <span className={styles.mediaTextVid}>Video support</span>
                     </div>
                 </div>
             </div>

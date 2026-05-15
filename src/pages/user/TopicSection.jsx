@@ -36,10 +36,6 @@ export default function TopicSection({ topic, isActive, onClick }) {
                 </div>
             </div>
 
-            <p className={style.topicDesc}>
-                {description}
-            </p>
-
             <div className={style.topicProgressRow}>
                 <span>{completedCount}/{totalCount} tasks</span>
                 <span>{progressPercent}%</span>

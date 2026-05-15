@@ -73,7 +73,11 @@ export default function Home({ language, setLanguage }) {
                     </div>
                 </div>
 
-                <div className={`${style.mobileMenu} ${menuOpen ? style.active : ""}`}>
+                <div className={`${style.mobileMenu} ${menuOpen ? style.active : ""}`}
+                    style={{
+                        right: language === "en" ? "30px" : "auto",
+                        left: language === "ar" ? "30px" : "auto",
+                    }}>
                     <a href="#why" onClick={() => setMenuOpen(false)}>{t('navFeatures')}</a>
                     <a href="#how1" onClick={() => setMenuOpen(false)}>{t('navHow')}</a>
                     <a href="#subscribe" onClick={() => setMenuOpen(false)}>{t('navSubscribe')}</a>
@@ -220,7 +224,7 @@ export default function Home({ language, setLanguage }) {
                         <ul>
                             <li><a href="#home">{t('home')}</a></li>
                             <li><a href="#why">{t('why')}</a></li>
-                            <li><a href="#how">{t('how')}</a></li>
+                            <li><a href="#how1">{t('how')}</a></li>
                             <li><a href="#subscribe">{t('stay')}</a></li>
                             <li><Link to={"/login"}>{t('login')}</Link></li>
                             <li><Link to={"/signup"}>{t('signup')}</Link></li>

@@ -77,7 +77,7 @@ export default function UserDash({ language }) {
             </div>
 
             <div className='row'>
-                <div className={`${style.cardsUserDash} col-md-3`}>
+                <div className={`${style.cardsUserDash} ${style.cvCard} col-md-3`}>
                     <div className={style.cardHead}>
                         <h5><b>{t('over')}</b></h5>
                         <FaFile className={style.headIcon} />
@@ -88,7 +88,7 @@ export default function UserDash({ language }) {
                     </div>
                 </div>
 
-                <div className={`${style.cardsUserDash} col-md-4 `}>
+                <div className={`${style.cardsUserDash} ${style.progressCard} col-md-4 `}>
                     <div className={style.cardHead}>
                         <h5><b>{t('progressTitle')}</b></h5>
                         <FaListCheck className={style.headIcon} />
