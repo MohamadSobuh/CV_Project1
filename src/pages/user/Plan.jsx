@@ -109,19 +109,29 @@ export default function Plan({ language }) {
                 />
             ) : (
                 <>
-                    <h1 className={style.planTitle}>{t('planTitle') || "Learning plan"}</h1>
-                    <p className={style.planSubtitle}>{t('planSubtitle')}</p>
+                    <div className={style.bgGrid} />
 
-                    <div className={style.overallProgressContainer}>
-                        <div className={style.progressLabelRow}>
-                            <span>{t('overallProgress')}</span>
-                            <span>{totalCompletedTasks}/{totalAssignedTasks} {t('tasks')}</span>
+                    <div className={style.planHead}><b>Isra</b> {t("planTitle")}</div>
+
+                    <div className={style.headerRow}>
+                        <div className={style.headerLeft}>
+                            <h1 className={style.planTitle}><b>{t('planTitle') || "Learning plan"}</b></h1>
+                            <p className={style.planSubtitle}>{t('planSubtitle')} </p>
                         </div>
-                        <div className={style.progressBarContainer}>
-                            <div className={style.progressBarFill} style={{ width: `${overallProgressPercent}%` }} />
-                        </div>
-                        <div style={{ textAlign: "right", marginTop: "5px", color: "#1A83A8", fontWeight: "bold", fontSize: "0.8rem" }}>
-                            {overallProgressPercent}%
+
+                        <div className={style.headerRight}>
+                            <div className={style.overallProgressContainer}>
+                                <div className={style.progressLabelRow}>
+                                    <span>{t('overallProgress')}</span>
+                                    <span>  {totalCompletedTasks}/{totalAssignedTasks} {t('tasks')} </span>
+                                </div>
+
+                                <div className={style.progressBarContainer}>
+                                    <div className={style.progressBarFill} style={{ width: `${overallProgressPercent}%` }} />
+                                </div>
+
+                                <div className={style.progressPercent}>{overallProgressPercent}% </div>
+                            </div>
                         </div>
                     </div>
 

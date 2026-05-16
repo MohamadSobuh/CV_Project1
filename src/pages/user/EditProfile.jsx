@@ -132,6 +132,8 @@ export default function EditProfile({ t, language }) {
 
     return (
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
+            <div className={style.bgGrid} />
+
             <div className={style.profile}>
                 <div className={style.center}>
                     <img

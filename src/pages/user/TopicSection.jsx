@@ -26,6 +26,7 @@ export default function TopicSection({ topic, isActive, onClick }) {
             className={`${style.topicCard} ${isActive ? style.active : ''}`}
             onClick={() => onClick && onClick(topic)}
         >
+
             <div className={style.topicCardHeader}>
                 <div className={style.topicTitleRow}>
                     <Icon size={24} />

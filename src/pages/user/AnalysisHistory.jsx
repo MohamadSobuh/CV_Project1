@@ -35,6 +35,8 @@ export default function AnalysisHistory({ language }) {
             ) : (<>
 
                 <div className={style.historyHead}>
+                                <div className={style.bgGrid} />
+                    
                     <p className={style.journey}>{t('journey')}</p>
                     <h1><b>{t('analysisHistoryTitle')}</b></h1>
                     <p>{t('analysisHistoryDesc')}</p>

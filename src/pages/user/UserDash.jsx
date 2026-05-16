@@ -6,6 +6,9 @@ import { FaListCheck } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { useUserFlow } from '../../context/UserFlowContext';
 import axios from "axios";
+import dashL from "../../images/dashL.png";
+import dashR from "../../images/dashR.png";
+
 
 
 export default function UserDash({ language }) {
@@ -50,7 +53,7 @@ export default function UserDash({ language }) {
     console.log(user);
 
     const { t, i18n } = useTranslation();
-
+    const isArabic = i18n.language === "ar";
     const fetchUserData = async () => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -71,11 +74,21 @@ export default function UserDash({ language }) {
 
     return (
         <div className={language === 'ar' ? style.userDashAr : style.userDash}>
-            <div className={style.dashHeader}>
-                <h1><b>{t('welcome')}{firstName}</b></h1>
-                <p>{t('quickLook')}</p>
-            </div>
+            <div className={style.bgGrid} />
 
+            <div className={style.dashHeader}>
+                <div className={style.bgGrid} />
+
+                <div className={style.textContainer}>
+                    <h1><b>{t('welcome')} {firstName}</b></h1>
+                    <p>{t('quickLook')}</p>
+                </div>
+
+                <img
+                    src={isArabic ? dashR : dashL}
+                    className={style.headerImage}
+                />
+            </div>
             <div className='row'>
                 <div className={`${style.cardsUserDash} ${style.cvCard} col-md-3`}>
                     <div className={style.cardHead}>

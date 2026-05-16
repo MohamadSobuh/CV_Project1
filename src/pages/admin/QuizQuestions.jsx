@@ -242,8 +242,10 @@ const QuizQuestions = ({ language = 'en' }) => {
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
+                                            <div className={style.bgGrid} />
+                        
                         <div className='col-md-6'>
-                            <h1>{t('quizTitle')}</h1>
+                            <h1><b>{t('quizTitle')}</b></h1>
                             <p>{t('quizSub')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>

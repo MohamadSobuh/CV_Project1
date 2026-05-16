@@ -20,6 +20,7 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
 
     return (
         <div className={style.topicCard}>
+            
             <div className={style.cardHeader}>
                 <div className={style.headerLeftGroup}>
                     <div className={style.iconBox}>

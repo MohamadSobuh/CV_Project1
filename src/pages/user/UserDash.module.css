@@ -13,16 +13,60 @@
 
 }
 
-.dashHeader { 
-    margin-bottom: 40px;
+.bgGrid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(59, 158, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 158, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
 }
 
+
+.dashHeader { 
+    margin-bottom: 40px;
+    margin-top: 50px; 
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px 50px 10px 50px; 
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; 
+}
+
+.textContainer {
+    flex: 1;
+}
+
+.headerImage {
+    position: absolute;
+    bottom: 0;
+    height: 200px;
+    width: auto;
+    object-fit: contain;
+}
+
+[dir="rtl"] .headerImage {
+    right: auto;
+    left: 50px;
+}
+
+[dir="ltr"] .headerImage {
+    right: 50px;
+    left: auto;
+}
 .cardsUserDash {
     background-color: white;
     border: 1px solid rgba(241,65,111,.25);
     padding: 20px 20px 0px 20px;
     color: #1A83A8;
-    margin: 10px;
+    margin: 15px;
     border-radius: 20px;
     height: fit-content;
 
@@ -189,4 +233,26 @@ li:nth-child(3)::marker {
         width: 100%;
         margin: 10px 10px;
     }
+}
+
+
+@media (max-width: 1395px) {
+
+    .cardsUserDash {
+        margin: 10px ;
+    }
+}
+@media (max-width: 992px) {
+    .headerImage {
+        height: 170px;
+    }
+}
+
+@media (max-width: 600px) {
+    .headerImage {
+        width: 125px;
+        height: 200px;
+    }
+
+ 
 }

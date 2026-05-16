@@ -99,6 +99,8 @@ export default function LoadingPage({ language }) {
                 : styles.loadingWrapper
         }>
             <section className={styles.heroContainer}>
+                <div className={styles.bgGrid} />
+
 
                 <div className={styles.cvCard}>
                     <div className={styles.cvHeaderRow}>

@@ -31,7 +31,7 @@ export default function AdminSidebar({ language }) {
             <nav className={`${style.nav} ${language === 'ar' ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}
             >
 
-                <Link to="/" className="style.center">
+                <Link to="/admin/profile" className="style.center">
                     <img src={userImg.image} alt="adminImg" className={`${style.adimnImg} rounded-circle`} />
                 </Link>
 

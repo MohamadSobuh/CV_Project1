@@ -26,6 +26,8 @@ export default function Report({ language }) {
     };
     return (
         <div className={language === 'ar' ? style.reportAr : style.report}>
+            <div className={style.bgGrid} />
+
             <div className={style.support}>{t("supportCenter")}</div>
             <h1><b>{t("reportsFeedback")}</b></h1>
             <p className={style.help}>{t("helpText")}</p>
@@ -102,7 +104,7 @@ export default function Report({ language }) {
                         className={style.submit}
                         onClick={() => {
                             if (!document.querySelector('input').value || !document.querySelector('textarea').value) {
-                                setError(t("errorRequiredFields")); 
+                                setError(t("errorRequiredFields"));
                                 return;
                             }
 

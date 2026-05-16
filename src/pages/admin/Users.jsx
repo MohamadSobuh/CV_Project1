@@ -160,8 +160,10 @@ export default function Users({ language }) {
                 <>
 
                     <div className='row align-items-center justify-content-between mb-4'>
+                                            <div className={style.bgGrid} />
+                        
                         <div className='col-md-6'>
-                            <h1>{t('title')}</h1>
+                            <h1><b>{t('title')}</b></h1>
                             <p>{t('descriptionUsersPage')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>

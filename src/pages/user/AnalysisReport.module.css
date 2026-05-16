@@ -26,6 +26,19 @@
     padding: 20px 300px 20px 40px;
 }
 
+.bgGrid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(59, 158, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 158, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
+
 .strengths {
     background-color: white;
     color: #017008;
@@ -193,8 +206,6 @@
     display: flex;
     align-items: center;
     animation-delay: 0.2s;
-
-
 }
 
 .headReportText {
@@ -209,14 +220,17 @@
 }
 
 .reportTitle {
-    text-shadow: 2px 2px 10px #1A83A8;
-    margin: 30px;
-    color: white;
+    margin-bottom: 30px;
 }
 
 .feildStyle {
-    margin: 30px 30px 0 30px;
-    color: white;
+    background-color: #bedde8;
+    color: #1A83A8;
+    border-radius: 25px;
+    padding: 5px 10px;
+    display: inline-block;
+    margin-bottom: 20px;
+
 }
 
 @media (max-width: 767px) {
@@ -331,6 +345,7 @@
     .reportAr {
         margin-right: 240px;
     }
+
     .ScoreText,
     .decCV {
         margin-left: 20px;

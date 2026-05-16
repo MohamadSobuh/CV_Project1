@@ -8,7 +8,7 @@ import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa"
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AnalysisReport({ language }) {
-const { analysisResult, setAnalysisResult, targetField, placementScore } = useUserFlow();    const { state } = useLocation();
+    const { analysisResult, setAnalysisResult, targetField, placementScore } = useUserFlow(); const { state } = useLocation();
     const isNew = state?.mode === "new";
     const score = state?.score;
     const navigate = useNavigate();
@@ -49,10 +49,13 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
 
     return (
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
+            <div className={style.bgGrid} />
 
+            <p className={style.feildStyle}>Feild : <b>{targetField || "NOT SPECIFIED"}</b></p>
+
+            <h1 className={style.reportTitle}><b>{t('reportTitle')}</b></h1>
             <div className={`row ${style.headReport}`}>
-                <h1 className={style.reportTitle}><b>{t('reportTitle')}</b></h1>
-                <p className={style.feildStyle}>Feild : <b>{targetField || "Not specified"}</b></p>
+
                 <div className='col-md-3'>
                     <CircularScore score={analysisResult.score} />
                 </div>
@@ -63,7 +66,9 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
             </div>
 
             <div className='row'>
+
                 <div className=' col-md-6'>
+                    <div className={style.bgGrid} />
 
                     <div className={style.strengths}>
                         <div className={style.strengtWeakhHeader}>
@@ -110,7 +115,7 @@ const { analysisResult, setAnalysisResult, targetField, placementScore } = useUs
                 <button className={style.startAssessment} onClick={() => isNew && navigate('/user/quiz', {
                     state: {
                         weaknesses: analysisResult.weaknesses,
-                         mode: "assessment"
+                        mode: "assessment"
                     }
                 })} disabled={!isNew} >
 

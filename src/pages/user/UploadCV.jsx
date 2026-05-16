@@ -111,6 +111,8 @@ export default function UploadCV({ language }) {
 
     return (
         <div className={style.uploadPage}>
+            <div className={style.bgGrid} />
+
             <div className={style.uploadCard}>
                 <h4>{t('uploadCVtitle')}</h4>
                 <p className={style.center}>{t('uploadCVdescription')}</p>
