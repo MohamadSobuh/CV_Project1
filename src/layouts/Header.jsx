@@ -12,15 +12,9 @@ export default function Header({ user, language, setLanguage }) {
     useEffect(() => {
         document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
     }, [language, i18n.language]);
+    const storedFirstName = localStorage.getItem("userFirstName") || "Israa";
+    const storedLastName = localStorage.getItem("userLastName") || "Shtaiwi";
 
-    useEffect(() => {
-
-        const storedFirstName = user.firstname;
-        const storedLastName = user.lastname;
-        console.log(user)
-
-
-    }, [user]);
 
     const handleLanguageChange = (e) => {
         const newLang = e.target.value;
@@ -42,7 +36,7 @@ export default function Header({ user, language, setLanguage }) {
                 <Link to="profile">
                     <img src={user?.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </Link>
-                <h6>{user?.firstname} {user?.lastname}</h6>
+                <h6>{storedFirstName} {storedLastName}</h6>
             </div>
         </header>
     )

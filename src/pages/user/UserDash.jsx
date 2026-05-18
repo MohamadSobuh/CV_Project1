@@ -11,17 +11,17 @@ import dashR from "../../images/dashR.png";
 
 
 
-export default function UserDash({ language }) {
+export default function UserDash({ language, user }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
-    const { user } = useUserFlow();
+    // const { user } = useUserFlow();
     const [userDash, setUserDash] = useState({
         TotalCVs: 0,
         Progress: "",
         learningPlan: null
     });
     ///مع هذا التعديل بقدر احذف ال userFirstName وال userLastName من local storage
-    let firstName = user?.firstname || "Israa";
-    let lastName = user?.lastname || "Shtaiwi";
+    let firstName = localStorage.getItem("userFirstName") || "Israa";
+    let lastName = localStorage.getItem("userLastName") || "Shtaiwi";
 
 
 

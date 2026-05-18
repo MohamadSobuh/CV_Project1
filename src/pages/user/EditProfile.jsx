@@ -19,19 +19,46 @@ export default function EditProfile({ t, language }) {
     const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({
         resolver: yupResolver(editProfileSchema),
         defaultValues: {
-            firstname: user?.firstname || "",
-            lastname: user?.lastname || "",
-            email: user?.email || "",
-            field: user?.field || "Artificial Intelligence",
+            firstname: "",
+            lastname: "",
+            email: "",
+            field: "",
             password: ""
         }
     });
-    const [image, setImage] = useState(user?.image || "");
+    const [image, setImage] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
+    const fetchProfile = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            navigate("/login");
+            return;
+        }
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/api/user/profile/", { headers: { Authorization: `Token ${token}` } });
+            console.log(response.data, "response data");
+            reset({
+                firstname: response.data.firstname || "",
+                lastname: response.data.lastname || "",
+                email: response.data.email || "",
+                field: response.data.field || "Artificial Intelligence",
+                password: ""
+            });
+            setImage(response.data.image || "");
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    }
+
     useEffect(() => {
-        if (user) {
+        fetchProfile();
+    }, [reset]);
+
+    useEffect(() => {
+        if (user && !image) {
             reset({
                 firstname: user.firstname || "",
                 lastname: user.lastname || "",
@@ -39,8 +66,10 @@ export default function EditProfile({ t, language }) {
                 field: user.field || "Artificial Intelligence",
                 password: ""
             });
+            setImage(user.image || "");
         }
     }, [user, reset]);
+
     const handleImageClick = () => {
         fileInputRef.current.click();
     };

@@ -6,14 +6,40 @@ import { useNavigate } from 'react-router-dom';
 import profileImg from "../../images/profileImg.png";
 import { useUserFlow } from '../../context/UserFlowContext';
 import axios from "axios";
+import { useEffect } from 'react';
 
 
 export default function UserProfile({ t, language }) {
     const navigate = useNavigate();
     const { user } = useUserFlow();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [userProfile, setUserProfile] = useState({});
 
-    const profile = user || {};
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refresh_token");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userFirstName");
+        localStorage.removeItem("userLastName");
+        localStorage.removeItem("userEmail");
+    }
+    const fetchProfile = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            navigate("/login");
+            return;
+        }
+        const response = await axios.get("http://127.0.0.1:8000/api/user/profile/", { headers: { Authorization: `Token ${token}` } });
+        setUserProfile(response.data);
+        console.log(response.data, "response data");
+    }
+    useEffect(() => {
+        fetchProfile();
+    }, []);
+
     const handleDeleteAccount = async () => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
@@ -21,12 +47,10 @@ export default function UserProfile({ t, language }) {
             navigate("/login");
             return;
         }
-        if (window.confirm("Are you sure you want to delete your account?")) {
-            await axios.delete("http://127.0.0.1:8000/api/user/profile/delete/", { headers: { Authorization: `Token ${token}` } });
-            localStorage.removeItem("user");
-            localStorage.removeItem("accessToken");
-            navigate("/login");
-        }
+        await axios.delete("http://127.0.0.1:8000/api/user/profile/delete/", { headers: { Authorization: `Token ${token}` } });
+        navigate("/login");
+        setShowDeleteModal(false);
+        logout();
     };
     if (!t) return <div className="text-center p-5">Loading...</div>;
     if (!user) return <div className="text-center p-5">Loading profile...</div>;
@@ -36,29 +60,29 @@ export default function UserProfile({ t, language }) {
 
             <div className={style.profile}>
                 <div className={style.center}>
-                    <img src={profile.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                    <img src={userProfile.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </div>
 
                 <form>
                     <div className="row">
                         <div className="form-group col-md-6">
                             <label className={style.text}><b>{t('firstNameLabel')}</b></label>
-                            <div className="form-control bg-light">{profile.firstname}</div>
+                            <div className="form-control bg-light">{userProfile.firstname}</div>
                         </div>
                         <div className="form-group col-md-6">
                             <label className={style.text}><b>{t('lastNameLabel')}</b></label>
-                            <div className="form-control bg-light">{profile.lastname}</div>
+                            <div className="form-control bg-light">{userProfile.lastname}</div>
                         </div>
                     </div>
 
                     <div className="form-group mt-3">
                         <label className={style.text}><b>{t('emailLabel')}</b></label>
-                        <div className="form-control bg-light">{profile.email}</div>
+                        <div className="form-control bg-light">{userProfile.email}</div>
                     </div>
 
                     <div className="form-group mt-3">
                         <label className={style.text}><b>{t('fieldLabel')}</b></label>
-                        <div className="form-control bg-light">{profile.field}</div>
+                        <div className="form-control bg-light">{userProfile.field}</div>
                     </div>
                 </form>
 
@@ -99,10 +123,7 @@ export default function UserProfile({ t, language }) {
 
                                 <button
                                     className={style.deleteBtn}
-                                    onClick={() => {
-                                        console.log("Deleted");
-                                        setShowDeleteModal(false);
-                                    }}
+                                    onClick={handleDeleteAccount}
                                 >
                                     {language === "ar" ? "نعم، احذف" : "Yes, Delete"}
                                 </button>

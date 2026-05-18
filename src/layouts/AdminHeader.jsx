@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-export default function Header({ user, language, setLanguage }) {
+export default function Header({ language, setLanguage }) {
     const { t, i18n } = useTranslation();
 
 
@@ -13,17 +13,13 @@ export default function Header({ user, language, setLanguage }) {
         document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
     }, [language, i18n.language]);
 
-    useEffect(() => {
-        const userString = localStorage.getItem("user");
+    const userString = localStorage.getItem("user");
 
-        const user = userString ? JSON.parse(userString) : {};
+    const user = userString ? JSON.parse(userString) : {};
 
-        const storedFirstName = user.firstname;
-        const storedLastName = user.lastname;
-        console.log(user)
-
-
-    }, [user]);
+    const storedFirstName = user.firstname;
+    const storedLastName = user.lastname;
+    console.log(user)
 
     const handleLanguageChange = (e) => {
         const newLang = e.target.value;
@@ -45,7 +41,7 @@ export default function Header({ user, language, setLanguage }) {
                 <Link to="profile">
                     <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </Link>
-                <h6>{user.first_name} {user.last_name}</h6>
+                <h6>{storedFirstName} {storedLastName}</h6>
             </div>
         </header>
     )
