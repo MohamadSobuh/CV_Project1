@@ -13,6 +13,8 @@ export default function EndOfPlan({ language }) {
 
     return (
         <div className={language === 'ar' ? style.endPlanAr : style.endPlanEn}>
+            <div className={style.bgGrid} />
+
             <div className={style.card}>
                 <div className={style.trophy}>
                     <FaTrophy />

@@ -144,6 +144,8 @@ export default function TaskAssQuiz({ language }) {
 
     return (
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >
+            <div className={style.bgGrid} />
+
             <h1>
                 <b>
                     {mode === "task"

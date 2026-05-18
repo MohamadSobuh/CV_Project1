@@ -41,6 +41,7 @@ import ViewTaskContent from './pages/admin/ViewTaskContent';
 import Report from './pages/user/Report';
 import EditAdminProfile from './pages/admin/EditAdminProfile';
 import AdminProfile from './pages/admin/AdminProfile';
+import LoadingPage from './pages/user/loadingPage';
 
 
 export default function App() {
@@ -83,6 +84,8 @@ export default function App() {
               <Route path='dashboard' element={<UserDash user={user} language={language} />}></Route>
               <Route path='upload' element={<UploadCV language={language} />} />
               <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
+              <Route path='loading' element={<LoadingPage language={language} />} />
+
               <Route path='analysisReport' element={<AnalysisReport language={language} />} />
               <Route path='quiz' element={<TaskAssQuiz language={language} />} />
               <Route path='quizResult' element={<QuizResult language={language} />} />

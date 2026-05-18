@@ -11,17 +11,37 @@
     padding: 20px 300px 20px 40px;
     min-height: 100vh;
 }
+.bgGrid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(59, 158, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 158, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
 
-/* Header */
+
+.planHead {
+    background-color: #bedde8;
+    color: #1A83A8;
+    border-radius: 25px;
+    padding: 5px 10px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
 .planTitle {
     font-size: 2rem;
     font-weight: bold;
     color: #082F43;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
+
 }
 
 .planSubtitle {
-    color: #1A83A8;
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
@@ -56,8 +76,35 @@
     border-radius: 4px;
     transition: width 0.3s ease;
 }
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
 
-/* Layout */
+.headerLeft {
+    display: flex;
+    flex-direction: column;
+}
+
+.headerRight {
+    min-width: 300px;
+    max-width: 400px;
+    background-color: white;
+    padding: 20px 20px 0 20px;
+    border-radius: 10px;
+    border-left:7px solid #1A83A8;
+    
+}
+
+.progressPercent {
+    text-align: right;
+    margin-top: 5px;
+    color: #1A83A8;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
 .mainContent {
     display: flex;
     gap: 30px;

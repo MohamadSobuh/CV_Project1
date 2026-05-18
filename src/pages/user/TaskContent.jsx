@@ -42,6 +42,8 @@ export default function TaskContent({ language }) {
 
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
+            <div className={styles.bgGrid} />
+
             <div className={styles.banner}>
                 <div className={styles.bannerIconWrapper}>
                     <FiBookOpen size={42} className={styles.bookIcon} />
@@ -59,7 +61,6 @@ export default function TaskContent({ language }) {
                 <div className={styles.mediaRow}>
                     <div className={styles.mediaBoxImage}>
                         {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img} />}
-                        <span className={styles.mediaTextImg}>Image support</span>
                     </div>
 
                     <div className={styles.mediaBoxVideo}>
@@ -71,7 +72,6 @@ export default function TaskContent({ language }) {
                             referrerPolicy="strict-origin-when-cross-origin"
                             className={styles.videoFrame}
                         ></iframe>
-                        <span className={styles.mediaTextVid}>Video support</span>
                     </div>
                 </div>
             </div>

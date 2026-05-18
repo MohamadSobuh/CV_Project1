@@ -32,6 +32,8 @@ export default function AdminProfile({ t, language }) {
     if (!user) return <div className="text-center p-5">Loading profile...</div>;
     return (
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
+                                <div className={style.bgGrid} />
+            
             <div className={style.profile}>
                 <div className={style.center}>
                     <img src={profile.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />

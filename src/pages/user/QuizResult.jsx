@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 
 export default function QuizResult({ language }) {
-        const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
 
     const navigate = useNavigate();
@@ -15,6 +15,8 @@ export default function QuizResult({ language }) {
     const score = placementScore;
     return (
         <div className={language === 'ar' ? style.quizResultAr : style.quizResultEn}>
+            <div className={style.bgGrid} />
+
             <CircularScore score={score} />
 
             <div className={style.card}>

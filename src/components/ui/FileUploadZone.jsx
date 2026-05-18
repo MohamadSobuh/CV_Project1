@@ -2,7 +2,8 @@ import { useState, useRef } from 'react'
 import style from "../../pages/user/UploadCV.module.css";
 import { FaFileArrowUp } from "react-icons/fa6";
 
-export default function FileUploadZone({ file, setFile, setError, t }) {
+export default function FileUploadZone({ file, setFile, setError, t, inputRef }) {
+
     const fileInputRef = useRef();
     const [isDragging, setIsDragging] = useState(false);
 
@@ -29,7 +30,7 @@ export default function FileUploadZone({ file, setFile, setError, t }) {
     return (
         <div
             className={`${style.uploadSection} ${isDragging ? style.dragging : ""}`}
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => inputRef.current.click()} 
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -50,7 +51,7 @@ export default function FileUploadZone({ file, setFile, setError, t }) {
 
             <input
                 type="file"
-                ref={fileInputRef}
+                ref={inputRef}
                 style={{ display: "none" }}
                 accept=".pdf,.doc,.docx"
                 onChange={(e) => {

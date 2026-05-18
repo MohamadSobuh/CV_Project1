@@ -90,6 +90,8 @@ export default function AdminTaskContent({ language }) {
 
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
+            <div className={styles.bgGrid} />
+
             <div className={styles.banner}>
                 <div className={styles.bannerIconWrapper}>
                     <FiBookOpen size={42} className={styles.bookIcon} />

@@ -26,6 +26,7 @@ export default function TopicSection({ topic, isActive, onClick }) {
             className={`${style.topicCard} ${isActive ? style.active : ''}`}
             onClick={() => onClick && onClick(topic)}
         >
+
             <div className={style.topicCardHeader}>
                 <div className={style.topicTitleRow}>
                     <Icon size={24} />
@@ -35,10 +36,6 @@ export default function TopicSection({ topic, isActive, onClick }) {
                     {difficulty}
                 </div>
             </div>
-
-            <p className={style.topicDesc}>
-                {description}
-            </p>
 
             <div className={style.topicProgressRow}>
                 <span>{completedCount}/{totalCount} tasks</span>

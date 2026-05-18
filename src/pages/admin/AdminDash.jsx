@@ -53,7 +53,9 @@ export default function AdminDash({ language }) {
 
   return (
     <div className={language === 'ar' ? style.dashArabic : style.dash}>
-      <h1>{t('dash')}</h1>
+      <div className={style.bgGrid} />
+
+      <h1><b>{t('dash')}</b></h1>
       <p>{t('overview')}</p>
       <br />
       <div className={`row ${style.cardsContainer}`}>

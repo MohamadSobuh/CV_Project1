@@ -303,6 +303,7 @@
     background-color: #082F43;
     padding: 50px;
     margin: 150px;
+    position: relative;
 }
 
 .subscription form {
@@ -343,6 +344,8 @@
     margin: 0 150px;
     padding: 40px 0;
     border-top: 1px solid #082F43;
+    position: relative;
+
 }
 
 .footer ul {

@@ -188,8 +188,10 @@ const TopicsPage = ({ language = 'en' }) => {
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
+                                            <div className={style.bgGrid} />
+                        
                         <div className='col-md-6'>
-                            <h1>{t('topicsTitle')}</h1>
+                            <h1><b>{t('topicsTitle')}</b></h1>
                             <p>{t('topicsSub')}</p>
                         </div>
                         <div className={`col-md-6 ${language === 'ar' ? 'text-start' : 'text-end'}`}>

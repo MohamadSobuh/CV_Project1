@@ -12,6 +12,8 @@ export default function EndOfTopic({ language }) {
     const data = location.state;
     return (
         <div className={language === 'ar' ? style.endPlanAr : style.endPlanEn}>
+            <div className={style.bgGrid} />
+
             <div className={style.card}>
                 <div className={style.trophy}>
                     <FaCheckCircle style={{ color: "#fff" }} />

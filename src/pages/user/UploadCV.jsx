@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import style from "./UploadCV.module.css";
 import { useTranslation } from "react-i18next";
-
 import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaTimesCircle } from "react-icons/fa";
 
 export default function UploadCV({ language }) {
     const [fields, setFields] = useState([]);
@@ -15,7 +15,7 @@ export default function UploadCV({ language }) {
     const [error, setError] = useState("");
     const { setHistory, setTargetField } = useUserFlow();
     const navigate = useNavigate();
-
+    const fileInputRef = useRef(null);
     useEffect(() => {
         const data = [
             { id: 1, name: "Front-end Development" },
@@ -39,7 +39,7 @@ export default function UploadCV({ language }) {
         }
     }
 
-    const handleAnalysis = () => {
+    const handleAnalysis = async () => {
         if (!file && !selectedField) {
             setError(t('errorBoth'));
             return;
@@ -74,45 +74,65 @@ export default function UploadCV({ language }) {
         }
 
         setError("");
-        setHistory(prev => [
-            ...prev,
-            {
-                id: Date.now(),
-                fileName: file.name,
-                field: selectedField
-            }
-        ]);
-        setTargetField(selectedField);
-        navigate("/user/analysisReport", {
-            state: {
-                mode: "new",
-                file,
-                selectedField
-            }
-        });
-        if (error) {
-            return;
-        } else {
-            uploadCV();
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("field", selectedField);
 
+            const token = localStorage.getItem("accessToken");
+
+            await axios.post(
+                "http://127.0.0.1:8000/api/user/upload-cv/",
+                formData,
+                { headers: { Authorization: `Token ${token}` } }
+            );
+
+            navigate("/user/loading", {
+                state: {
+                    mode: "new",
+                    file,
+                    selectedField
+                }
+            });
+
+        } catch (err) {
+            console.log(err);
+            setError("Upload failed");
+        }
+    };
+    const { t, i18n } = useTranslation();
+    const handleRemoveFile = () => {
+        setFile(null);
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
         }
     };
 
-    const { t, i18n } = useTranslation();
-
-
     return (
         <div className={style.uploadPage}>
+            <div className={style.bgGrid} />
+
             <div className={style.uploadCard}>
                 <h4>{t('uploadCVtitle')}</h4>
                 <p className={style.center}>{t('uploadCVdescription')}</p>
 
-                <FileUploadZone
-                    file={file}
-                    setFile={setFile}
-                    setError={setError}
-                    t={t}
-                />
+                <div className={style.uploadZoneWrapper}>
+                    {file && (
+                        <FaTimesCircle
+                            className={style.removeFileIcon}
+                            onClick={handleRemoveFile}
+                        />
+                    )}
+
+                    <FileUploadZone
+                        file={file}
+                        setFile={setFile}
+                        setError={setError}
+                        t={t}
+                        inputRef={fileInputRef}
+                    />
+                </div>
 
                 <p><b>{t('chooseField')}</b></p>
                 <select value={selectedField} onChange={(e) => setSelectedField(e.target.value)} className={style.selectField}>
