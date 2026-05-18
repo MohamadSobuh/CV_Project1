@@ -1,6 +1,6 @@
 import style from "./SidebarAdminUser.module.css";
 import { NavLink, Link } from "react-router-dom";
-import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars , FaTimes} from "react-icons/fa";
+import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
 import Admin from "../images/Admin.jpg";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,18 @@ export default function AdminSidebar({ language }) {
     }, []);
 
     const { t, i18n } = useTranslation();
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refresh_token");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userFirstName");
+        localStorage.removeItem("userLastName");
+        localStorage.removeItem("userEmail");
+
+        navigate("/");
+    }
 
 
     return (
@@ -62,7 +74,7 @@ export default function AdminSidebar({ language }) {
                         <FaCog className="m-3" />{t('setting')}
                     </NavLink>
 
-                    <Link className={`${style.links} ${style.logout}`} to="/">
+                    <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>
                         {t('logout')}<FaSignOutAlt className="m-3" />
                     </Link>
                 </div>

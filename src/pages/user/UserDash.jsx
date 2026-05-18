@@ -11,33 +11,26 @@ import dashR from "../../images/dashR.png";
 
 
 
-export default function UserDash({ language, user }) {
+export default function UserDash({ language }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
-    //const { user } = useUserFlow();
+    const { user } = useUserFlow();
     const [userDash, setUserDash] = useState({
         TotalCVs: 0,
-        total_learning_hours: 2.5,
-        learningPlan: [
-            {
-                id: 13,
-                name: "JavaScript Basics",
-                progress: 25
-            }
-        ]
+        Progress: "",
+        learningPlan: null
     });
-
-
     ///مع هذا التعديل بقدر احذف ال userFirstName وال userLastName من local storage
-    let firstName = user.firstname || "Israa";
-    let lastName = user.lastname || "Shtaiwi";
-    let learningPlan = "Front-end development"
-    let Progress = "20%"
-    let TotalCVs = "1"
+    let firstName = user?.firstname || "Israa";
+    let lastName = user?.lastname || "Shtaiwi";
+
 
 
     useEffect(() => {
-        let current = 0;
-        const target = 20;
+        const target = parseInt(userDash.Progress, 10) || 0;
+
+        if (animatedProgress >= target) return;
+
+        let current = animatedProgress;
 
         const interval = setInterval(() => {
             current += 1;
@@ -46,10 +39,12 @@ export default function UserDash({ language, user }) {
             if (current >= target) {
                 clearInterval(interval);
             }
-        }, 50);
+        }, 30);
 
-    }, [userDash.learningPlan]);
-    console.log(user);
+        return () => clearInterval(interval);
+
+    }, [userDash.Progress]);
+
 
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
@@ -107,14 +102,14 @@ export default function UserDash({ language, user }) {
                     </div>
 
                     <div className={style.cardContent}>
-                        {learningPlan ? (
+                        {userDash.learningPlan ? (
                             <>
                                 <p>{t('currentPlan')}</p>
-                                <h5>{learningPlan}</h5>
+                                <h5>{userDash.learningPlan}</h5>
                                 <div className={style.progressBar}>
                                     <div className={style.progressFill} style={{ width: `${animatedProgress}%` }}></div>
                                 </div>
-                                <p> {Progress} {t('completed')}</p>
+                                <p> {userDash.Progress} {t('completed')}</p>
                                 <Link className={style.goLink} to="/user/plan"><b>{t('goToPlan')}<FaAngleRight /> </b></Link>
 
                             </>) : (<>

@@ -45,7 +45,7 @@ export default function Header({ user, language, setLanguage }) {
                 <Link to="profile">
                     <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </Link>
-                <h6>{user.firstname} {user.lastname}</h6>
+                <h6>{user.first_name} {user.last_name}</h6>
             </div>
         </header>
     )

@@ -12,12 +12,13 @@ export default function Sidebar({ language }) {
 
   const { t, i18n } = useTranslation();
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
     localStorage.removeItem("user");
     localStorage.removeItem("userFirstName");
     localStorage.removeItem("userLastName");
+    localStorage.removeItem("userEmail");
 
     navigate("/");
   }

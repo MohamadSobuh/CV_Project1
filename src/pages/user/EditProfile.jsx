@@ -27,6 +27,7 @@ export default function EditProfile({ t, language }) {
         }
     });
     const [image, setImage] = useState(user?.image || "");
+    const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
     useEffect(() => {
@@ -49,8 +50,7 @@ export default function EditProfile({ t, language }) {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
-
-            setFormData({ ...formData, image: file });
+            setImageFile(file);
         }
     };
 
@@ -191,6 +191,8 @@ export default function EditProfile({ t, language }) {
                             <option value="Artificial Intelligence">Artificial Intelligence</option>
                             <option value="Software Engineering">Software Engineering</option>
                             <option value="Data Science">Data Science</option>
+                            <option value="Full Stack">Full Stack</option>
+
                         </select>
                         {errors.field && <InputError error={errors.field} />}
                     </div>
