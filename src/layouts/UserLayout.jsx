@@ -2,12 +2,12 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
-export default function UserLayout({ language, setLanguage }) {
+export default function UserLayout({ user, language, setLanguage }) {
     return (
         <div>
             <Sidebar language={language} />
             <div>
-                <Header language={language} setLanguage={setLanguage} />
+                <Header user={user} language={language} setLanguage={setLanguage} />
                 <div>
                     <Outlet />
                 </div>

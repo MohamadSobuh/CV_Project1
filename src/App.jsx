@@ -46,6 +46,8 @@ import AdminProfile from './pages/admin/AdminProfile';
 export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
   const { t, i18n } = useTranslation();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -66,7 +68,7 @@ export default function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />
             <Route path="/login" element={<Signin />} />
-            <Route path='/user' element={<UserLayout language={language} setLanguage={setLanguage} />}>
+            <Route path='/user' element={<UserLayout user={user} language={language} setLanguage={setLanguage} />}>
               <Route path='profile' element={
                 <UserProfile t={t} language={language} />
               } />
@@ -78,7 +80,7 @@ export default function App() {
                 />
               } />
 
-              <Route path='dashboard' element={<UserDash language={language} />}></Route>
+              <Route path='dashboard' element={<UserDash user={user} language={language} />}></Route>
               <Route path='upload' element={<UploadCV language={language} />} />
               <Route path='analysisHistory' element={<AnalysisHistory language={language} />} />
               <Route path='analysisReport' element={<AnalysisReport language={language} />} />
@@ -95,8 +97,8 @@ export default function App() {
 
             </Route>
 
-            <Route path='/admin' element={<AdminLayout language={language} setLanguage={setLanguage} />}>
-              <Route path='dashboard' element={<AdminDash language={language} />} />
+            <Route path='/admin' element={<AdminLayout user={user} language={language} setLanguage={setLanguage} />}>
+              <Route path='dashboard' element={<AdminDash user={user} language={language} />} />
               <Route path='users' element={<Users language={language} />} />
               <Route path='tasks' element={<Tasks language={language} />} />
               <Route path='editTask' element={<AdminTaskContent language={language} />} />

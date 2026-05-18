@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-export default function Header({ language, setLanguage }) {
+export default function Header({ user, language, setLanguage }) {
     const { t, i18n } = useTranslation();
-    const [user, setUser] = useState({ firstname: "", lastname: "", image: "" });
+
 
     useEffect(() => {
         document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
@@ -22,12 +22,8 @@ export default function Header({ language, setLanguage }) {
         const storedLastName = user.lastname;
         console.log(user)
 
-        setUser({
-            firstname: storedFirstName || "Israa",
-            lastname: storedLastName || "Shtaiwi",
-            image: profileImg
-        });
-    }, []);
+
+    }, [user]);
 
     const handleLanguageChange = (e) => {
         const newLang = e.target.value;

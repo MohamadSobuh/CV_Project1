@@ -8,9 +8,9 @@ import { useUserFlow } from '../../context/UserFlowContext';
 import axios from "axios";
 
 
-export default function UserDash({ language }) {
+export default function UserDash({ language, user }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
-    const { user } = useUserFlow();
+    //const { user } = useUserFlow();
     const [userDash, setUserDash] = useState({
         TotalCVs: 0,
         total_learning_hours: 2.5,
@@ -23,11 +23,10 @@ export default function UserDash({ language }) {
         ]
     });
 
+
     ///مع هذا التعديل بقدر احذف ال userFirstName وال userLastName من local storage
-    const userString = localStorage.getItem("user");
-    const userObj = userString ? JSON.parse(userString) : {};
-    let firstName = userObj.firstname || "Israa";
-    let lastName = userObj.lastname || "Shtaiwi";
+    let firstName = user.firstname || "Israa";
+    let lastName = user.lastname || "Shtaiwi";
     let learningPlan = "Front-end development"
     let Progress = "20%"
     let TotalCVs = "1"

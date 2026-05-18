@@ -1,12 +1,12 @@
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
-export default function AdminLayout({ language, setLanguage }) {
+export default function AdminLayout({ user, language, setLanguage }) {
     return (
         <div>
             <AdminSidebar language={language} />
             <div>
-                <AdminHeader language={language} setLanguage={setLanguage} />
+                <AdminHeader user={user} language={language} setLanguage={setLanguage} />
                 <div>
                     <Outlet />
                 </div>
