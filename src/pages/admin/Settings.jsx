@@ -113,8 +113,8 @@ const Settings = () => {
 
     return (
         <div className={language === 'ar' ? style.settingsPageAr : style.settingsPage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-                                <div className={style.bgGrid} />
-            
+            <div className={style.bgGrid} />
+
             <div className="row align-items-center mb-4">
                 <div className='col-md-6'>
                     <h1 className="fw-bold" style={{ color: '#082F43' }}>{t('settingsTitle')}</h1>

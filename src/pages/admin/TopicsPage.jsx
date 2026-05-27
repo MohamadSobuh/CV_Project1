@@ -188,8 +188,8 @@ const TopicsPage = ({ language = 'en' }) => {
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
-                                            <div className={style.bgGrid} />
-                        
+                        <div className={style.bgGrid} />
+
                         <div className='col-md-6'>
                             <h1><b>{t('topicsTitle')}</b></h1>
                             <p>{t('topicsSub')}</p>
@@ -199,7 +199,7 @@ const TopicsPage = ({ language = 'en' }) => {
                                 + {t('addTopic')}
                             </button>
                         </div>
-                    
+
                         <div className="col-md-6">
                             <br />
                             <div className={style.searchContainer}>

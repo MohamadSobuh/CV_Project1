@@ -242,8 +242,8 @@ const QuizQuestions = ({ language = 'en' }) => {
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
-                                            <div className={style.bgGrid} />
-                        
+                        <div className={style.bgGrid} />
+
                         <div className='col-md-6'>
                             <h1><b>{t('quizTitle')}</b></h1>
                             <p>{t('quizSub')}</p>
@@ -338,7 +338,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                     <div className={style.modalContent} onClick={e => e.stopPropagation()}>
                         <h2 className={style.modalTitle}>{t('confirm')}</h2>
                         <p>{t('confirmDeleteDesc')}</p>
-                        <div className={style.modalButtons}> 
+                        <div className={style.modalButtons}>
                             <button className={style.btnOutline} onClick={() => setShowDeleteModal(null)}>{t('confirmDeleteCancel')}</button>
                             <button className={style.btnActive} style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleDelete}>{t('confirmDeleteBtn')}</button>
                         </div>

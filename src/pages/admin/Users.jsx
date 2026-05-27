@@ -160,8 +160,8 @@ export default function Users({ language }) {
                 <>
 
                     <div className='row align-items-center justify-content-between mb-4'>
-                                            <div className={style.bgGrid} />
-                        
+                        <div className={style.bgGrid} />
+
                         <div className='col-md-6'>
                             <h1><b>{t('title')}</b></h1>
                             <p>{t('descriptionUsersPage')}</p>

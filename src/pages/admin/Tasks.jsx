@@ -200,8 +200,8 @@ export default function Tasks({ language }) {
             ) : (
                 <>
                     <div className='row align-items-center justify-content-between mb-4'>
-                                            <div className={style.bgGrid} />
-                        
+                        <div className={style.bgGrid} />
+
                         <div className='col-md-6'>
                             <h1><b>{t('titleTaskPage')}</b></h1>
                             <p>{t('descriptionTaskPage')}</p>
