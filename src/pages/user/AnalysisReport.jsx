@@ -6,30 +6,37 @@ import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export default function AnalysisReport({ language }) {
-    const { analysisResult, setAnalysisResult, targetField, placementScore } = useUserFlow(); const { state } = useLocation();
+    const { analysisResult, setAnalysisResult, targetField, placementScore ,cvId} = useUserFlow();
+    const { state } = useLocation();
     const isNew = state?.mode === "new";
     const score = state?.score;
     const navigate = useNavigate();
+    const token = localStorage.getItem("accessToken");
+    console.log("cvId",cvId);
+    
+    const fetchAnalysisResult = async() => {
+        if(!token){
+            console.error("No token found");
+            return;
+        }
+        try{
+            const response = await axios.get(`http://127.0.0.1:8000/api/user/analysis-report/${cvId}/`, {
+                headers: { Authorization: `Token ${token}` },
+            });
+            setAnalysisResult(response.data);
+            console.log(response.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
 
     useEffect(() => {
-        const result = {
-            DesCV: "Your CV demonstrates strong technical foundation with excellent JavaScript skills. A few strategic additions could push it to the top tier. ",
-            strengths: [
-                { skill: "HTML", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-                { skill: "CSS", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-                { skill: "Skill Name", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-            ],
-            weaknesses: [
-                { skill: "Java Script", description: "Needs improvement in type safety and generics." },
-                { skill: "React", description: "Lacks experience with unit testing frameworks." },
-                { skill: "Skill Name", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-            ],
-            score: 60
-        };
-        setAnalysisResult(result);
+        fetchAnalysisResult();
     }, []);
 
     function getScoreDes(score) {
@@ -47,6 +54,8 @@ export default function AnalysisReport({ language }) {
     const { t, i18n } = useTranslation();
 
 
+    const strengthsList = analysisResult?.strengths || [];
+    const weaknessesList = analysisResult?.weaknesses || [];
     return (
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
             <div className={style.bgGrid} />
@@ -76,10 +85,11 @@ export default function AnalysisReport({ language }) {
                             <h3>{t('strengths')}</h3>
                         </div>
 
-                        {analysisResult.strengths.map((item) => (
+                        {strengthsList.map((item) => (
                             <div className={style.strengthStyle}>
-                                <b>{item.skill}</b>
-                                <p>{item.description}</p>
+                               <b>{typeof item === 'object' ? (item.skill || item.title || "Skill") : item}</b>
+                                <p>{typeof item === 'object' ? item.description : ''}</p>
+                                {/* <p>{item.description}</p> */}
                             </div>
                         ))}
                     </div>
@@ -92,10 +102,11 @@ export default function AnalysisReport({ language }) {
                             <h3>{t('weaknesses')}</h3>
                         </div>
 
-                        {analysisResult.weaknesses.map((item) => (
+                        {weaknessesList.map((item) => (
                             <div className={style.weakStyle}>
-                                <b>{item.skill}</b>
-                                <p>{item.description}</p>
+                               <b>{typeof item === 'object' ? (item.skill || item.title || "Skill") : item}</b>
+                                <p>{typeof item === 'object' ? item.description : ''}</p>
+                                {/* <p>{item.description}</p> */}
                             </div>
                         ))}
 

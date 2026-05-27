@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import style from "./Report.module.css";
 import { FaCloudUploadAlt, FaBolt, FaCheckCircle } from "react-icons/fa";
+
+
 export default function Report({ language }) {
     const { t, i18n } = useTranslation();
     const [priority, setPriority] = useState("");
     const [screenshot, setScreenshot] = useState(null);
     const [dragActive, setDragActive] = useState(false);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+
     const handleDrop = (e) => {
         e.preventDefault();
         setDragActive(false);
-
         const file = e.dataTransfer.files[0];
         if (file) setScreenshot(file);
     };
@@ -24,6 +30,60 @@ export default function Report({ language }) {
     const handleDragLeave = () => {
         setDragActive(false);
     };
+
+    const handleSubmit = async () => {
+        setError("");
+
+        if (!title.trim()) {
+            setError(t("errorRequiredFields"));
+            return;
+        }
+        if (!description.trim()) {
+            setError(t("errorRequiredFields"));
+            return;
+        }
+        if (!priority) {
+            setError(t("errorRequiredFields"));
+            return;
+        }
+
+        const token = localStorage.getItem("accessToken");
+
+        const formData = new FormData();
+        formData.append("title", title.trim());
+        formData.append("priority", priority);
+        formData.append("description", description.trim());
+        if (screenshot) {
+            formData.append("screenshot", screenshot);
+        }
+
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:8000/api/user/send-report/', {
+                method: "POST",
+                headers: { Authorization: `Token ${token}` },
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error || "Something went wrong. Please try again.");
+                return;
+            }
+
+            setSuccess(true);
+            setTitle("");
+            setDescription("");
+            setPriority("");
+            setScreenshot(null);
+        } catch (err) {
+            setError("Network error. Please check your connection and try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className={language === 'ar' ? style.reportAr : style.report}>
             <div className={style.bgGrid} />
@@ -42,6 +102,8 @@ export default function Report({ language }) {
                         required
                         className={style.reportTitle}
                         placeholder={t("reportTitlePlaceholder")}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />                    <br />
                     <b>{t("priorityLevel")}</b>
                     <br />
@@ -65,6 +127,8 @@ export default function Report({ language }) {
                         placeholder={t("descriptionPlaceholder")}
                         className={`form-control ${style.reportTextarea}`}
                         required
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
                     <b>{t("uploadScreenshot")}</b>
                     <div
@@ -95,23 +159,25 @@ export default function Report({ language }) {
                             onChange={(e) => setScreenshot(e.target.files[0])}
                         />
                     </div>
+
                     {error && (
                         <div className={style.errorBox}>
                             {error}
                         </div>
                     )}
+
+                    {success && (
+                        <div className={style.successBox || style.errorBox} style={{ background: "#d1fae5", color: "#065f46", borderColor: "#6ee7b7" }}>
+                            {t("reportSentSuccess") || "Report sent successfully! Check your email for confirmation."}
+                        </div>
+                    )}
+
                     <button
                         className={style.submit}
-                        onClick={() => {
-                            if (!document.querySelector('input').value || !document.querySelector('textarea').value) {
-                                setError(t("errorRequiredFields"));
-                                return;
-                            }
-
-                            setError("");
-                        }}
+                        onClick={handleSubmit}
+                        disabled={loading}
                     >
-                        {t("submitReport")}
+                        {loading ? (t("sending") || "Sending...") : t("submitReport")}
                     </button>
                 </div>
                 <div className={style.sideColumn}>

@@ -3,17 +3,19 @@ import style from "./UploadCV.module.css";
 import { useTranslation } from "react-i18next";
 import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
-import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaTimesCircle } from "react-icons/fa";
+import { useUserFlow } from "../../context/UserFlowContext";
 
 export default function UploadCV({ language }) {
+    const { t } = useTranslation();
     const [fields, setFields] = useState([]);
     const [selectedField, setSelectedField] = useState("");
     const [file, setFile] = useState();
     const [error, setError] = useState("");
-    const { setHistory, setTargetField } = useUserFlow();
+    const [isLoading, setIsLoading] = useState(false);
+    const { setCvId } = useUserFlow();
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
     useEffect(() => {
@@ -25,21 +27,9 @@ export default function UploadCV({ language }) {
 
         setFields(data);
     }, []);
-    const uploadCV = async () => {
-        try {
-            const payload = new FormData();
-            payload.append("file", file);
-            payload.append("field", selectedField);
-            const token = localStorage.getItem("accessToken");
-            const response = await axios.post("http://127.0.0.1:8000/api/user/upload-cv/", payload, { headers: { Authorization: `Token ${token}` } });
-            console.log(response.data);
-            alert("تم رفع السيرة الذاتية بنجاح");
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     const handleAnalysis = async () => {
+        // --- Validation ---
         if (!file && !selectedField) {
             setError(t('errorBoth'));
             return;
@@ -73,7 +63,9 @@ export default function UploadCV({ language }) {
             return;
         }
 
+        // --- Upload ---
         setError("");
+        setIsLoading(true);
         try {
             const formData = new FormData();
             formData.append("file", file);
@@ -81,26 +73,32 @@ export default function UploadCV({ language }) {
 
             const token = localStorage.getItem("accessToken");
 
-            await axios.post(
+            const response = await axios.post(
                 "http://127.0.0.1:8000/api/user/upload-cv/",
                 formData,
                 { headers: { Authorization: `Token ${token}` } }
             );
+            setCvId(response.data.cv_id);
 
+            // Pass only serializable data through router state.
+            // AnalysisHistory will fetch fresh data from the API on its own mount,
+            // so there is no need to manually update the history context here.
             navigate("/user/loading", {
                 state: {
                     mode: "new",
-                    file,
+                    fileName: file.name,
                     selectedField
                 }
             });
 
         } catch (err) {
-            console.log(err);
-            setError("Upload failed");
+            console.error(err);
+            setError(t('uploadFailed') || "Upload failed");
+        } finally {
+            setIsLoading(false);
         }
     };
-    const { t, i18n } = useTranslation();
+
     const handleRemoveFile = () => {
         setFile(null);
 
@@ -146,7 +144,13 @@ export default function UploadCV({ language }) {
 
                 <UploadPageError error={error} />
 
-                <button className={style.analysisBtn} onClick={handleAnalysis}>{t('analysisBtn')}</button>
+                <button
+                    className={style.analysisBtn}
+                    onClick={handleAnalysis}
+                    disabled={isLoading}
+                >
+                    {isLoading ? t('uploading') || "Uploading..." : t('analysisBtn')}
+                </button>
             </div>
         </div >
     );

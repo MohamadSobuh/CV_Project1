@@ -16,6 +16,7 @@ export const UserFlowProvider = ({ children }) => {
   const [analysisResult, setAnalysisResult] = useState({ DesCV: "", strengths: [{ skill: "", description: "" }], weaknesses: [{ skill: "", description: "" }], score: 0 });
   const [placementScore, setPlacementScore] = useState(0);
   const [topics, setTopics] = useState([]);
+  const [cvId, setCvId] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -53,6 +54,7 @@ export const UserFlowProvider = ({ children }) => {
       placementScore, setPlacementScore,
       topics, setTopics,
       activeTask, setActiveTask,
+      cvId, setCvId,
     }}>
       {children}
     </UserFlowContext.Provider>

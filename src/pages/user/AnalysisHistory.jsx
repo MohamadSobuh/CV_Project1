@@ -6,25 +6,44 @@ import { FaFileAlt, FaUsers } from "react-icons/fa"; import { useUserFlow } from
 import { useNavigate } from "react-router-dom";
 import EmptyPage from "../../components/ui/EmptyPage";
 import emptyHistory from "../../images/emptyHistory.png";
+import axios from 'axios';
+
+
 
 export default function AnalysisHistory({ language }) {
-    const { history } = useUserFlow(); /*  هاد رح نستخدمها بس يكون الربط كلو شغال*/
-    const [fakeHistory, setFakeHistory] = useState([]);
+    const { history,setHistory, setCvId} = useUserFlow(); /*  هاد رح نستخدمها بس يكون الربط كلو شغال*/
+    // const [fakeHistory, setFakeHistory] = useState([]);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const token = localStorage.getItem("accessToken");
 
+
+    const fetchHistory = async() => {
+        if (!token) {
+            console.error("No token found, redirecting to login...");
+            navigate("/login"); 
+            return;
+        }
+        try{
+                const response = await axios.get("http://127.0.0.1:8000/api/user/analysis-history/", {
+                    headers: { Authorization: `Token ${token}` },
+                });
+                setHistory(response.data);
+                console.log(response.data);
+            }
+        catch (error) {
+                console.log(error);
+            }
+        }
 
     useEffect(() => {
-        setFakeHistory([
-            { id: 1, field: "Front-end Development", fileName: "frontend_cv.pdf" },
-            { id: 2, field: "Back-end Development", fileName: "backend_cv.docx" },
-            { id: 3, field: "Full Stack", fileName: "fullstack_cv.pdf" },
-        ]);
+        fetchHistory();
+        
     }, []);
     return (
         <div className={language === 'ar' ? style.historyAr : style.historyEn}>
 
-            {fakeHistory.length === 0 ? (
+            {history.length === 0 ? (
                 <EmptyPage
                     icon={<img src={emptyHistory} width="200" height="150" />}
                     title={t('emptyHistoryTitle')}
@@ -43,7 +62,7 @@ export default function AnalysisHistory({ language }) {
                 </div>
 
                 <div className={style.cards}>
-                    {fakeHistory.map((item) => (
+                    {history.map((item) => (
                         <div key={item.id} className={style.historyCard}>
                             <div className={style.left}>
                                 <div className={style.cardIcon}>
@@ -61,14 +80,15 @@ export default function AnalysisHistory({ language }) {
                             </div>
 
                             <button className={style.viewFullAn}
-                                onClick={() =>
+                                onClick={() =>{
+                                    setCvId(item.id),
                                     navigate("/user/analysisReport", {
                                         state: {
                                             mode: "history",
-                                            score: 90
+                                            score: item.score
                                         }
-                                    })
-                                }>
+                                    })}}
+                                >
                                 {t('viewFullAnalysis')}
                             </button>
                         </div>
