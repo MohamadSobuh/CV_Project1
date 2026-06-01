@@ -59,7 +59,7 @@ export default function Report({ language }) {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8000/api/user/send-report/', {
+            const response = await fetch('http://localhost:8000/api/userr/send-report/', {
                 method: "POST",
                 headers: { Authorization: `Token ${token}` },
                 body: formData,

@@ -16,11 +16,22 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa";
+import Notification from '../../components/ui/Notification';
+import { useLocation } from "react-router-dom";
 
 
 
 
 export default function Tasks({ language }) {
+
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
 
     const [tasks, setTasks] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -33,6 +44,7 @@ export default function Tasks({ language }) {
     const [filterInput, setFilterInput] = useState('');
     const [tasksFilter, setTasksFilter] = useState([]);
     const [filterTopic, setFilterTopic] = useState('');
+    const location = useLocation();
 
 
 
@@ -56,14 +68,25 @@ export default function Tasks({ language }) {
 
 
     const { t, i18n } = useTranslation();
+    
 
 
+    useEffect(() => {
+        if (location.state?.message) {
+            showMessage(location.state.message, location.state.type);
+        }
+    }, [location.state]);
     useEffect(() => {
         const fetchTasks = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (!token || token === "undefined") {
-                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    navigate("/login",{
+                        state: {
+                            message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                            type: "error"
+                        }
+                    });
                     return;
                 }
                 const response = await axios.get("http://127.0.0.1:8000/api/dashboard/tasks", {
@@ -109,7 +132,12 @@ export default function Tasks({ language }) {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token || token === "undefined") {
-                alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                navigate("/login",{
+                    state: {
+                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                        type: "error"
+                    }
+                });
                 return;
             }
             const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/tasks/${showDeleteModal}/`, {
@@ -120,8 +148,10 @@ export default function Tasks({ language }) {
             console.log(response.data);
             setTasks(tasks.filter(task => task.id !== showDeleteModal));
             setShowDeleteModal(null);
+            showMessage(language === "ar" ? "تم حذف المهمة بنجاح" : "Task deleted successfully", "success");
         } catch (err) {
             console.error("Error deleting task:", err);
+            showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
 
@@ -165,7 +195,12 @@ export default function Tasks({ language }) {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token || token === "undefined") {
-                alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                navigate("/login",{
+                    state: {
+                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                        type: "error"
+                    }
+                });
                 return;
             }
             const response = await axios.post("http://127.0.0.1:8000/api/dashboard/tasks/", payload, {
@@ -175,6 +210,7 @@ export default function Tasks({ language }) {
             });
 
             console.log(response.data);
+            showMessage(language === "ar" ? "تم إضافة المهمة بنجاح" : "Task added successfully", "success");
             setTasks(prev => [...prev, response.data]);
             reset();
             setShowModal(false);
@@ -189,6 +225,11 @@ export default function Tasks({ language }) {
 
     return (
         <div className={language === "ar" ? style.TasksPageArabic : style.TasksPage}>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
             {tasks.length === 0 ? (
                 <EmptyPage
                     icon={<FaTasks />}
@@ -366,6 +407,7 @@ export default function Tasks({ language }) {
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

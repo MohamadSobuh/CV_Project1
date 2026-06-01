@@ -8,17 +8,29 @@ import InputError from "../../components/ui/InputError";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import Notification  from "../../components/ui/Notification";
 
 
 export default function Signin() {
     const location = useLocation();
     const language = location.state?.language || "en";
     const { t, i18n } = useTranslation();
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type) => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => setMessage({ show: false, text: "", type: "success" }), 3000);
+    }
+
+    useEffect(() => {
+        if (location.state?.message) {
+            showMessage(location.state.message, location.state.type);
+        }
+    }, [location.state]);
 
 
     const inputs = [

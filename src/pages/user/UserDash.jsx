@@ -54,7 +54,7 @@ export default function UserDash({ language, user }) {
             if (!token || token === "undefined") {
                 return;
             }
-            const response = await axios.get("http://127.0.0.1:8000/api/user/dashboard/", { headers: { Authorization: `Token ${token}` } });
+            const response = await axios.get("http://127.0.0.1:8000/api/userr/dashboard/", { headers: { Authorization: `Token ${token}` } });
             console.log(response.data);
             setUserDash(response.data);
         } catch (error) {

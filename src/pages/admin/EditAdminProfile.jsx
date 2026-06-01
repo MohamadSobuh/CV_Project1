@@ -11,16 +11,25 @@ import InputError from "../../components/ui/InputError";
 import { editProfileSchema } from "../../utils/validationSchema";
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
+import Notification from '../../components/ui/Notification';
 
 export default function EditAdminProfile({ t, language }) {
     const { user, setUser } = useUserFlow();
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+    
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
     const navigate = useNavigate();
 
     const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({
         resolver: yupResolver(editProfileSchema),
         defaultValues: {
-            firstname: user?.firstname || "",
-            lastname: user?.lastname || "",
+            firstname: user?.firstname || user?.first_name || "",
+            lastname: user?.lastname || user?.last_name || "",
             email: user?.email || "",
             password: ""
         }
@@ -31,10 +40,9 @@ export default function EditAdminProfile({ t, language }) {
     useEffect(() => {
         if (user) {
             reset({
-                firstname: user.firstname || "",
-                lastname: user.lastname || "",
+                firstname: user.firstname || user.first_name || "",
+                lastname: user.lastname || user.last_name || "",
                 email: user.email || "",
-                field: user.field || "Artificial Intelligence",
                 password: ""
             });
         }
@@ -42,6 +50,7 @@ export default function EditAdminProfile({ t, language }) {
     const handleImageClick = () => {
         fileInputRef.current.click();
     };
+    console.log(user);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -78,8 +87,12 @@ export default function EditAdminProfile({ t, language }) {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token || token === "undefined") {
-                alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-                navigate("/login");
+                navigate("/login",{
+                    state: {
+                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                        type: "error"
+                    }
+                });
                 return;
             }
 
@@ -90,27 +103,30 @@ export default function EditAdminProfile({ t, language }) {
             else {
 
                 const response = await axios.post(
-                    "http://127.0.0.1:8000/api/user/profile/change-password/",
+                    "http://127.0.0.1:8000/api/userr/profile/change-password/",
                     payload.password,
                     { headers: { Authorization: `Token ${token}` } }
                 );
-                console.log(response, "response change password");
             }
 
             const response = await axios.put(
-                "http://127.0.0.1:8000/api/user/profile/update/",
+                "http://127.0.0.1:8000/api/userr/profile/update/",
                 payload,
                 { headers: { Authorization: `Token ${token}` } }
             );
+            console.log(response, "response update profile");
 
             const updated = { ...response.data, image: response.data.image || profileImg };
             setUser(updated);
-            localStorage.setItem("userFirstName", updated.firstname);
-            localStorage.setItem("userLastName", updated.lastname);
+            localStorage.setItem("userFirstName", updated.firstname || updated.first_name);
+            localStorage.setItem("userLastName", updated.lastname || updated.last_name);
             localStorage.setItem("userEmail", updated.email);
-
-            alert("Profile updated successfully");
-            navigate('/admin/profile');
+            navigate('/admin/profile',{
+                state: {
+                    message: language === "ar" ? "تم تحديث الملف الشخصي بنجاح" : "Profile updated successfully",
+                    type: "success"
+                }
+            });
         } catch (err) {
             console.error("Error updating profile:", err);
             if (err.response && err.response.data) {
@@ -122,7 +138,7 @@ export default function EditAdminProfile({ t, language }) {
                     });
                 });
             } else {
-                alert("Failed to update profile. Please try again.");
+                showMessage(language === "ar" ? "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى." : "Failed to update profile. Please try again.", "error");
             }
         }
     };
@@ -131,6 +147,11 @@ export default function EditAdminProfile({ t, language }) {
 
     return (
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
             <div className={style.profile}>
                 <div className={style.center}>
                     <img

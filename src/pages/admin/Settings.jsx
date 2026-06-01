@@ -5,6 +5,8 @@ import style from "./Settings.module.css";
 import SettingsCard from "../../components/ui/SettingsCard";
 import { FaGlobe, FaLock, FaSave } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import Notification from '../../components/ui/Notification';
+
 
 const Settings = () => {
     const { t, i18n } = useTranslation();
@@ -29,10 +31,20 @@ const Settings = () => {
 
     const [loading, setLoading] = useState(true);
 
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
+
     useEffect(() => {
         const fetchSettings = async () => {
             const token = localStorage.getItem("accessToken");
             if (!token || token === "undefined") {
+                showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
                 navigate("/login");
                 return;
             }
@@ -98,7 +110,7 @@ const Settings = () => {
             console.error("Error updating settings:", error.response?.data || error);
         }
         console.log("Saving Settings:", { ...siteSettings });
-        alert(language === 'ar' ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully");
+        showMessage(language === 'ar' ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully");
     };
 
     if (loading) {
@@ -112,6 +124,7 @@ const Settings = () => {
     }
 
     return (
+
         <div className={language === 'ar' ? style.settingsPageAr : style.settingsPage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <div className={style.bgGrid} />
 
@@ -200,7 +213,13 @@ const Settings = () => {
                     </SettingsCard>
                 </div>
             </div>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
         </div>
+
     );
 };
 

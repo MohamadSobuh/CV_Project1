@@ -6,6 +6,7 @@ import AdminInput from "../../components/ui/AdminInput";
 import InputError from "../../components/ui/InputError";
 import { topicSchema } from "../../utils/validationSchema";
 
+
 const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(topicSchema)
@@ -38,7 +39,8 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
 
         { id: 1, name: "Front-end Development" },
         { id: 2, name: "Backend Development" },
-        { id: 3, name: "UI/UX Design" }
+        { id: 3, name: "Artificial Intelligence" },
+        { id: 4, name: "Full-stack Development" }
     ];
     const difficulties = [
         { id: 1, name: "Easy" },

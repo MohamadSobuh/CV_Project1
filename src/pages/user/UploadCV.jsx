@@ -74,7 +74,7 @@ export default function UploadCV({ language }) {
             const token = localStorage.getItem("accessToken");
 
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/user/upload-cv/",
+                "http://127.0.0.1:8000/api/userr/upload-cv/",
                 formData,
                 { headers: { Authorization: `Token ${token}` } }
             );

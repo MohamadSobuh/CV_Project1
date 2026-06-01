@@ -17,8 +17,8 @@ export default function Header({ language, setLanguage }) {
 
     const user = userString ? JSON.parse(userString) : {};
 
-    const storedFirstName = user.firstname;
-    const storedLastName = user.lastname;
+    const storedFirstName = user?.firstname || user?.first_name || "";
+    const storedLastName = user?.lastname || user?.last_name || "";
     console.log(user)
 
     const handleLanguageChange = (e) => {

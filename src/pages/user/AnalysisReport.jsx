@@ -23,7 +23,7 @@ export default function AnalysisReport({ language }) {
             return;
         }
         try{
-            const response = await axios.get(`http://127.0.0.1:8000/api/user/analysis-report/${cvId}/`, {
+            const response = await axios.get(`http://127.0.0.1:8000/api/userr/analysis-report/${cvId}/`, {
                 headers: { Authorization: `Token ${token}` },
             });
             setAnalysisResult(response.data);
@@ -60,7 +60,7 @@ export default function AnalysisReport({ language }) {
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
             <div className={style.bgGrid} />
 
-            <p className={style.feildStyle}>Feild : <b>{targetField || "NOT SPECIFIED"}</b></p>
+            <p className={style.feildStyle}>Feild : <b>{analysisResult?.field || "NOT SPECIFIED"}</b></p>
 
             <h1 className={style.reportTitle}><b>{t('reportTitle')}</b></h1>
             <div className={`row ${style.headReport}`}>
@@ -70,7 +70,7 @@ export default function AnalysisReport({ language }) {
                 </div>
                 <div className={`col-md-8 ${style.headReportText}`}>
                     <h2 style={{ "--score-color": getColor(analysisResult.score) }} className={language === 'ar' ? style.ScoreTextEn : style.ScoreText}>{getScoreDes(analysisResult.score)}</h2>
-                    <p className={language === 'ar' ? style.decCVEn : style.decCV}>{analysisResult.DesCV}</p>
+                    <p className={language === 'ar' ? style.decCVEn : style.decCV}>{analysisResult?.recommendations?.[0] || "No recommendations available"}</p>
                 </div>
             </div>
 

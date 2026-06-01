@@ -12,7 +12,10 @@ import EmptyPage from "../../components/ui/EmptyPage";
 import { signupSchema } from "../../utils/validationSchema";
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import Notification from "../../components/ui/Notification";
 export default function Users({ language }) {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
@@ -21,6 +24,14 @@ export default function Users({ language }) {
     const [filterInput, setFilterInput] = useState("");
     const [usersFilter, setUsersFilter] = useState([]);
     // const [imgSrc, setImgSrc] = useState(user.image);
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
 
     const { t, i18n } = useTranslation();
 
@@ -34,7 +45,12 @@ export default function Users({ language }) {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (!token || token === "undefined") {
-                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    navigate("/login", { 
+                        state: {
+                            message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again",
+                            type: "error"
+                        }
+                    });
                     return;
                 }
                 const response = await axios.get("http://127.0.0.1:8000/api/dashboard/profiles/", {
@@ -58,6 +74,7 @@ export default function Users({ language }) {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
             alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            navigate("/login");
             return;
         }
         try {
@@ -69,9 +86,11 @@ export default function Users({ language }) {
             if (response.status === 200 || response.status === 204) {
                 setUsers(users.filter(user => user.id !== showDeleteModal));
                 setShowDeleteModal(null);
+                showMessage(language === "ar" ? "تم حذف المستخدم بنجاح" : "User deleted successfully", "success");
             }
         } catch (err) {
             console.error("Error deleting user:", err);
+            showMessage(language === "ar" ? "فشل حذف المستخدم" : "Failed to delete user", "error");
         }
     };
     const totalPagesFilter = Math.ceil(usersFilter.length / usersPerPage);
@@ -130,16 +149,14 @@ export default function Users({ language }) {
                 setUsers(prev => [...prev, newUser]);
                 reset();
                 setShowModal(false);
-                alert("تم الحفظ في قاعدة البيانات بنجاح");
+                showMessage(language === "ar" ? "تم إضافة المستخدم بنجاح" : "User added successfully", "success");
             }
         } catch (error) {
             console.error("تفاصيل الخطأ من السيرفر:", error.response?.data);
-            alert("فشلت الإضافة: " + JSON.stringify(error.response?.data));
+            showMessage(language === "ar" ? "فشلت الإضافة" : "Failed to add user", "error");
+            reset();
+            setShowModal(false);
         }
-
-
-        reset();
-        setShowModal(false);
     };
     console.log("Validation Errors:", errors);
     console.log("Users Filter:", usersFilter);
@@ -347,6 +364,8 @@ export default function Users({ language }) {
                     </div>
                 </div>
             )}
+
+           <Notification show={message.show} text={message.text} type={message.type} />
 
         </div>
     );

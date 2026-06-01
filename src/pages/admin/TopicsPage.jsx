@@ -15,23 +15,38 @@ import { Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import Notification from '../../components/ui/Notification';
+
 const TopicsPage = ({ language = 'en' }) => {
     const { t, i18n } = useTranslation();
-
+    const navigate = useNavigate();
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [filterInput, setFilterInput] = useState('');
     const [topicsFilter, setTopicsFilter] = useState([]);
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type) => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => setMessage({ show: false, text: "", type: "success" }), 3000);
+    }
 
 
     const [topics, setTopics] = useState([]);
+    useEffect(() => {
+        if (location.state?.message) {
+            showMessage(location.state.message, location.state.type);
+        }
+    }, [location.state]);
     useEffect(() => {
         const fetchTopics = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (!token || token === "undefined") {
-                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+                    navigate("/login");
                     return;
                 }
                 const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
@@ -65,7 +80,8 @@ const TopicsPage = ({ language = 'en' }) => {
         }
 
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
             return;
         }
 
@@ -85,18 +101,19 @@ const TopicsPage = ({ language = 'en' }) => {
 
                 setTopics(prev => [savedTopic, ...prev]);
                 setShowAddModal(false);
-                alert("تمت إضافة الموضوع بنجاح");
+                showMessage(language === 'ar' ? "تمت إضافة الموضوع بنجاح" : "Topic added successfully", "success");
             }
         } catch (error) {
             console.error("Error adding topic:", error.response?.data);
-            alert("فشلت الإضافة: " + JSON.stringify(error.response?.data));
+            showMessage("فشلت الإضافة: " + JSON.stringify(error.response?.data), "error");
         }
     };
     const handleDelete = async () => {
         const token = localStorage.getItem("accessToken");
 
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
             return;
         }
         try {
@@ -109,18 +126,19 @@ const TopicsPage = ({ language = 'en' }) => {
             if (response.status === 200 || response.status === 204) {
                 setTopics(topics.filter(topic => topic.id !== showDeleteModal));
                 setShowDeleteModal(null);
-                alert("تم حذف الموضوع بنجاح");
+                showMessage(language === 'ar' ? "تم حذف الموضوع بنجاح" : "Topic deleted successfully", "success");
             }
         } catch (error) {
             console.error("Error deleting topic:", error.response?.data);
-            alert("فشل الحذف: " + JSON.stringify(error.response?.data));
+            showMessage(language === 'ar' ? "فشل الحذف" : "Failed to delete topic", "error");
         }
     }
     const handleEdit = async (data) => {
         const token = localStorage.getItem("accessToken");
 
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
             return;
         }
         const validatedDifficulty = data.difficulty?.toLowerCase();
@@ -153,11 +171,11 @@ const TopicsPage = ({ language = 'en' }) => {
                 );
 
                 setShowEditModal(null);
-                alert("تم تحديث الموضوع بنجاح");
+                showMessage(language === 'ar' ? "تم تحديث الموضوع بنجاح" : "Topic updated successfully", "success");
             }
         } catch (error) {
             console.error("Error updating topic:", error.response?.data);
-            alert("فشل التحديث: " + JSON.stringify(error.response?.data));
+            showMessage(language === 'ar' ? "فشل التحديث" : "Failed to update topic", "error");
         }
     };
     const handleFilter = () => {
@@ -177,6 +195,11 @@ const TopicsPage = ({ language = 'en' }) => {
 
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
             {topics.length === 0 ? (
                 <EmptyPage
                     icon={<FaBookOpen />}

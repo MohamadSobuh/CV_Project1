@@ -25,7 +25,7 @@ export default function AnalysisHistory({ language }) {
             return;
         }
         try{
-                const response = await axios.get("http://127.0.0.1:8000/api/user/analysis-history/", {
+                const response = await axios.get("http://127.0.0.1:8000/api/userr/analysis-history/", {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setHistory(response.data);

@@ -5,19 +5,57 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import profileImg from "../../images/profileImg.png";
 import { useUserFlow } from '../../context/UserFlowContext';
+import { useEffect } from "react";
 import axios from "axios";
+import Notification from '../../components/ui/Notification';
+import { useLocation } from "react-router-dom";
 
 
 export default function AdminProfile({ t, language }) {
     const navigate = useNavigate();
-    const { user } = useUserFlow();
+    const location = useLocation();
+    const { user ,setUser} = useUserFlow();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [adminProfile, setAdminProfile] = useState(null);
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+    
 
-    const profile = user || {};
+
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
+    useEffect(() => {
+        if (location.state?.message) {
+            showMessage(location.state.message, location.state.type);
+        }
+    }, [location.state]);
+
+    const fetchAdminProfile = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
+            navigate("/login");
+            return;
+        }
+        const response = await axios.get("http://127.0.0.1:8000/api/userr/profile/", { headers: { Authorization: `Token ${token}` } });
+        setAdminProfile(response.data);
+        console.log(response.data, "response data");
+        setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+    }
+    useEffect(() => {
+        fetchAdminProfile();
+    }, []);
+
+
+    
     const handleDeleteAccount = async () => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+            showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
             navigate("/login");
             return;
         }
@@ -25,6 +63,7 @@ export default function AdminProfile({ t, language }) {
         await axios.delete("http://127.0.0.1:8000/api/user/profile/delete/", { headers: { Authorization: `Token ${token}` } });
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
+        showMessage(language === "ar" ? "تم حذف الحساب بنجاح" : "Profile deleted successfully", "success");
         navigate("/login");
 
     };
@@ -32,28 +71,33 @@ export default function AdminProfile({ t, language }) {
     if (!user) return <div className="text-center p-5">Loading profile...</div>;
     return (
         <div className={language === 'ar' ? style.fullAr : style.fullEn}>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
                                 <div className={style.bgGrid} />
             
             <div className={style.profile}>
                 <div className={style.center}>
-                    <img src={profile.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                    <img src={adminProfile?.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </div>
 
                 <form>
                     <div className="row">
                         <div className="form-group col-md-6">
                             <label className={style.text}><b>{t('firstNameLabel')}</b></label>
-                            <div className="form-control bg-light">{profile.firstname}</div>
+                            <div className="form-control bg-light">{adminProfile?.firstname}</div>
                         </div>
                         <div className="form-group col-md-6">
                             <label className={style.text}><b>{t('lastNameLabel')}</b></label>
-                            <div className="form-control bg-light">{profile.lastname}</div>
+                            <div className="form-control bg-light">{adminProfile?.lastname}</div>
                         </div>
                     </div>
 
                     <div className="form-group mt-3">
                         <label className={style.text}><b>{t('emailLabel')}</b></label>
-                        <div className="form-control bg-light">{profile.email}</div>
+                        <div className="form-control bg-light">{adminProfile?.email}</div>
                     </div>
 
 

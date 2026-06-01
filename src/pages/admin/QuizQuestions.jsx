@@ -14,6 +14,7 @@ import { FaQuestionCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaFilter } from "react-icons/fa";
+import Notification from '../../components/ui/Notification';
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
@@ -29,6 +30,15 @@ const QuizQuestions = ({ language = 'en' }) => {
     const [filterTask, setFilterTask] = useState('');
     const [questionsFilter, setQuestionsFilter] = useState([]);
     const [topics, setTopics] = useState([]);
+
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
 
 
 
@@ -57,8 +67,10 @@ const QuizQuestions = ({ language = 'en' }) => {
                 )
             );
             setShowEditModal(null);
+            showMessage(language === "ar" ? "تم تعديل السؤال بنجاح" : "Question updated successfully", "success");
         } catch (error) {
             console.error("Error updating question:", error.response?.data || error);
+            showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
     const handleDelete = async () => {
@@ -74,9 +86,11 @@ const QuizQuestions = ({ language = 'en' }) => {
                 }
             });
             setQuestions(questions.filter((q) => q.id !== showDeleteModal));
+            showMessage(language === "ar" ? "تم حذف السؤال بنجاح" : "Question deleted successfully", "success");
             setShowDeleteModal(null);
         } catch (error) {
             console.error("Error fetching questions:", error);
+            showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
 
@@ -171,9 +185,11 @@ const QuizQuestions = ({ language = 'en' }) => {
             });
 
             setQuestions(prev => [response.data, ...prev]);
+            showMessage(language === "ar" ? "تم إضافة السؤال بنجاح" : "Question added successfully", "success");
             console.log(response.data, "questions");
         } catch (error) {
             console.error("Server Validation Error:", error.response?.data);
+            showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
 
 
@@ -184,7 +200,8 @@ const QuizQuestions = ({ language = 'en' }) => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (!token || token === "undefined") {
-                    alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                    showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+                    navigate("/login");
                     return;
                 }
                 const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
@@ -197,7 +214,7 @@ const QuizQuestions = ({ language = 'en' }) => {
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics:", err);
-            }
+                }
 
 
 
@@ -354,6 +371,11 @@ const QuizQuestions = ({ language = 'en' }) => {
                     <button className={style.btnOutline} onClick={handleNext}>{t('next')}</button>
                 </div>
             )}
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
         </div>
     );
 };

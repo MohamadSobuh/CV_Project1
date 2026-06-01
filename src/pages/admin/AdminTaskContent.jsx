@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,useState} from 'react';
 import { FiBookOpen } from "react-icons/fi";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import styles from './AdminTaskContent.module.css';
@@ -12,10 +12,20 @@ import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
 import { useTranslation } from "react-i18next";
 
+import  Notification  from "../../components/ui/Notification";
+
 export default function AdminTaskContent({ language }) {
     const navigate = useNavigate();
     const { activeTask, topics } = useAdminFlow();
     const { t, i18n } = useTranslation();
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+    
+    const showMessage = (text, type = "success") => {
+        setMessage({ show: true, text, type });
+        setTimeout(() => {
+            setMessage(prev => ({ ...prev, show: false }));
+        }, 3000);
+    };
 
     // embed youtube video
     const getEmbedUrl = (url) => {
@@ -61,7 +71,8 @@ export default function AdminTaskContent({ language }) {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token || token === "undefined") {
-                alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
+                showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
+                navigate("/login");
                 return;
             }
             await axios.put(`http://127.0.0.1:8000/api/dashboard/tasks/${activeTask.id}/`, payload, {
@@ -69,11 +80,15 @@ export default function AdminTaskContent({ language }) {
                     Authorization: `Token ${token}`
                 }
             });
-            alert("Task updated successfully!");
-            navigate('/admin/tasks');
+            navigate('/admin/tasks',{
+                state: {
+                    message: language === "ar" ? "تم تحديث المهمة بنجاح" : "Task updated successfully",
+                    type: "success"
+                }
+            });
         } catch (err) {
             console.error("Error updating task:", err);
-            alert("Failed to update task.");
+            showMessage(language === "ar" ? "فشل تحديث المهمة. يرجى المحاولة مرة أخرى." : "Failed to update task. Please try again.", "error");
         }
     };
 
@@ -90,6 +105,11 @@ export default function AdminTaskContent({ language }) {
 
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
+            <Notification
+                show={message.show}
+                text={message.text}
+                type={message.type}
+            />
             <div className={styles.bgGrid} />
 
             <div className={styles.banner}>
