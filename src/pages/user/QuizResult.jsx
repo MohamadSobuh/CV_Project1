@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
-
+import { FaCheckCircle, FaTimesCircle, FaTrophy, FaBookOpen } from "react-icons/fa";
 
 export default function QuizResult({ language }) {
     const { t, i18n } = useTranslation();
@@ -13,6 +13,10 @@ export default function QuizResult({ language }) {
     const { state } = useLocation();
     const { placementScore } = useUserFlow();
     const score = placementScore;
+    const mode = state?.mode;
+    const isTask = mode === "task";
+    const passed = score >= 80;
+
     return (
         <div className={language === 'ar' ? style.quizResultAr : style.quizResultEn}>
             <div className={style.bgGrid} />
@@ -20,19 +24,47 @@ export default function QuizResult({ language }) {
             <CircularScore score={score} />
 
             <div className={style.card}>
-                <div className={style.emoji}>📚</div>
-                <h2 className={style.title}><b>{t('quizResultTitle')}</b></h2>
-                <p className={style.description}> {t('descriptionQuizResult')}</p>
-            </div>
 
-            <div className={style.buttons}>
-                <button className={style.planBtn} onClick={() => navigate('/user/plan')}>
-                    <b>{t('viewPlan')}</b>
-                </button>
-                <button className={style.dashBtn} onClick={() => navigate('/user/dashboard')}>
-                    {t('dash')}
-                </button>
+                <div className={style.emoji}>
+                    {!isTask ? (
+                        <FaBookOpen />
+                    ) : passed ? (
+                        <FaCheckCircle color="#00e5c3" />
+                    ) : (
+                        <FaTimesCircle color="#ff4d4f" />
+                    )}
+                </div>
+
+                <h2 className={style.title}>
+                    <b>
+                        {!isTask
+                            ? t('quizResultTitle')
+                            : passed
+                                ? t('taskCompleted')
+                                : t('taskFailed')}
+                    </b>
+                </h2>
+
+                <p className={style.description}>
+                    {!isTask ? (
+                        t('descriptionQuizResult')
+                    ) : passed ? (
+                        t('taskSuccessMsg')
+                    ) : (
+                        t('taskFailMsg')
+                    )}
+                </p>
             </div>
+            <button
+                className={style.planBtn}
+                onClick={() => navigate('/user/plan')}
+            >
+                <b>
+                    {isTask
+                        ? t('returnPlan')
+                        : t('viewPlan')}
+                </b>
+            </button>
         </div>
     );
 }

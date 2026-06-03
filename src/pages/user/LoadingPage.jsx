@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styles from "../../components/CVAnalyzerHero.module.css";
+
 const PARTICLE_COLORS = [
     "#3b9eff",
     "#00e5c3",
@@ -91,6 +92,21 @@ export default function LoadingPage({ language }) {
         return () => clearTimeout(timer);
     }, []);
 
+    const loadingMessages = [
+        t("loadingMessage1"),
+        t("loadingMessage2"),
+        t("loadingMessage3")
+    ];
+
+    const [messageIndex, setMessageIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className={
@@ -100,8 +116,9 @@ export default function LoadingPage({ language }) {
         }>
             <section className={styles.heroContainer}>
                 <div className={styles.bgGrid} />
-
-
+                <p className={styles.loadingText}>
+                    <b> {loadingMessages[messageIndex]}</b>
+                </p>
                 <div className={styles.cvCard}>
                     <div className={styles.cvHeaderRow}>
                         <div className={styles.cvAvatar} />

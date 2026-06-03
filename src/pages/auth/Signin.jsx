@@ -8,18 +8,19 @@ import InputError from "../../components/ui/InputError";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Notification  from "../../components/ui/Notification";
-
+import Notification from "../../components/ui/Notification";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Signin() {
     const location = useLocation();
     const language = location.state?.language || "en";
     const { t, i18n } = useTranslation();
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+    const [showPassword, setShowPassword] = useState(false);
 
     const showMessage = (text, type) => {
         setMessage({ show: true, text, type });
@@ -43,7 +44,7 @@ export default function Signin() {
         },
         {
             name: "password",
-            type: "password",
+            type: showPassword ? "text" : "password",
             label: t('password'),
             id: "passwordInput",
             col: "col-md-12"
@@ -105,7 +106,6 @@ export default function Signin() {
             }
         }
     };
-
     return (
         <div className={`${style.bg} ${language === "ar" ? style.rtl : style.ltr}`}>
             <div className={style.glowTopRight}></div>
@@ -122,11 +122,26 @@ export default function Signin() {
                 <form onSubmit={handleSubmit(submitForm)}>
                     {inputs.map((input) => (
                         <div key={input.id} className={`form-floating mb-3 ${input.name === 'email' ? 'mt-3' : ''}`}>
-                            <Input
-                                {...input}
-                                register={register}
-                                
-                            />
+                            {input.name === "password" ? (
+                                <>
+                                    <Input
+                                        {...input}
+                                        register={register}
+                                        type={showPassword ? "text" : "password"}
+                                        className={style.passwordInput}
+                                    />
+
+                                    <span
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className={style.eyeIcon}
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </span>
+                                </>
+                            ) : (
+                                <Input {...input} register={register} />
+                            )}
+
                             <label htmlFor={input.id}>{input.label}</label>
 
                             {errors[input.name] &&

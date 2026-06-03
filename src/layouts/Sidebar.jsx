@@ -43,10 +43,8 @@ export default function Sidebar({ language }) {
         <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/plan"> <FaClipboardList className="m-3" />{t('plan')}</NavLink>
         <div className={style.bottomLinks}>
           <hr />
+          <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/user/report"> <FaClipboardList className="m-3" />{t('report')}</NavLink>
 
-          <Link className={style.links} to="/user/report">
-            <FaFlag className="m-3" />Report
-          </Link>
           <Link className={`${style.links} ${style.logout}`} to="/" onClick={logout}>
             {t('logout')}
             <FaSignOutAlt className="m-3" />

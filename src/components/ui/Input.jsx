@@ -1,4 +1,4 @@
-const Input = ({ type, name, id, register, onChange, ...rest }) => {
+const Input = ({ type, name, id, register, onChange,className = "" , ...rest }) => {
 
     const { onChange: registerOnChange, ...registerProps } = register(name);
     const combinedOnChange = (e) => {
