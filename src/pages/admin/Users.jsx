@@ -14,7 +14,7 @@ import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Notification from "../../components/ui/Notification";
-import api from '../../api/axios';
+import api from '../../utils/axios';
 
 export default function Users({ language }) {
     const navigate = useNavigate();
