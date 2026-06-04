@@ -46,7 +46,7 @@ export default function EditProfile({ t, language }) {
     const fetchProfile = async () => {
         if (!ensureAuth()) return;
         try {
-            const response = await api.get("/user/profile/");
+            const response = await api.get("/userr/profile/");
             console.log(response.data, "response data");
             reset({
                 firstname: response.data.firstname || "",
@@ -123,14 +123,14 @@ export default function EditProfile({ t, language }) {
             else {
 
                 const response = await api.post(
-                    "/user/profile/change-password/",
+                    "/userr/profile/change-password/",
                     payload.password,
                 );
                 console.log(response, "response change password");
             }
 
             const response = await api.put(
-                "/user/profile/update/",
+                "/userr/profile/update/",
                 payload,
             );
 
@@ -218,9 +218,9 @@ export default function EditProfile({ t, language }) {
                         <label className={style.text}><b>{t('fieldLabel')}</b></label>
                         <select {...register('field')} className='form-control'>
                             <option value="Artificial Intelligence">Artificial Intelligence</option>
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Data Science">Data Science</option>
-                            <option value="Full Stack">Full Stack</option>
+                            <option value="Front-end Development">Front-end Development</option>
+                            <option value="Back-end Development">Back-end Development</option>
+                            <option value="Full-Stack">Full-Stack</option>
 
                         </select>
                         {errors.field && <InputError error={errors.field} />}
