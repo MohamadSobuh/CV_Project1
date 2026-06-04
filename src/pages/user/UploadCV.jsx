@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import FileUploadZone from "../../components/ui/FileUploadZone";
 import UploadPageError from "../../components/ui/UploadPageError";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FaTimesCircle } from "react-icons/fa";
 import { useUserFlow } from "../../context/UserFlowContext";
+import api from "../../utils/axios";
 
 export default function UploadCV({ language }) {
     const { t } = useTranslation();
@@ -71,13 +71,12 @@ export default function UploadCV({ language }) {
             formData.append("file", file);
             formData.append("field", selectedField);
 
-            const token = localStorage.getItem("accessToken");
 
-            const response = await axios.post(
-                "http://127.0.0.1:8000/api/userr/upload-cv/",
-                formData,
-                { headers: { Authorization: `Token ${token}` } }
-            );
+            const response = await api.post('userr/upload-cv/', formData,{
+                headers: {
+        'Content-Type': 'multipart/form-data' // 🍏 تضمن تفكيك الملف كـ Binary بشكل سليم في Django
+    }
+            });
             setCvId(response.data.cv_id);
 
             // Pass only serializable data through router state.

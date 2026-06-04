@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import style from "./AnalysisReport.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -6,7 +6,8 @@ import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../../utils/axios';
+
 
 export default function AnalysisReport({ language }) {
     const { analysisResult, setAnalysisResult, targetField, placementScore ,cvId} = useUserFlow();
@@ -16,16 +17,26 @@ export default function AnalysisReport({ language }) {
     const navigate = useNavigate();
     const token = localStorage.getItem("accessToken");
     console.log("cvId",cvId);
+
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
     
     const fetchAnalysisResult = async() => {
-        if(!token){
-            console.error("No token found");
-            return;
-        }
+        if(!ensureAuth()) return;
+        
         try{
-            const response = await axios.get(`http://127.0.0.1:8000/api/userr/analysis-report/${cvId}/`, {
-                headers: { Authorization: `Token ${token}` },
-            });
+            const response = await api.get(`/userr/analysis-report/${cvId}/`);
             setAnalysisResult(response.data);
             console.log(response.data);
         }

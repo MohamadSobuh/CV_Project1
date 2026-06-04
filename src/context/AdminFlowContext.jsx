@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+
+import api from '../utils/axios';
 
 const AdminFlowContext = createContext({
   topics: [],
@@ -21,10 +22,8 @@ export const AdminFlowProvider = ({ children }) => {
   const fetchTopics = async () => {
     setLoadingTopics(true);
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics/", {
-        headers: token && token !== "undefined" ? { Authorization: `Token ${token}` } : {}
-      });
+     
+      const response = await api.get("/dashboard/topics/");
       setTopics(response.data);
     } catch (err) {
       console.error("Error fetching topics:", err);

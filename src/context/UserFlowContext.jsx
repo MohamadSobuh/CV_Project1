@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import profileImg from '../images/profileImg.png';
+import api from '../utils/axios';
 
 const UserFlowContext = createContext({
   uploadedCV: null,
@@ -24,14 +24,24 @@ export const UserFlowProvider = ({ children }) => {
   });
 
   // Fetch user profile from API on mount and keep context in sync
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (!token || token === 'undefined') return;
+        if (!ensureAuth()) return;
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/user/profile/', {
-          headers: { Authorization: `Token ${token}` },
-        });
+        const response = await api.get('/userr/profile/');
         const data = response.data;
         // Normalise image: backend may return a URL or nothing
         if (!data.image) data.image = profileImg;

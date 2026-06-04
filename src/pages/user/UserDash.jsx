@@ -5,14 +5,16 @@ import { FaLightbulb, FaFile, FaCloudUploadAlt, FaAngleRight } from "react-icons
 import { FaListCheck } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { useUserFlow } from '../../context/UserFlowContext';
-import axios from "axios";
 import dashL from "../../images/dashL.png";
 import dashR from "../../images/dashR.png";
+import api from "../../utils/axios";
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function UserDash({ language, user }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
+    const navigate = useNavigate();
     // const { user } = useUserFlow();
     const [userDash, setUserDash] = useState({
         TotalCVs: 0,
@@ -48,13 +50,23 @@ export default function UserDash({ language, user }) {
 
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
     const fetchUserData = async () => {
+        if (!ensureAuth()) return;
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                return;
-            }
-            const response = await axios.get("http://127.0.0.1:8000/api/userr/dashboard/", { headers: { Authorization: `Token ${token}`} });
+            const response = await api.get("/userr/dashboard/");
             console.log(response.data);
             setUserDash(response.data);
         } catch (error) {

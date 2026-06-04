@@ -4,7 +4,6 @@ import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import styles from './AdminTaskContent.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAdminFlow } from '../../context/AdminFlowContext';
-import axios from 'axios';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { signupSchemaForTasks } from "../../utils/validationSchema";
@@ -13,6 +12,7 @@ import InputError from "../../components/ui/InputError";
 import { useTranslation } from "react-i18next";
 
 import  Notification  from "../../components/ui/Notification";
+import api from '../../utils/axios';
 
 export default function AdminTaskContent({ language }) {
     const navigate = useNavigate();
@@ -56,6 +56,19 @@ export default function AdminTaskContent({ language }) {
             navigate('/admin/tasks');
         }
     }, [activeTask, reset, navigate]);
+        const ensureAuth = () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login", {
+                    state: {
+                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                        type: "error"
+                    }
+                });
+                return false;
+            }
+            return true;
+        };
 
     const onSubmit = async (data) => {
         if (!activeTask) return;
@@ -69,17 +82,9 @@ export default function AdminTaskContent({ language }) {
         };
 
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
-                navigate("/login");
-                return;
-            }
-            await axios.put(`http://127.0.0.1:8000/api/dashboard/tasks/${activeTask.id}/`, payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            if (!ensureAuth()) return;
+            const response = await api.put(`/dashboard/tasks/${activeTask.id}/`, payload);
+            console.log(response.data, "response update task");
             navigate('/admin/tasks',{
                 state: {
                     message: language === "ar" ? "تم تحديث المهمة بنجاح" : "Task updated successfully",

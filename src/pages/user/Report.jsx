@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import style from "./Report.module.css";
 import { FaCloudUploadAlt, FaBolt, FaCheckCircle } from "react-icons/fa";
+import api from "../../utils/axios";
 
 
 export default function Report({ language }) {
@@ -47,7 +48,6 @@ export default function Report({ language }) {
             return;
         }
 
-        const token = localStorage.getItem("accessToken");
 
         const formData = new FormData();
         formData.append("title", title.trim());
@@ -59,11 +59,7 @@ export default function Report({ language }) {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8000/api/userr/send-report/', {
-                method: "POST",
-                headers: { Authorization: `Token ${token}` },
-                body: formData,
-            });
+            const response = await api.post('/userr/send-report/', formData);
 
             const data = await response.json();
 

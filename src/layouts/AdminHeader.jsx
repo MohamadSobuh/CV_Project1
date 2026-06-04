@@ -1,35 +1,32 @@
 
 import style from "./Header.module.css";
 import profileImg from "../images/profileImg.PNG";
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useUserFlow } from "../context/UserFlowContext";
 
 export default function Header({ language, setLanguage }) {
-    const { t, i18n } = useTranslation();
-
+    const { i18n } = useTranslation();
+    const { user } = useUserFlow();
 
     useEffect(() => {
         document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
     }, [language, i18n.language]);
 
-    const userString = localStorage.getItem("user");
+    const currentUser = useMemo(() => user || {}, [user]);
 
-    const user = userString ? JSON.parse(userString) : {};
+    const storedFirstName = useMemo(() => currentUser.firstname || currentUser.first_name || "", [currentUser]);
+    const storedLastName = useMemo(() => currentUser.lastname || currentUser.last_name || "", [currentUser]);
 
-    const storedFirstName = user?.firstname || user?.first_name || "";
-    const storedLastName = user?.lastname || user?.last_name || "";
-    console.log(user)
-
-    const handleLanguageChange = (e) => {
+    const handleLanguageChange = useCallback((e) => {
         const newLang = e.target.value;
         i18n.changeLanguage(newLang);
         localStorage.setItem("language", newLang);
         if (setLanguage) {
             setLanguage(newLang);
         }
-        console.log("Language changed to:", newLang);
-    };
+    }, [i18n, setLanguage]);
 
     return (
         <header className={`${style.header}`}>
@@ -39,10 +36,10 @@ export default function Header({ language, setLanguage }) {
                     <option value="ar">AR</option>
                 </select>
                 <Link to="profile">
-                    <img src={user.image} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                    <img src={currentUser.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                 </Link>
                 <h6>{storedFirstName} {storedLastName}</h6>
             </div>
         </header>
-    )
+    );
 }

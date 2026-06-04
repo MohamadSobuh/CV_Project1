@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react';
 import style from "./UserProfile.module.css";
-import { FaSave, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import profileImg from "../../images/profileImg.png";
 import { useUserFlow } from '../../context/UserFlowContext';
-import axios from 'axios';
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/ui/Input";
 import InputError from "../../components/ui/InputError";
 import { editProfileSchema } from "../../utils/validationSchema";
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
+import api from "../../utils/axios";
 
 export default function EditProfile({ t, language }) {
     const { user, setUser } = useUserFlow();
@@ -30,15 +29,24 @@ export default function EditProfile({ t, language }) {
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
-    const fetchProfile = async () => {
+        const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-            navigate("/login");
-            return;
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
         }
+        return true;
+    };
+
+    const fetchProfile = async () => {
+        if (!ensureAuth()) return;
         try {
-            const response = await axios.get("http://127.0.0.1:8000/api/user/profile/", { headers: { Authorization: `Token ${token}` } });
+            const response = await api.get("/user/profile/");
             console.log(response.data, "response data");
             reset({
                 firstname: response.data.firstname || "",
@@ -105,13 +113,8 @@ export default function EditProfile({ t, language }) {
     };
 
     const updateProfile = async (data) => {
+        if (!ensureAuth()) return;
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-                navigate("/login");
-                return;
-            }
 
             const payload = { ...data };
             if (!payload.password) {
@@ -119,18 +122,16 @@ export default function EditProfile({ t, language }) {
             }
             else {
 
-                const response = await axios.post(
-                    "http://127.0.0.1:8000/api/user/profile/change-password/",
+                const response = await api.post(
+                    "/user/profile/change-password/",
                     payload.password,
-                    { headers: { Authorization: `Token ${token}` } }
                 );
                 console.log(response, "response change password");
             }
 
-            const response = await axios.put(
-                "http://127.0.0.1:8000/api/user/profile/update/",
+            const response = await api.put(
+                "/user/profile/update/",
                 payload,
-                { headers: { Authorization: `Token ${token}` } }
             );
 
             const updated = { ...response.data, image: response.data.image || profileImg };
@@ -139,8 +140,7 @@ export default function EditProfile({ t, language }) {
             localStorage.setItem("userLastName", updated.lastname);
             localStorage.setItem("userEmail", updated.email);
 
-            alert("Profile updated successfully");
-            navigate('/user/profile');
+            navigate('/user/profile', { state: { message: language === "ar" ? "تم تحديث الملف الشخصي بنجاح" : "Profile updated successfully", type: "success" } });
         } catch (err) {
             console.error("Error updating profile:", err);
             if (err.response && err.response.data) {
@@ -152,7 +152,7 @@ export default function EditProfile({ t, language }) {
                     });
                 });
             } else {
-                alert("Failed to update profile. Please try again.");
+                navigate('/user/profile', { state: { message: language === "ar" ? "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى" : "Failed to update profile. Please try again.", type: "error" } });
             }
         }
     };

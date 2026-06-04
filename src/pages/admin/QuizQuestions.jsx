@@ -15,6 +15,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaFilter } from "react-icons/fa";
 import Notification from '../../components/ui/Notification';
+import api from '../../utils/axios';
+
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
@@ -47,19 +49,28 @@ const QuizQuestions = ({ language = 'en' }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(questionSchema)
     });
-    const handleEdit = async (data) => {
-        console.log(data, "data before update");
-        try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login");
-                return;
-            }
-            const response = await axios.put(`http://127.0.0.1:8000/api/dashboard/questions/${showEditModal.id}/`, data, {
-                headers: {
-                    Authorization: `Token ${token}`
+const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
                 }
             });
+            return false;
+        }
+        return true;
+    }; 
+    
+    
+    const handleEdit = async (data) => {
+        console.log(data, "data before update");
+        if (!ensureAuth()) return;
+
+        try {
+            const response = await api.put(`/dashboard/questions/${showEditModal.id}/`, data);
+            
             console.log(response.data, "response");
             setQuestions(prevQuestions =>
                 prevQuestions.map((q) =>
@@ -69,26 +80,20 @@ const QuizQuestions = ({ language = 'en' }) => {
             setShowEditModal(null);
             showMessage(language === "ar" ? "تم تعديل السؤال بنجاح" : "Question updated successfully", "success");
         } catch (error) {
+            setShowEditModal(null);
             console.error("Error updating question:", error.response?.data || error);
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
     const handleDelete = async () => {
+        if (!ensureAuth()) return;
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login");
-                return;
-            }
-            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/questions/${showDeleteModal}/`, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.delete(`/dashboard/questions/${showDeleteModal}/`);
             setQuestions(questions.filter((q) => q.id !== showDeleteModal));
             showMessage(language === "ar" ? "تم حذف السؤال بنجاح" : "Question deleted successfully", "success");
             setShowDeleteModal(null);
         } catch (error) {
+            setShowDeleteModal(null);
             console.error("Error fetching questions:", error);
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
@@ -98,17 +103,9 @@ const QuizQuestions = ({ language = 'en' }) => {
 
     useEffect(() => {
         const fetchQuestions = async () => {
+            if (!ensureAuth()) return;
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    navigate("/login");
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/questions/", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
+                const response = await api.get("/dashboard/questions/");
                 setQuestions(response.data);
                 console.log(response.data, "questions");
             } catch (error) {
@@ -121,24 +118,16 @@ const QuizQuestions = ({ language = 'en' }) => {
 
     useEffect(() => {
         const fetchTasks = async () => {
+            if (!ensureAuth()) return ;
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    navigate("/login");
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/tasks/", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
+                const response = await api.get("/dashboard/tasks/");
                 setTasksFromDB(response.data);
                 console.log(response.data, "tasks");
             } catch (err) {
                 console.error("Error fetching tasks:", err);
             }
         };
-        console.log(tasksFromDB);
+        console.log(tasksFromDB, "tasksFromDB");
         fetchTasks();
     }, []);
 
@@ -172,18 +161,9 @@ const QuizQuestions = ({ language = 'en' }) => {
             options: optionsArray
         };
         console.log(payload, "payload");
+        if (!ensureAuth()) return;
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login");
-                return;
-            }
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/questions/", payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
-
+            const response = await api.post("/dashboard/questions/", payload);
             setQuestions(prev => [response.data, ...prev]);
             showMessage(language === "ar" ? "تم إضافة السؤال بنجاح" : "Question added successfully", "success");
             console.log(response.data, "questions");
@@ -197,24 +177,14 @@ const QuizQuestions = ({ language = 'en' }) => {
     };
     useEffect(() => {
         const fetchTopics = async () => {
+            if (!ensureAuth()) return;
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-                    navigate("/login");
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
-
+                const response = await api.get("/dashboard/topics");
                 console.log(response.data);
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics:", err);
-                }
+            }
 
 
 

@@ -66,7 +66,7 @@ export default function App() {
           {/* <Sidebar language={language} />*/}
           {/* <Header language={language} setLanguage={setLanguage} /> */}
           <SessionTimeout />
-<Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading...</div>}> ////هون بدنا نضيف تصميم loading
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />

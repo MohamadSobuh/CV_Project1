@@ -2,21 +2,36 @@ import React, { useState, useEffect } from 'react';
 import style from "./AdminDash.module.css";
 import { FaUsers, FaListUl, FaQuestionCircle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from 'react-router-dom';
 
 
-import axios from 'axios';
+import api from '../../utils/axios';
 export default function AdminDash({ language }) {
   const [totalusers, setTotalUsers] = useState(0);
   const [totaltasks, setTotalTasks] = useState(0);
   const [questions, setQuestions] = useState(0);
   const [lastUsers, setLastUsers] = useState([]);
+  const navigate = useNavigate();
 
-
+const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
   useEffect(() => {
     const fetchStats = async () => {
 
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/stats");
+        if (!ensureAuth()) return;
+        const response = await api.get("/dashboard/stats");
         console.log(response.data);
         setTotalUsers(response.data.total_users);
         setTotalTasks(response.data.total_tasks);
@@ -34,8 +49,9 @@ export default function AdminDash({ language }) {
 
   useEffect(() => {
     const fetchLatestUsers = async () => {
+      if (!ensureAuth()) return;
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/dashboard/latest-users/");
+        const response = await api.get("/dashboard/latest-users/");
         console.log(response.data);
         setLastUsers(response.data);
 

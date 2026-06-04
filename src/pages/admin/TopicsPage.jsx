@@ -77,12 +77,8 @@ const TopicsPage = ({ language = 'en' }) => {
             order: 0
         }
 
-        if (!token || token === "undefined") {
-            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-            navigate("/login");
-            return;
-        }
-
+        if (!ensureAuth()) return;
+        
         try {
             const response = await api.post("/dashboard/topics",payload);
 
@@ -103,15 +99,9 @@ const TopicsPage = ({ language = 'en' }) => {
         }
     };
     const handleDelete = async () => {
-        const token = localStorage.getItem("accessToken");
-
-        if (!token || token === "undefined") {
-            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-            navigate("/login");
-            return;
-        }
+        if (!ensureAuth()) return;
         try {
-            const response = await api.delete(`/dashboard/topics/${showDeleteModal}`);
+            const response = await api.delete(`/dashboard/topics/${showDeleteModal}/`);
 
             if (response.status === 200 || response.status === 204) {
                 setTopics(topics.filter(topic => topic.id !== showDeleteModal));
@@ -119,20 +109,14 @@ const TopicsPage = ({ language = 'en' }) => {
                 showMessage(language === 'ar' ? "تم حذف الموضوع بنجاح" : "Topic deleted successfully", "success");
             }
         } catch (error) {
+            setShowDeleteModal(null);
             console.error("Error deleting topic:", error.response?.data);
             showMessage(language === 'ar' ? "فشل الحذف" : "Failed to delete topic", "error");
         }
     }
     const handleEdit = async (data) => {
-        const token = localStorage.getItem("accessToken");
-
-        if (!token || token === "undefined") {
-            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-            navigate("/login");
-            return;
-        }
+        if (!ensureAuth()) return;
         const validatedDifficulty = data.difficulty?.toLowerCase();
-
         const payload = {
             title: data.title,
             desc: data.desc,
@@ -143,7 +127,7 @@ const TopicsPage = ({ language = 'en' }) => {
         // console.log(payload);
 
         try {
-            const response = await api.patch(`/dashboard/topics/${showEditModal.id}`, payload);
+            const response = await api.patch(`/dashboard/topics/${showEditModal.id}/`, payload);
 
             if (response.status === 200) {
                 const updatedTopic = {
@@ -160,6 +144,7 @@ const TopicsPage = ({ language = 'en' }) => {
                 showMessage(language === 'ar' ? "تم تحديث الموضوع بنجاح" : "Topic updated successfully", "success");
             }
         } catch (error) {
+            setShowEditModal(null);
             console.error("Error updating topic:", error.response?.data);
             showMessage(language === 'ar' ? "فشل التحديث" : "Failed to update topic", "error");
         }

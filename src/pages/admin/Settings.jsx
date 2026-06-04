@@ -6,6 +6,7 @@ import SettingsCard from "../../components/ui/SettingsCard";
 import { FaGlobe, FaLock, FaSave } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import Notification from '../../components/ui/Notification';
+import api from '../../utils/axios';
 
 
 const Settings = () => {
@@ -39,21 +40,24 @@ const Settings = () => {
             setMessage(prev => ({ ...prev, show: false }));
         }, 3000);
     };
-
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
     useEffect(() => {
         const fetchSettings = async () => {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-                navigate("/login");
-                return;
-            }
+            if (!ensureAuth()) return;
             try {
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/settings/", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
+                const response = await api.get("/dashboard/settings/");
                 console.log(response.data, "response");
 
                 if (response.data) {
@@ -90,17 +94,9 @@ const Settings = () => {
     };
 
     const handleSave = async () => {
-        const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
-            navigate("/login");
-            return;
-        }
+        if (!ensureAuth()) return;
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/settings/", { ...siteSettings }, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.post("/dashboard/settings/", { ...siteSettings });
             console.log(response.data, "response");
             if (response.data.defaultLanguage) {
                 handleLanguageChange({ target: { value: response.data.defaultLanguage } });

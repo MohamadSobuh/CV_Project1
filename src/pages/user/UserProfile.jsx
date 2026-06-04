@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import profileImg from "../../images/profileImg.png";
 import { useUserFlow } from '../../context/UserFlowContext';
-import axios from "axios";
 import { useEffect } from 'react';
+import api from '../../utils/axios';
 
 
 export default function UserProfile({ t, language }) {
@@ -25,32 +25,48 @@ export default function UserProfile({ t, language }) {
         localStorage.removeItem("userLastName");
         localStorage.removeItem("userEmail");
     }
-    const fetchProfile = async () => {
+    const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-            navigate("/login");
-            return;
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
         }
-        const response = await axios.get("http://127.0.0.1:8000/api/user/profile/", { headers: { Authorization: `Token ${token}` } });
-        setUserProfile(response.data);
-        console.log(response.data, "response data");
+        return true;
+    };
+    const fetchProfile = async () => {
+        if (!ensureAuth()) return;
+        try {
+            const response = await api.get("/userr/profile/");
+            setUserProfile(response.data);
+            console.log(response.data, "response data");
+        } catch (error) {
+            console.log(error);
+        }
     }
     useEffect(() => {
         fetchProfile();
     }, []);
 
     const handleDeleteAccount = async () => {
-        const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-            navigate("/login");
-            return;
+        if (!ensureAuth()) return;
+        try {
+            await api.delete("/userr/profile/delete/");
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "تم حذف الحساب بنجاح" : "Account deleted successfully",
+                    type: "success"
+                }
+            });
+            setShowDeleteModal(false);
+            logout();
+        } catch (error) {
+            console.log(error);
         }
-        await axios.delete("http://127.0.0.1:8000/api/user/profile/delete/", { headers: { Authorization: `Token ${token}` } });
-        navigate("/login");
-        setShowDeleteModal(false);
-        logout();
     };
     if (!t) return <div className="text-center p-5">Loading...</div>;
     if (!user) return <div className="text-center p-5">Loading profile...</div>;

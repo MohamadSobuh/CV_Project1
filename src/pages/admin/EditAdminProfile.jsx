@@ -12,6 +12,7 @@ import { editProfileSchema } from "../../utils/validationSchema";
 import { useForm } from "react-hook-form";
 import { useState } from 'react';
 import Notification from '../../components/ui/Notification';
+import api from '../../utils/axios';
 
 export default function EditAdminProfile({ t, language }) {
     const { user, setUser } = useUserFlow();
@@ -82,37 +83,41 @@ export default function EditAdminProfile({ t, language }) {
             e.target.style.border = "2px solid #07c937";
         }
     };
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate('/login', {
+                state: {
+                    message: language === 'ar'
+                        ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً"
+                        : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    };
 
     const updateProfile = async (data) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login",{
-                    state: {
-                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
-                        type: "error"
-                    }
-                });
-                return;
-            }
+            if (!ensureAuth()) return;
 
             const payload = { ...data };
             if (!payload.password) {
                 delete payload.password;
             }
-            else {
-
-                const response = await axios.post(
-                    "http://127.0.0.1:8000/api/userr/profile/change-password/",
-                    payload.password,
-                    { headers: { Authorization: `Token ${token}` } }
+            else{
+        
+            const response = await api.post(
+                    "/userr/profile/change-password/",
+                    payload.password
                 );
             }
 
-            const response = await axios.put(
-                "http://127.0.0.1:8000/api/userr/profile/update/",
-                payload,
-                { headers: { Authorization: `Token ${token}` } }
+            const response = await api.put(
+                "/userr/profile/update/",
+                payload
             );
             console.log(response, "response update profile");
 

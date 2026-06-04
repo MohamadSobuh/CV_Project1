@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import style from "./AnalysisHistory.module.css";
 import { useTranslation } from "react-i18next";
 
-import { FaFileAlt, FaUsers } from "react-icons/fa"; import { useUserFlow } from '../../context/UserFlowContext';
+import { FaFileAlt} from "react-icons/fa"; import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
 import EmptyPage from "../../components/ui/EmptyPage";
 import emptyHistory from "../../images/emptyHistory.png";
-import axios from 'axios';
+import api from "../../utils/axios";
 
 
 
@@ -18,16 +18,26 @@ export default function AnalysisHistory({ language }) {
     const token = localStorage.getItem("accessToken");
 
 
-    const fetchHistory = async() => {
-        if (!token) {
-            console.error("No token found, redirecting to login...");
-            navigate("/login"); 
-            return;
-        }
-        try{
-                const response = await axios.get("http://127.0.0.1:8000/api/userr/analysis-history/", {
-                    headers: { Authorization: `Token ${token}` },
+
+        const ensureAuth = () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token || token === "undefined") {
+                navigate("/login", {
+                    state: {
+                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                        type: "error"
+                    }
                 });
+                return false;
+            }
+            return true;
+        };
+
+
+    const fetchHistory = async() => {
+        if (!ensureAuth()) return;
+        try{
+                const response = await api.get("/userr/analysis-history/");
                 setHistory(response.data);
                 console.log(response.data);
             }

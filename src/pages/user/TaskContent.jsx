@@ -6,9 +6,9 @@ import styles from './TaskContent.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import htmlFund from '../../components/media/tasks/html_fund.png';
 import { useTranslation } from "react-i18next";
+import api from "../../utils/axios";
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
@@ -28,22 +28,30 @@ export default function TaskContent({ language }) {
     };
     const token = localStorage.getItem("accessToken");
 
-    useEffect(() => {
-        if (!token) {
-            console.error("No token found, redirecting to login...");
-            navigate("/login");
-            return;
+
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
         }
+        return true;
+    };
+    
+
+    useEffect(() => {
+        if (!ensureAuth()) return;
         const fetchTaskData = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/userr/task-content/${32}/`, {
-                    headers: {
-                        Authorization: `Token ${token}`,
-                        },
-                    });
-                    setTaskData(response.data);
-                    console.log("taskData", taskData)
-                } catch (error) {
+                const response = await api.get(`/userr/task-content/${32}/`);
+                setTaskData(response.data);
+                console.log("taskData", taskData)
+            } catch (error) {
                     console.error('Error fetching task data:', error);
                 }
             };

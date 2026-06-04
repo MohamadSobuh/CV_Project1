@@ -18,6 +18,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa";
 import Notification from '../../components/ui/Notification';
 import { useLocation } from "react-router-dom";
+import api from '../../utils/axios';
 
 
 
@@ -76,25 +77,21 @@ export default function Tasks({ language }) {
             showMessage(location.state.message, location.state.type);
         }
     }, [location.state]);
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
+            return false;
+        }
+        return true;
+    };
+
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    navigate("/login",{
-                        state: {
-                            message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
-                            type: "error"
-                        }
-                    });
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/tasks", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
-
+                if (!ensureAuth()) return;
+                const response = await api.get("/dashboard/tasks");
                 console.log(response.data);
                 setTasks(response.data);
             } catch (err) {
@@ -130,26 +127,14 @@ export default function Tasks({ language }) {
     };
     const handleDelete = async () => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login",{
-                    state: {
-                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
-                        type: "error"
-                    }
-                });
-                return;
-            }
-            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/tasks/${showDeleteModal}/`, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
-            console.log(response.data);
+            if (!ensureAuth()) return;
+            const response = await api.delete(`/dashboard/tasks/${showDeleteModal}/`);
+            console.log(response)
             setTasks(tasks.filter(task => task.id !== showDeleteModal));
             setShowDeleteModal(null);
             showMessage(language === "ar" ? "تم حذف المهمة بنجاح" : "Task deleted successfully", "success");
         } catch (err) {
+            setShowDeleteModal(null);
             console.error("Error deleting task:", err);
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
@@ -193,22 +178,8 @@ export default function Tasks({ language }) {
         };
         console.log("Payload to be sent:", payload);
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
-                navigate("/login",{
-                    state: {
-                        message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
-                        type: "error"
-                    }
-                });
-                return;
-            }
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/tasks/", payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
-
+            if (!ensureAuth()) return;
+            const response = await api.post("/dashboard/tasks/", payload);
             console.log(response.data);
             showMessage(language === "ar" ? "تم إضافة المهمة بنجاح" : "Task added successfully", "success");
             setTasks(prev => [...prev, response.data]);
@@ -216,12 +187,14 @@ export default function Tasks({ language }) {
             setShowModal(false);
         }
         catch (err) {
-            console.error("تفاصيل الخطأ من السيرفر:", err.response?.data);
-
+            setShowModal(false);
             console.error("Error adding task:", err);
+            showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
-
     };
+
+
+
 
     return (
         <div className={language === "ar" ? style.TasksPageArabic : style.TasksPage}>

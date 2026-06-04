@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import Notification from '../../components/ui/Notification';
 import { useLocation } from "react-router-dom";
+import api from '../../utils/axios';
 
 
 export default function AdminProfile({ t, language }) {
@@ -32,15 +33,23 @@ export default function AdminProfile({ t, language }) {
             showMessage(location.state.message, location.state.type);
         }
     }, [location.state]);
-
-    const fetchAdminProfile = async () => {
+    const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
-            showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
-            navigate("/login");
-            return;
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
         }
-        const response = await axios.get("http://127.0.0.1:8000/api/userr/profile/", { headers: { Authorization: `Token ${token}` } });
+        return true;
+    };
+
+    const fetchAdminProfile = async () => {
+        if (!ensureAuth()) return;
+        const response = await api.get("/userr/profile/");
         setAdminProfile(response.data);
         console.log(response.data, "response data");
         setUser(response.data);
@@ -53,14 +62,8 @@ export default function AdminProfile({ t, language }) {
 
     
     const handleDeleteAccount = async () => {
-        const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
-            showMessage(language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again", "error");
-            navigate("/login");
-            return;
-        }
-
-        await axios.delete("http://127.0.0.1:8000/api/user/profile/delete/", { headers: { Authorization: `Token ${token}` } });
+        if (!ensureAuth()) return;
+        await api.delete("/user/profile/delete/");
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
         showMessage(language === "ar" ? "تم حذف الحساب بنجاح" : "Profile deleted successfully", "success");

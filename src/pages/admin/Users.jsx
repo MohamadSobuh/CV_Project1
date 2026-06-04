@@ -14,6 +14,8 @@ import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Notification from "../../components/ui/Notification";
+import api from '../../api/axios';
+
 export default function Users({ language }) {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
@@ -39,25 +41,21 @@ export default function Users({ language }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchema)
     });
+        const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
+            return false;
+        }
+        return true;
+    };
 
     useEffect(() => {
         const fetchUsers = async () => {
+            if (!ensureAuth()) return;
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    navigate("/login", { 
-                        state: {
-                            message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please login again",
-                            type: "error"
-                        }
-                    });
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/profiles/", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
+                const response = await api.get("/dashboard/profiles/");
 
                 console.log(response.data);
                 setUsers(response.data);
@@ -71,18 +69,9 @@ export default function Users({ language }) {
     }, []);
 
     const handleDelete = async () => {
-        const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
-            alert("انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً");
-            navigate("/login");
-            return;
-        }
+        if (!ensureAuth()) return;
         try {
-            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/profiles/${showDeleteModal}/`, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.delete(`/dashboard/profiles/${showDeleteModal}/`);
             if (response.status === 200 || response.status === 204) {
                 setUsers(users.filter(user => user.id !== showDeleteModal));
                 setShowDeleteModal(null);
@@ -90,6 +79,7 @@ export default function Users({ language }) {
             }
         } catch (err) {
             console.error("Error deleting user:", err);
+            setShowDeleteModal(null);
             showMessage(language === "ar" ? "فشل حذف المستخدم" : "Failed to delete user", "error");
         }
     };
@@ -130,13 +120,8 @@ export default function Users({ language }) {
             Progress: "0%",
             CVnumbers: 0,
         };
-        const token = localStorage.getItem("accessToken");
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/profiles/", payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.post("/dashboard/profiles/", payload);
 
             if (response.status === 201 || response.status === 200) {
                 const newUser = {
