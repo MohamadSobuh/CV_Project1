@@ -80,7 +80,7 @@ const TopicsPage = ({ language = 'en' }) => {
         if (!ensureAuth()) return;
         
         try {
-            const response = await api.post("/dashboard/topics",payload);
+            const response = await api.post("/dashboard/topics/",payload);
 
             if (response.status === 201 || response.status === 200) {
                 const savedTopic = {
