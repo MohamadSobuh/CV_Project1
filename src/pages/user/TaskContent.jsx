@@ -15,6 +15,7 @@ export default function TaskContent({ language }) {
     const { activeTask } = useUserFlow();
     const { t, i18n } = useTranslation();
     const [taskData, setTaskData] = useState(null);
+    console.log("activeTask", activeTask)
 
     const testData = {
         "lesson_number": "01",
@@ -25,16 +26,27 @@ export default function TaskContent({ language }) {
         "quiz_id": 5,
         "is_completed": true
     };
+    const token = localStorage.getItem("accessToken");
 
     useEffect(() => {
+        if (!token) {
+            console.error("No token found, redirecting to login...");
+            navigate("/login");
+            return;
+        }
         const fetchTaskData = async () => {
             try {
-                console.log(activeTask);
-                setTaskData(testData);
-            } catch (error) {
-                console.error('Error fetching task data:', error);
-            }
-        };
+                const response = await axios.get(`http://127.0.0.1:8000/api/userr/task-content/${32}/`, {
+                    headers: {
+                        Authorization: `Token ${token}`,
+                        },
+                    });
+                    setTaskData(response.data);
+                    console.log("taskData", taskData)
+                } catch (error) {
+                    console.error('Error fetching task data:', error);
+                }
+            };
         fetchTaskData();
     }, [activeTask]);
 

@@ -11,11 +11,13 @@ import { signupSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Notification from "../../components/ui/Notification";
 
 export default function Signup() {
     const location = useLocation();
     const language = location.state?.language || "en";
     const { t, i18n } = useTranslation();
+
 
 
     const inputs = [
@@ -59,12 +61,16 @@ export default function Signup() {
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/users/register/", payload);
             console.log("Success:", response.data);
-            navigate("/login");
+            navigate("/login",{
+                state:{
+                    message: "تم تسجيل الحساب بنجاح",
+                    type: "success",
+                }
+            });
         } catch (error) {
             if (error.response && error.response.data) {
                 const serverErrors = error.response.data;
 
-                // 1. التعامل مع الأخطاء الخاصة بالحقول (مثل الإيميل المكرر)
                 Object.keys(serverErrors).forEach((field) => {
                     setError(field, {
                         type: "server",

@@ -1,53 +1,55 @@
-import AdminLayout from './layouts/AdminLayout';
-import UserLayout from './layouts/UserLayout';
-import AdminSidebar from './layouts/AdminSidebar';
-import Sidebar from './layouts/Sidebar';
-import Header from './layouts/Header';
+import { lazy,Suspense } from 'react';
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+const UserLayout = lazy(() => import('./layouts/UserLayout'));
+const AdminSidebar = lazy(() => import('./layouts/AdminSidebar'));
+const Sidebar = lazy(() => import('./layouts/Sidebar'));
+const Header = lazy(() => import('./layouts/Header'));
 
-import Signin from './pages/auth/Signin';
-import Signup from './pages/auth/Signup';
+const Signin = lazy(() => import('./pages/auth/Signin'));
+const Signup = lazy(() => import('./pages/auth/Signup'));
 
-import AdminDash from './pages/admin/AdminDash';
-import Users from './pages/admin/Users';
-import Tasks from './pages/admin/Tasks';
-import TopicsPage from './pages/admin/TopicsPage';
-import QuizQuestions from './pages/admin/QuizQuestions';
-import Settings from './pages/admin/Settings';
-import EditProfile from './pages/user/EditProfile';
+const AdminDash = lazy(() => import('./pages/admin/AdminDash'));
+const Users = lazy(() => import('./pages/admin/Users'));
+const Tasks = lazy(() => import('./pages/admin/Tasks'));
+const QuizQuestions = lazy(() => import('./pages/admin/QuizQuestions'));
+const Settings = lazy(() => import('./pages/admin/Settings'));
+const EditProfile = lazy(() => import('./pages/user/EditProfile'));
 import { useTranslation } from "react-i18next";
 
-import Home from './components/Home';
-import UserProfile from './pages/user/UserProfile';
+const Home = lazy(() => import('./components/Home'));
+const UserProfile = lazy(() => import('./pages/user/UserProfile'));
 import { useState, useEffect } from "react";
 import { Route, Routes } from 'react-router-dom';
-import UploadCV from './pages/user/UploadCV';
-import UserDash from './pages/user/UserDash';
-import SessionTimeout from './components/SessionTimeout';
+const UploadCV = lazy(() => import('./pages/user/UploadCV'));
+const UserDash = lazy(() => import('./pages/user/UserDash'));
+const SessionTimeout = lazy(() => import('./components/SessionTimeout'));
 
 import { UserFlowProvider } from './context/UserFlowContext';
 import { AdminFlowProvider } from './context/AdminFlowContext';
-import AnalysisReport from './pages/user/AnalysisReport';
-import AnalysisHistory from './pages/user/AnalysisHistory';
-import TaskAssQuiz from './pages/user/TaskAssQuiz';
-import QuizResult from './pages/user/QuizResult';
-import Plan from './pages/user/Plan';
-import Hero from './components/Hero';
-import TaskContent from './pages/user/TaskContent';
-import TaskItem from './pages/user/TaskItem';
-import AdminTaskContent from './pages/admin/AdminTaskContent';
-import EndOfPlan from './pages/user/EndOfPlan';
-import EndOfTopic from './pages/user/EndOfTopic';
-import ViewTaskContent from './pages/admin/ViewTaskContent';
-import Report from './pages/user/Report';
-import EditAdminProfile from './pages/admin/EditAdminProfile';
-import AdminProfile from './pages/admin/AdminProfile';
-import LoadingPage from './pages/user/loadingPage';
+const AnalysisReport = lazy(() => import('./pages/user/AnalysisReport'));
+const AnalysisHistory = lazy(() => import('./pages/user/AnalysisHistory'));
+const TaskAssQuiz = lazy(() => import('./pages/user/TaskAssQuiz'));
+const QuizResult = lazy(() => import('./pages/user/QuizResult'));
+const Plan = lazy(() => import('./pages/user/Plan'));
+const Hero = lazy(() => import('./components/Hero'));
+const TaskContent = lazy(() => import('./pages/user/TaskContent'));
+const TaskItem = lazy(() => import('./pages/user/TaskItem'));
+const AdminTaskContent = lazy(() => import('./pages/admin/AdminTaskContent'));
+const EndOfPlan = lazy(() => import('./pages/user/EndOfPlan'));
+const EndOfTopic = lazy(() => import('./pages/user/EndOfTopic'));
+const ViewTaskContent = lazy(() => import('./pages/admin/ViewTaskContent'));
+const Report = lazy(() => import('./pages/user/Report'));
+const EditAdminProfile = lazy(() => import('./pages/admin/EditAdminProfile'));
+const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
+const LoadingPage = lazy(() => import('./pages/user/loadingPage'));
+const TopicsPage = lazy(() => import('./pages/admin/TopicsPage'));
 
 
 export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
   const { t, i18n } = useTranslation();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  
 
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function App() {
           {/* <Sidebar language={language} />*/}
           {/* <Header language={language} setLanguage={setLanguage} /> */}
           <SessionTimeout />
-
+<Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />
@@ -105,8 +107,9 @@ export default function App() {
               <Route path='users' element={<Users language={language} />} />
               <Route path='tasks' element={<Tasks language={language} />} />
               <Route path='editTask' element={<AdminTaskContent language={language} />} />
-              <Route path="topics" element={<TopicsPage language={language} />} >
-              </Route>
+              
+                <Route path="topics" element={<TopicsPage language={language} />} >
+                </Route>
               <Route path="quiz" element={<QuizQuestions language={language} />} />
               <Route path="settings" element={<Settings language={language} />} />
               <Route path='viewTaskContent' element={<ViewTaskContent language={language} />} />
@@ -122,6 +125,7 @@ export default function App() {
               } />
             </Route>
           </Routes>
+          </Suspense>
 
         </div >
       </UserFlowProvider>

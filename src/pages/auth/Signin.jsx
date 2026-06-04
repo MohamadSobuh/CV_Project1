@@ -108,6 +108,7 @@ export default function Signin() {
 
     return (
         <div className={`${style.bg} ${language === "ar" ? style.rtl : style.ltr}`}>
+           <Notification show={message.show} text={message.text} type={message.type} />
             <div className={style.glowTopRight}></div>
             <div className={style.glowBottomLeft}></div>
 

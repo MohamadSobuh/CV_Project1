@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Notification from '../../components/ui/Notification';
+import api from '../../utils/axios';
 
 const TopicsPage = ({ language = 'en' }) => {
     const { t, i18n } = useTranslation();
@@ -35,37 +36,34 @@ const TopicsPage = ({ language = 'en' }) => {
 
 
     const [topics, setTopics] = useState([]);
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
+            navigate("/login");
+            return false;
+        }
+        return true;
+    };
+ 
     useEffect(() => {
         if (location.state?.message) {
             showMessage(location.state.message, location.state.type);
         }
     }, [location.state]);
+ 
     useEffect(() => {
         const fetchTopics = async () => {
+            if (!ensureAuth()) return;
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token || token === "undefined") {
-                    showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
-                    navigate("/login");
-                    return;
-                }
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/topics", {
-                    headers: {
-                        Authorization: `Token ${token}`
-                    }
-                });
-
+                const response = await api.get("/dashboard/topics");
                 console.log(response.data);
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics:", err);
             }
-
-
-
         };
         fetchTopics();
-
     }, []);
     const handleAdd = async (newTopic) => {
         console.log(newTopic);
@@ -86,11 +84,7 @@ const TopicsPage = ({ language = 'en' }) => {
         }
 
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/dashboard/topics/", payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.post("/dashboard/topics",payload);
 
             if (response.status === 201 || response.status === 200) {
                 const savedTopic = {
@@ -117,11 +111,7 @@ const TopicsPage = ({ language = 'en' }) => {
             return;
         }
         try {
-            const response = await axios.delete(`http://127.0.0.1:8000/api/dashboard/topics/${showDeleteModal}/`, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.delete(`/dashboard/topics/${showDeleteModal}`);
 
             if (response.status === 200 || response.status === 204) {
                 setTopics(topics.filter(topic => topic.id !== showDeleteModal));
@@ -153,11 +143,7 @@ const TopicsPage = ({ language = 'en' }) => {
         // console.log(payload);
 
         try {
-            const response = await axios.patch(`http://127.0.0.1:8000/api/dashboard/topics/${showEditModal.id}/`, payload, {
-                headers: {
-                    Authorization: `Token ${token}`
-                }
-            });
+            const response = await api.patch(`/dashboard/topics/${showEditModal.id}`, payload);
 
             if (response.status === 200) {
                 const updatedTopic = {
