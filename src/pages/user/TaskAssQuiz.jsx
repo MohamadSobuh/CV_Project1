@@ -134,14 +134,16 @@ export default function TaskAssQuiz({ language }) {
         });
 
         const percentage = (earnedMarks / totalMarks) * 100;
+
         setPlacementScore(percentage);
+
         navigate('/user/quizResult', {
             state: {
                 score: percentage,
+                mode, 
             }
         });
     }
-
     return (
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >
             <div className={style.bgGrid} />

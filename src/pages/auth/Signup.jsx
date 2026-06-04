@@ -11,14 +11,14 @@ import { signupSchema } from "../../utils/validationSchema";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Notification from "../../components/ui/Notification";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";import Notification from "../../components/ui/Notification";
 
 export default function Signup() {
     const location = useLocation();
     const language = location.state?.language || "en";
     const { t, i18n } = useTranslation();
-
-
+    const [showPassword, setShowPassword] = useState(false);
 
     const inputs = [
         {
@@ -38,7 +38,7 @@ export default function Signup() {
         {
             name: "email",
             type: "email",
-            label:t('email'),
+            label: t('email'),
             id: "emailInput",
             col: "col-md-12"
         },
@@ -139,11 +139,25 @@ export default function Signup() {
 
                     {inputs.slice(2).map((input) => (
                         <div key={input.id} className={`form-floating mb-3 mt-3 ${input.col}`}>
-                            <Input
-                                {...input}
-                                register={register}
-                                onChange={input.name === 'password' ? handlePasswordStrength : undefined}
-                            />
+                            {input.name === "password" ? (
+                                <>
+                                    <Input
+                                        {...input}
+                                        register={register}
+                                        type={showPassword ? "text" : "password"}
+                                        className={style.passwordInput}
+                                    />
+
+                                    <span
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className={style.eyeIcon}
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </span>
+                                </>
+                            ) : (
+                                <Input {...input} register={register} />
+                            )}
                             <label htmlFor={input.id}>{input.label}</label>
                             {errors[input.name] && <InputError error={errors[input.name]} />}
                         </div>

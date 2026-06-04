@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 export default function Header({ user, language, setLanguage }) {
     const { t, i18n } = useTranslation();
 
-
     useEffect(() => {
         document.documentElement.dir = (language || i18n.language) === 'ar' ? 'rtl' : 'ltr';
     }, [language, i18n.language]);
