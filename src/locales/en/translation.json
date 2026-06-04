@@ -354,5 +354,7 @@
     "difficultyRequired": "Please select a difficulty",
     "loadingMessage1": "Extracting skills, experience, and strengths from your CV...",
     "loadingMessage2": "Analyzing strengths, gaps, and opportunities in your profile...",
-    "loadingMessage3": "Generating your personalized report. This may take a few moments..."
+    "loadingMessage3": "Generating your personalized report. This may take a few moments...",
+    "loadingTitle" :  "Loading...",
+    "loadingWait" : "Please wait a moment"
 }

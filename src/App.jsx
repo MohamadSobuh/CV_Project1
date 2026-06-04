@@ -43,6 +43,7 @@ const EditAdminProfile = lazy(() => import('./pages/admin/EditAdminProfile'));
 const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
 const LoadingPage = lazy(() => import('./pages/user/loadingPage'));
 const TopicsPage = lazy(() => import('./pages/admin/TopicsPage'));
+import LoadingScreen from "./components/ui/LoadingScreen";
 
 
 export default function App() {
@@ -66,7 +67,7 @@ export default function App() {
           {/* <Sidebar language={language} />*/}
           {/* <Header language={language} setLanguage={setLanguage} /> */}
           <SessionTimeout />
-          <Suspense fallback={<div>Loading...</div>}> ////هون بدنا نضيف تصميم loading
+          <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<Home language={language} setLanguage={setLanguage} />} />
