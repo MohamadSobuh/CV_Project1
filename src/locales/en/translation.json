@@ -356,5 +356,6 @@
     "loadingMessage2": "Analyzing strengths, gaps, and opportunities in your profile...",
     "loadingMessage3": "Generating your personalized report. This may take a few moments...",
     "loadingTitle" :  "Loading...",
-    "loadingWait" : "Please wait a moment"
+    "loadingWait" : "Please wait a moment",
+    "invalidEmailOrPassword": "Invalid email or password"
 }

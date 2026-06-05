@@ -45,9 +45,28 @@ export default function Plan({ language }) {
     const [activeTopicId, setActiveTopicId] = useState(1);
     const { setActiveTask } = useUserFlow()
     const { t, i18n } = useTranslation();
+    const { user } = useUserFlow();
 
     const navigate = useNavigate();
-    const token = localStorage.getItem("accessToken");
+
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
+    useEffect(() => {
+        ensureAuth();
+    }, []);
     
 //     const fetchPlan = async() => {
 //         if (!token) {

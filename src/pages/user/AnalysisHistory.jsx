@@ -10,10 +10,13 @@ import api from "../../utils/axios";
 
 
 
+
+
 export default function AnalysisHistory({ language }) {
     const { history,setHistory, setCvId} = useUserFlow(); /*  هاد رح نستخدمها بس يكون الربط كلو شغال*/
     // const [fakeHistory, setFakeHistory] = useState([]);
     const navigate = useNavigate();
+    const {user} = useUserFlow();
     const { t, i18n } = useTranslation();
     const token = localStorage.getItem("accessToken");
 
@@ -21,7 +24,8 @@ export default function AnalysisHistory({ language }) {
 
         const ensureAuth = () => {
             const token = localStorage.getItem("accessToken");
-            if (!token || token === "undefined") {
+            const role = localStorage.getItem("userRole");
+            if (!token || token === "undefined" || role !== "user") {
                 navigate("/login", {
                     state: {
                         message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",

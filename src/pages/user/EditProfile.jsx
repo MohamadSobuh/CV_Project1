@@ -29,9 +29,10 @@ export default function EditProfile({ t, language }) {
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
-        const ensureAuth = () => {
+    const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
             navigate("/login", {
                 state: {
                     message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",

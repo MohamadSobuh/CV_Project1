@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useTranslation } from "react-i18next";
 import style from "./Report.module.css";
 import { FaCloudUploadAlt, FaBolt, FaCheckCircle } from "react-icons/fa";
 import api from "../../utils/axios";
+import {useNavigate} from "react-router-dom";
+import { useUserFlow } from "../../context/UserFlowContext";
+
 
 
 export default function Report({ language }) {
     const { t, i18n } = useTranslation();
+    const { user } = useUserFlow();
+    const navigate = useNavigate();
     const [priority, setPriority] = useState("");
     const [screenshot, setScreenshot] = useState(null);
     const [dragActive, setDragActive] = useState(false);
@@ -61,24 +66,41 @@ export default function Report({ language }) {
             setLoading(true);
             const response = await api.post('/userr/send-report/', formData);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.error || "Something went wrong. Please try again.");
-                return;
-            }
-
             setSuccess(true);
             setTitle("");
             setDescription("");
             setPriority("");
             setScreenshot(null);
+            navigate("/user/dashboard", {
+                state: {
+                    message: language == 'ar' ? "تم إرسال التقرير بنجاح" : "Report sent successfully",
+                    success: true
+                }
+            });
         } catch (err) {
             setError("Network error. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
     };
+        const ensureAuth = () => {
+            const token = localStorage.getItem("accessToken");
+            const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
+    useEffect(() => {
+        ensureAuth();
+    }, []);
 
     return (
         <div className={language === 'ar' ? style.reportAr : style.report}>

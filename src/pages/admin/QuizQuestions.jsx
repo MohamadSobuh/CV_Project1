@@ -51,7 +51,8 @@ const QuizQuestions = ({ language = 'en' }) => {
     });
 const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "admin") {
             navigate("/login", {
                 state: {
                     message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",

@@ -9,12 +9,29 @@ import dashL from "../../images/dashL.png";
 import dashR from "../../images/dashR.png";
 import api from "../../utils/axios";
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import Notification from '../../components/ui/Notification';
 
 
 
-export default function UserDash({ language, user }) {
+export default function UserDash({ language }) {
     const [animatedProgress, setAnimatedProgress] = useState(0);
     const navigate = useNavigate();
+    const location = useLocation();
+    const { user } = useUserFlow();
+    const [message, setMessage] = useState({ show: false, text: "", type: "success" });
+
+    const showMessage = (text, type) => {
+            setMessage({ show: true, text, type });
+        setTimeout(() => setMessage({ show: false, text: "", type: "success" }), 3000);
+    }
+    
+    useEffect(() => {
+        if (location.state?.message) {
+            showMessage(location.state.message, location.state.type);
+        }
+    }, [location.state]);
+    
     // const { user } = useUserFlow();
     const [userDash, setUserDash] = useState({
         TotalCVs: 0,
@@ -24,6 +41,8 @@ export default function UserDash({ language, user }) {
     ///مع هذا التعديل بقدر احذف ال userFirstName وال userLastName من local storage
     let firstName = localStorage.getItem("userFirstName") || "Israa";
     let lastName = localStorage.getItem("userLastName") || "Shtaiwi";
+
+
 
 
 
@@ -52,7 +71,8 @@ export default function UserDash({ language, user }) {
     const isArabic = i18n.language === "ar";
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
             navigate("/login", {
                 state: {
                     message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
@@ -80,6 +100,7 @@ export default function UserDash({ language, user }) {
 
     return (
         <div className={language === 'ar' ? style.userDashAr : style.userDash}>
+            <Notification show={message.show} text={message.text} type={message.type} />
             <div className={style.bgGrid} />
 
             <div className={style.dashHeader}>

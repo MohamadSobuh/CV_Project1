@@ -5,8 +5,10 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
+
 export default function EndOfPlan({ language }) {
     const { t, i18n } = useTranslation();
+    
 
     const location = useLocation();
     const stats = location.state?.stats;

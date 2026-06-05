@@ -15,6 +15,7 @@ export default function TaskContent({ language }) {
     const { activeTask } = useUserFlow();
     const { t, i18n } = useTranslation();
     const [taskData, setTaskData] = useState(null);
+    const { user } = useUserFlow();
     console.log("activeTask", activeTask)
 
     const testData = {
@@ -26,12 +27,12 @@ export default function TaskContent({ language }) {
         "quiz_id": 5,
         "is_completed": true
     };
-    const token = localStorage.getItem("accessToken");
 
 
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
             navigate("/login", {
                 state: {
                     message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",

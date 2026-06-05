@@ -41,9 +41,10 @@ export default function Users({ language }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchema)
     });
-        const ensureAuth = () => {
+    const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "admin") {
             showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
             navigate("/login");
             return false;

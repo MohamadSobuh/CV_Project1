@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 export default function TaskAssQuiz({ language }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const { user } = useUserFlow();
 
     const { state } = useLocation();
     const mode = state?.mode;

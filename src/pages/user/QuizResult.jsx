@@ -4,10 +4,11 @@ import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
 import { FaCheckCircle, FaTimesCircle, FaTrophy, FaBookOpen } from "react-icons/fa";
+import { useEffect } from "react";
 
 export default function QuizResult({ language }) {
     const { t, i18n } = useTranslation();
-
+    const { user } = useUserFlow();
 
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -17,6 +18,24 @@ export default function QuizResult({ language }) {
     const isTask = mode === "task";
     const passed = score >= 80;
 
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
+    useEffect(() => {
+        ensureAuth();
+    }, []);
     return (
         <div className={language === 'ar' ? style.quizResultAr : style.quizResultEn}>
             <div className={style.bgGrid} />

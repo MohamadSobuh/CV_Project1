@@ -17,6 +17,7 @@ export default function UploadCV({ language }) {
     const [isLoading, setIsLoading] = useState(false);
     const { setCvId } = useUserFlow();
     const navigate = useNavigate();
+    const { user } = useUserFlow();
     const fileInputRef = useRef(null);
     useEffect(() => {
         const data = [
@@ -26,6 +27,24 @@ export default function UploadCV({ language }) {
         ];
 
         setFields(data);
+    }, []);
+    const ensureAuth = () => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
+    useEffect(() => {
+        ensureAuth();
     }, []);
 
     const handleAnalysis = async () => {

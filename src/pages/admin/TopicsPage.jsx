@@ -38,7 +38,8 @@ const TopicsPage = ({ language = 'en' }) => {
     const [topics, setTopics] = useState([]);
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "admin") {
             showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
             navigate("/login");
             return false;

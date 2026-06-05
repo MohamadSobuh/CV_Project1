@@ -90,19 +90,17 @@ export default function Signin() {
 
 
         } catch (error) {
+            console.log("Error:", error);
             if (error.response && error.response.data) {
                 const serverErrors = error.response.data;
 
-                if (serverErrors.non_field_errors) {
-                    setError("email", {
-                        type: "server",
-                        message: serverErrors.non_field_errors[0]
-                    });
+                if (serverErrors.non_field_errors) {                    
                     setError("password", {
                         type: "server",
-                        message: serverErrors.non_field_errors[0]
+                        message: t('invalidEmailOrPassword')
                     });
                 }
+                console.log("Server Errors:", serverErrors);
             }
         }
     };
@@ -145,8 +143,9 @@ export default function Signin() {
 
                             <label htmlFor={input.id}>{input.label}</label>
 
-                            {errors[input.name] &&
-                                <InputError error={errors[input.name]} />}
+                            {input.name === "password" && errors[input.name] && (
+                                <InputError error={errors[input.name]} />
+                            )}
 
                         </div>
                     ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import style from "./AdminTables.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +10,6 @@ import InputError from "../../components/ui/InputError";
 import * as yup from "yup";
 import { signupSchemaForTasks } from "../../utils/validationSchema";
 import EmptyPage from "../../components/ui/EmptyPage";
-import axios from 'axios';
 import { useAdminFlow } from '../../context/AdminFlowContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -43,7 +42,6 @@ export default function Tasks({ language }) {
     const navigate = useNavigate();
     const { setActiveTask } = useAdminFlow();
     const [filterInput, setFilterInput] = useState('');
-    const [tasksFilter, setTasksFilter] = useState([]);
     const [filterTopic, setFilterTopic] = useState('');
     const location = useLocation();
 
@@ -79,7 +77,8 @@ export default function Tasks({ language }) {
     }, [location.state]);
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "admin") {
             showMessage(language === 'ar' ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again", "error");
             navigate("/login");
             return false;
@@ -139,11 +138,18 @@ export default function Tasks({ language }) {
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
+    const filteredTasks = useMemo(() => {
+        return tasks.filter(task => {
+            const matchesInput = (task.title || task.task || "").toLowerCase().includes(filterInput.toLowerCase());
+            const matchesTopic = (task.topic || "").toString().includes(filterTopic);
+            return matchesInput && matchesTopic;
+        });
+    }, [filterInput, filterTopic, tasks]);
 
-    const totalPagesFilter = Math.ceil(tasksFilter.length / tasksPerPage);
+    const totalPagesFilter = Math.ceil(filteredTasks.length / tasksPerPage);
     const indexOfLastTaskFilter = currentPage * tasksPerPage;
     const indexOfFirstTaskFilter = indexOfLastTaskFilter - tasksPerPage;
-    const currentTasksFilter = tasksFilter.slice(indexOfFirstTaskFilter, indexOfLastTaskFilter);
+    const currentTasksFilter = filteredTasks.slice(indexOfFirstTaskFilter, indexOfLastTaskFilter);
 
     const handleNext = () => setCurrentPage(prev => (
         prev < totalPagesFilter ? prev + 1 : prev
@@ -152,18 +158,7 @@ export default function Tasks({ language }) {
     const handlePrev = () => setCurrentPage(prev => (
         prev > 1 ? prev - 1 : prev
     ));
-    const handleFilter = () => {
-        const filteredTasks = tasks.filter(task => {
-            const matchesInput = task.task.toLowerCase().includes(filterInput.toLowerCase());
-            const matchesTopic = task.topic.toString().includes(filterTopic);
-            return matchesInput && matchesTopic;
-        });
-        setTasksFilter(filteredTasks);
-    };
-    useEffect(() => {
-        handleFilter();
-        console.log(filterTopic);
-    }, [filterInput, filterTopic, tasks]);
+    
 
 
 
