@@ -1,6 +1,7 @@
 :global(.form-control:focus) {
     border-color: #082F43 !important;
     box-shadow: 0 0 0 1px #1A83A8 !important;
+    
 }
 
 
@@ -126,16 +127,43 @@
     padding-right: 45px !important;
 }
 
-.eyeIcon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    z-index: 10;
-    color: #082F43;
+.floatingContainer {
+    position: relative;
 }
 
+.eyeIcon {
+    position: absolute;
+    top: 29px; 
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+    z-index: 5; 
+    display: flex;
+    align-items: center;
+}
+
+.ltr .eyeIcon {
+    right: 15px;
+    left: auto;
+}
+
+.rtl .eyeIcon {
+    left: 15px;
+    right: auto;
+}
+
+.ltr .passwordInput {
+    padding-right: 45px !important;
+}
+
+.rtl .passwordInput {
+    padding-left: 45px !important;
+}
+
+.errorWrapper {
+    margin-top: 5px;
+    width: 100%;
+}
 @media (max-width: 1024px) {
 
     .left {

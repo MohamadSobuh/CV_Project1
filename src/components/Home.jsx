@@ -234,8 +234,8 @@ export default function Home({ language, setLanguage }) {
                         <b>{t('footerFollow')}</b>
                         <br />
                         <div className={style.socialIcons}>
-                            <a href=""> <FaInstagram size={30} color="#E4405F" /> </a>
-                            <a href="" style={{ marginLeft: "10px" }}> <FaWhatsapp size={30} color="#25D366" /> </a>
+                            <a href="https://www.instagram.com/cvision_2026/"> <FaInstagram size={30} color="#E4405F" /> </a>
+                            <a href="https://wa.me/972569277561" style={{ marginLeft: "10px" }}> <FaWhatsapp size={30} color="#25D366" /> </a>
                         </div>
                     </div>
                 </div>
