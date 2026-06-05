@@ -87,7 +87,7 @@ export default function LoadingPage({ language }) {
                     selectedField
                 }
             });
-        }, 50000);
+        }, 5000);
 
         return () => clearTimeout(timer);
     }, []);

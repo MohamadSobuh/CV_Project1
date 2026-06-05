@@ -143,9 +143,8 @@ export default function AdminTaskContent({ language }) {
                     </div>
 
 
-                    <div style={{ flex: '1 1 40%' }}>
-                        <p className={styles.cardDescription}>{taskData.description}</p>
-                    </div>
+                  <br />
+                  
                     <div style={{ flex: '1 1 50%' }}>
                         <label style={{ display: 'block', marginBottom: '8px', color: '#1A83A8', fontWeight: '500' }}>{t('editTaskContent')}</label>
                         <textarea {...register("content")} rows={6} placeholder={t('editTaskContent')} style={{ width: "100%", borderRadius: "8px", border: "1px solid #1A83A8", padding: "12px", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", boxSizing: "border-box", fontSize: "14px", fontFamily: "inherit", resize: "vertical" }} />
