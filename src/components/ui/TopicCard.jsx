@@ -17,6 +17,7 @@ const TopicCard = ({ topic, language, t, onEditClick, onDeleteClick }) => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+    console.log(topic);
 
     return (
         <div className={style.topicCard}>

@@ -16,7 +16,7 @@ export default function AnalysisReport({ language }) {
     const score = state?.score;
     const navigate = useNavigate();
         console.log("cvId",cvId);
-    const {user} = useUserFlow();
+    const {user } = useUserFlow();
 
 
     const ensureAuth = () => {
@@ -69,6 +69,7 @@ export default function AnalysisReport({ language }) {
 
     const strengthsList = analysisResult?.strengths || [];
     const weaknessesList = analysisResult?.weaknesses || [];
+
     return (
         <div className={language === 'ar' ? style.reportAr : style.reportEn}>
             <div className={style.bgGrid} />
@@ -136,7 +137,7 @@ export default function AnalysisReport({ language }) {
                     : <> <h2>{t('readyToValidateF')}</h2>
                         <p>{t('TakeAdaptiveQuizF')}</p></>}
 
-                <button className={style.startAssessment} onClick={() => isNew && navigate('/user/quiz', {
+                <button className={style.startAssessment} onClick={() => isNew && navigate('/user/InitalAssQuiz', {
                     state: {
                         weaknesses: analysisResult.weaknesses,
                         mode: "assessment"

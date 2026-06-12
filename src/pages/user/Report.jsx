@@ -63,6 +63,7 @@ export default function Report({ language }) {
         }
 
         try {
+            console.log(formData);
             setLoading(true);
             const response = await api.post('/userr/send-report/', formData);
 

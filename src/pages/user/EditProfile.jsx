@@ -130,9 +130,23 @@ export default function EditProfile({ t, language }) {
                 console.log(response, "response change password");
             }
 
+            const formData = new FormData();
+            formData.append("firstname", data.firstname || "");
+            formData.append("lastname", data.lastname || "");
+            formData.append("email", data.email || "");
+            formData.append("field", data.field || "");
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
             const response = await api.put(
                 "/userr/profile/update/",
-                payload,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
 
             const updated = { ...response.data, image: response.data.image || profileImg };
@@ -140,6 +154,7 @@ export default function EditProfile({ t, language }) {
             localStorage.setItem("userFirstName", updated.firstname);
             localStorage.setItem("userLastName", updated.lastname);
             localStorage.setItem("userEmail", updated.email);
+
 
             navigate('/user/profile', { state: { message: language === "ar" ? "تم تحديث الملف الشخصي بنجاح" : "Profile updated successfully", type: "success" } });
         } catch (err) {

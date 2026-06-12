@@ -58,7 +58,7 @@ const TopicsPage = ({ language = 'en' }) => {
             if (!ensureAuth()) return;
             try {
                 const response = await api.get("/dashboard/topics");
-                console.log(response.data);
+                console.log(response.data,"data");
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics:", err);
@@ -74,14 +74,17 @@ const TopicsPage = ({ language = 'en' }) => {
             desc: newTopic.desc,
             difficulty: newTopic.difficulty.toLowerCase(),
             learning_plan: 5, ////////////////////////////////////////????//
+            
             tasks_count: 0,
             order: 0
         }
+        console.log(payload,"payload");
 
         if (!ensureAuth()) return;
         
         try {
             const response = await api.post("/dashboard/topics/",payload);
+            console.log(response,"response");
 
             if (response.status === 201 || response.status === 200) {
                 const savedTopic = {

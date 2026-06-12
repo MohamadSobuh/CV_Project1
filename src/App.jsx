@@ -43,6 +43,7 @@ const EditAdminProfile = lazy(() => import('./pages/admin/EditAdminProfile'));
 const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
 const LoadingPage = lazy(() => import('./pages/user/loadingPage'));
 const TopicsPage = lazy(() => import('./pages/admin/TopicsPage'));
+const InitalAssQuiz = lazy(() => import('./pages/user/InitalAssQuiz'));
 import LoadingScreen from "./components/ui/LoadingScreen";
 
 
@@ -97,6 +98,7 @@ export default function App() {
               <Route path='endPlan' element={<EndOfPlan language={language} />} />
               <Route path='endTopic' element={<EndOfTopic language={language} />} />
               <Route path='report' element={<Report language={language} />} />
+              <Route path='initalAssQuiz' element={<InitalAssQuiz language={language} />} />
 
 
 

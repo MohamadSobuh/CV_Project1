@@ -36,6 +36,7 @@ export default function EditAdminProfile({ t, language }) {
         }
     });
     const [image, setImage] = useState(user?.image || "");
+    const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
     useEffect(() => {
@@ -46,6 +47,7 @@ export default function EditAdminProfile({ t, language }) {
                 email: user.email || "",
                 password: ""
             });
+            setImage(user.image || "");
         }
     }, [user, reset]);
     const handleImageClick = () => {
@@ -58,8 +60,7 @@ export default function EditAdminProfile({ t, language }) {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
-
-            setFormData({ ...formData, image: file });
+            setImageFile(file);
         }
     };
 
@@ -115,10 +116,25 @@ export default function EditAdminProfile({ t, language }) {
                     payload.password
                 );
             }
+            
+
+             const formData = new FormData();
+            formData.append("firstname", data.firstname || "");
+            formData.append("lastname", data.lastname || "");
+            formData.append("email", data.email || "");
+            formData.append("field", data.field || "");
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
 
             const response = await api.put(
                 "/userr/profile/update/",
-                payload
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
             console.log(response, "response update profile");
 
@@ -160,13 +176,14 @@ export default function EditAdminProfile({ t, language }) {
             />
             <div className={style.profile}>
                 <div className={style.center}>
-                    <img
-                        src={image}
-                        alt="Profile"
-                        className={`${style.imgProfile} rounded-circle`}
-                        onClick={handleImageClick}
-                        style={{ cursor: "pointer" }}
-                    />
+                   <img
+    src={image || profileImg} 
+    alt="Profile"
+    className={`${style.imgProfile} rounded-circle`}
+    onClick={handleImageClick}
+    style={{ cursor: "pointer" }}
+/>
+
                     <input
                         type="file"
                         accept="image/*"

@@ -67,6 +67,10 @@
     border-radius: 50%;
     position: relative;
 }
+.activeAndAnswered {
+    border-color: #157253;
+    background: #ccf3e3;
+}
 
 
 .option input:checked+.newRadio::after {
