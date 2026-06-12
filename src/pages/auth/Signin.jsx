@@ -94,7 +94,7 @@ export default function Signin() {
             if (error.response && error.response.data) {
                 const serverErrors = error.response.data;
 
-                if (serverErrors.non_field_errors) {                    
+                if (serverErrors.non_field_errors) {
                     setError("password", {
                         type: "server",
                         message: t('invalidEmailOrPassword')
@@ -106,7 +106,7 @@ export default function Signin() {
     };
     return (
         <div className={`${style.bg} ${language === "ar" ? style.rtl : style.ltr}`}>
-           <Notification show={message.show} text={message.text} type={message.type} />
+            <Notification show={message.show} text={message.text} type={message.type} />
             <div className={style.glowTopRight}></div>
             <div className={style.glowBottomLeft}></div>
 
@@ -120,16 +120,16 @@ export default function Signin() {
                 <p>{t('loginMessge')}</p>
                 <form onSubmit={handleSubmit(submitForm)}>
                     {inputs.map((input) => (
-                        <div key={input.id} className={`form-floating mb-3 ${input.name === 'email' ? 'mt-3' : ''}`}>
+                        <div key={input.id} className={`form-floating mb-3 ${input.name === 'email' ? 'mt-3' : ''} ${style.floatingContainer}`}>
+
                             {input.name === "password" ? (
                                 <>
                                     <Input
                                         {...input}
                                         register={register}
                                         type={showPassword ? "text" : "password"}
-                                        className={style.passwordInput}
+                                        className={`form-control ${style.passwordInput}`}
                                     />
-
                                     <span
                                         onClick={() => setShowPassword(!showPassword)}
                                         className={style.eyeIcon}
@@ -138,18 +138,19 @@ export default function Signin() {
                                     </span>
                                 </>
                             ) : (
-                                <Input {...input} register={register} />
+                                <Input {...input} register={register} className="form-control" />
                             )}
 
                             <label htmlFor={input.id}>{input.label}</label>
 
                             {input.name === "password" && errors[input.name] && (
-                                <InputError error={errors[input.name]} />
+                                <div className={style.errorWrapper}>
+                                    <InputError error={errors[input.name]} />
+                                </div>
                             )}
 
                         </div>
                     ))}
-
                     <button type="submit" className={`${style.btn}`} disabled={isSubmitting}><b>{t('login')} </b></button>
                 </form>
                 <br />

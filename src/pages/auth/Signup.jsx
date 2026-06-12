@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";import Notification from "../../components/ui/Notification";
+import { useState } from "react"; import Notification from "../../components/ui/Notification";
 
 export default function Signup() {
     const location = useLocation();
@@ -61,8 +61,8 @@ export default function Signup() {
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/users/register/", payload);
             console.log("Success:", response.data);
-            navigate("/login",{
-                state:{
+            navigate("/login", {
+                state: {
                     message: "تم تسجيل الحساب بنجاح",
                     type: "success",
                 }
@@ -109,7 +109,7 @@ export default function Signup() {
     }
 
     return (
-        <div className={style.bg}>
+        <div className={`${style.bg} ${language === "ar" ? style.rtl : style.ltr}`}>
             <div className={style.glowTopRight}></div>
             <div className={style.glowBottomLeft}></div>
             <div className={style.bgGrid} />
@@ -138,14 +138,16 @@ export default function Signup() {
                     </div>
 
                     {inputs.slice(2).map((input) => (
-                        <div key={input.id} className={`form-floating mb-3 mt-3 ${input.col}`}>
+                        <div key={input.id} className={`form-floating mb-3 mt-3 ${input.col} ${style.floatingInputContainer}`}>
+
                             {input.name === "password" ? (
                                 <>
                                     <Input
                                         {...input}
                                         register={register}
                                         type={showPassword ? "text" : "password"}
-                                        className={style.passwordInput}
+                                        className={`form-control ${language === 'ar' ? style.ps45 : style.pe45}`}
+                                        onChange={handlePasswordStrength}
                                     />
 
                                     <span
@@ -156,10 +158,16 @@ export default function Signup() {
                                     </span>
                                 </>
                             ) : (
-                                <Input {...input} register={register} />
+                                <Input {...input} register={register} className="form-control" />
                             )}
+
                             <label htmlFor={input.id}>{input.label}</label>
-                            {errors[input.name] && <InputError error={errors[input.name]} />}
+
+                            {errors[input.name] && (
+                                <div className={style.errorContainer}>
+                                    <InputError error={errors[input.name]} />
+                                </div>
+                            )}
                         </div>
                     ))}
 
