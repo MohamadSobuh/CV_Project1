@@ -1,41 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import style from "./Notification.module.css";
+import { useEffect } from "react";
 
-const Notification = ({ show: showProp, text, type = "success" }) => {
-  const [show, setShow] = useState(false);
-  const [localText, setLocalText] = useState("");
-  const [localType, setLocalType] = useState("success");
+import { notify } from "../../utils/toast";
 
-  useEffect(() => {
-    if (showProp !== undefined) {
-      setShow(showProp);
-      if (text) {
-        setLocalText(text);
-        setLocalType(type);
-      }
-    } else if (text) {
-      setLocalText(text);
-      setLocalType(type);
-      setShow(true);
+export default function Notification({ show = true, text, type = "success" }) {
+    useEffect(() => {
+        if (!show || !text) return;
 
-      const timer = setTimeout(() => {
-        setShow(false);
-      }, 3000);
+        notify(text, type, {
+            toastId: `notification-${type}-${text}`,
+        });
+    }, [show, text, type]);
 
-      return () => clearTimeout(timer);
-    }
-  }, [showProp, text, type]);
-
-  return (
-    <div className={`${style['message-box']} ${show ? style.show : ''} ${style[localType]}`}>
-      <div className={style['message-icon']}>
-        {localType === 'success' ? '✓' : '✗'}
-      </div>
-      <div className={style['message-text']}>
-        {localText}
-      </div>
-    </div>
-  );
-};
-
-export default Notification;
+    return null;
+}

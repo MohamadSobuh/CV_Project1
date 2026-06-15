@@ -9,37 +9,12 @@ import TopicList from "./TopicList";
 import TaskList from "./TaskList";
 import { useUserFlow } from '../../context/UserFlowContext';
 import axios from "axios";
+import api from '../../utils/axios';
 
 
 export default function Plan({ language }) {
     const [planData, setPlanData] = useState([
-        {
-         id: 1, title: 'HTML & CSS', difficulty: 'Easy',
-            description: 'Explanation of the topic as a general idea 1',
-            tasks: [
-                { id: 101, title: 'Task#1 Name', status: 'completed', quizScore: 80 },
-                { id: 102, title: 'Task#2 Name', status: 'completed', quizScore: 90 },
-                { id: 103, title: 'Task#3 Name', status: 'completed', quizScore: 100 },
-                { id: 104, title: 'Task#4 Name', status: 'pending' },
-
-            ]
-        },
-        {
-            id: 2, title: 'Java Script', difficulty: 'Medium',
-            description: 'Explanation of the topic as a general idea 2',
-            tasks: [
-                { id: 201, title: 'Task#1 Name', status: 'completed', quizScore: 100 },
-                { id: 202, title: 'Task#2 Name', status: 'pending' },
-            ]
-        },
-        {
-            id: 3, title: 'React js', difficulty: 'Hard',
-            description: 'Explanation of the topic as a general idea 3',
-            tasks: [
-                { id: 301, title: 'Task#1 Name', status: 'pending' },
-                { id: 302, title: 'Task#2 Name', status: 'pending' },
-            ]
-        },
+        
     ]);
 
     const [activeTopicId, setActiveTopicId] = useState(1);
@@ -67,27 +42,39 @@ export default function Plan({ language }) {
     useEffect(() => {
         ensureAuth();
     }, []);
+
+    const fetchTaskQuiz = async (taskId) => {
+        if (!ensureAuth()) {
+            return;
+        }
+        try {
+            const response = await api.get(`/userr/task-quiz/${taskId}/`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching task quiz:", error);
+            return null;
+        }
+    };
+
+    const fetchPlan = async() => {
+
+        if (!ensureAuth()) {
+            return;
+        }
+        try{
+                const response = await api.get("/userr/personal-plan/");
+                setPlanData(response.data.planData);
+                console.log(response.data);
+            }
+        catch (error) {
+                console.log(error);
+            }
+        }
+        useEffect(() => {
+    fetchPlan();
+}, []);
+
     
-//     const fetchPlan = async() => {
-//         if (!token) {
-//             console.error("No token found, redirecting to login...");
-//             navigate("/login"); 
-//             return;
-//         }
-//         try{
-//                 const response = await axios.get("http://127.0.0.1:8000/api/userr/learning-plan/", {
-//                     headers: { Authorization: `Token ${token}` },
-//                 });
-//                 setPlanData(response.data);
-//                 console.log(response.data);
-//             }
-//         catch (error) {
-//                 console.log(error);
-//             }
-//         }
-//         useEffect(() => {
-//     fetchPlan();
-// }, []);
 
     let totalAssignedTasks = 0;
     let totalCompletedTasks = 0;

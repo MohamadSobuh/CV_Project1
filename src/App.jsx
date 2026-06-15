@@ -26,6 +26,9 @@ const SessionTimeout = lazy(() => import('./components/SessionTimeout'));
 
 import { UserFlowProvider } from './context/UserFlowContext';
 import { AdminFlowProvider } from './context/AdminFlowContext';
+import LoadingScreen from "./components/ui/LoadingScreen";
+import QuizNavigationGuard from "./components/QuizNavigationGuard";
+
 const AnalysisReport = lazy(() => import('./pages/user/AnalysisReport'));
 const AnalysisHistory = lazy(() => import('./pages/user/AnalysisHistory'));
 const TaskAssQuiz = lazy(() => import('./pages/user/TaskAssQuiz'));
@@ -44,13 +47,12 @@ const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
 const LoadingPage = lazy(() => import('./pages/user/loadingPage'));
 const TopicsPage = lazy(() => import('./pages/admin/TopicsPage'));
 const InitalAssQuiz = lazy(() => import('./pages/user/InitalAssQuiz'));
-import LoadingScreen from "./components/ui/LoadingScreen";
-
+const TaskAnswerResult = lazy(() => import("./pages/user/TaskAnswerResult"));
 
 export default function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem("language") || "en");
   const { t, i18n } = useTranslation();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(JSON.parse(localStorage.getItem("user")));
   
 
 
@@ -68,6 +70,7 @@ export default function App() {
           {/* <Sidebar language={language} />*/}
           {/* <Header language={language} setLanguage={setLanguage} /> */}
           <SessionTimeout />
+          <QuizNavigationGuard />
           <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/signup" element={<Signup />} />
@@ -99,7 +102,7 @@ export default function App() {
               <Route path='endTopic' element={<EndOfTopic language={language} />} />
               <Route path='report' element={<Report language={language} />} />
               <Route path='initalAssQuiz' element={<InitalAssQuiz language={language} />} />
-
+              <Route path='taskAnswerResult' element={<TaskAnswerResult language={language} />} />
 
 
 

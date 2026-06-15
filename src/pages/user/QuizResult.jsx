@@ -5,6 +5,7 @@ import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
 import { FaCheckCircle, FaTimesCircle, FaTrophy, FaBookOpen } from "react-icons/fa";
 import { useEffect } from "react";
+import api from "../../utils/axios";
 
 export default function QuizResult({ language }) {
     const { t, i18n } = useTranslation();
@@ -17,6 +18,13 @@ export default function QuizResult({ language }) {
     const mode = state?.mode;
     const isTask = mode === "task";
     const passed = score >= 80;
+    const selectedField = state?.selectedField;
+    const skillsResults = state?.skillsResults || [];
+
+    console.log("Quiz result data:", skillsResults);
+
+    const finalWeaknesses = skillsResults?.filter(skill => skill.passed === false) 
+    console.log("Final weaknesses:", finalWeaknesses);
 
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
@@ -33,8 +41,22 @@ export default function QuizResult({ language }) {
         return true;
     }
 
+    const genaratePlan = async() => {
+        if(!ensureAuth()) return;
+        
+        try{ 
+            const response = await api.post(`/userr/create-learning-plan/`,{"field": selectedField,"weaknesses": finalWeaknesses
+});
+            console.log(response.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         ensureAuth();
+        genaratePlan();
     }, []);
     return (
         <div className={language === 'ar' ? style.quizResultAr : style.quizResultEn}>

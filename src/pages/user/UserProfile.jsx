@@ -102,6 +102,13 @@ export default function UserProfile({ t, language }) {
                         <label className={style.text}><b>{t('fieldLabel')}</b></label>
                         <div className="form-control bg-light">{userProfile.field}</div>
                     </div>
+
+                    <div className="form-group mt-3">
+                        <label className={style.text}><b>{t('bio', 'Bio')}</b></label>
+                        <div className="form-control bg-light text-wrap" style={{ minHeight: "76px" }}>
+                            {userProfile.bio || t('noBio', 'No bio added yet.')}
+                        </div>
+                    </div>
                 </form>
 
                 <Link to="edit" className="alert alert-info w-100 mt-4 p-2 d-flex align-items-center justify-content-center text-decoration-none">

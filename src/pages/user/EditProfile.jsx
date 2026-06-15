@@ -22,6 +22,7 @@ export default function EditProfile({ t, language }) {
             lastname: "",
             email: "",
             field: "",
+            bio: "",
             password: ""
         }
     });
@@ -54,6 +55,7 @@ export default function EditProfile({ t, language }) {
                 lastname: response.data.lastname || "",
                 email: response.data.email || "",
                 field: response.data.field || "Artificial Intelligence",
+                bio: response.data.bio || "",
                 password: ""
             });
             setImage(response.data.image || "");
@@ -73,6 +75,7 @@ export default function EditProfile({ t, language }) {
                 lastname: user.lastname || "",
                 email: user.email || "",
                 field: user.field || "Artificial Intelligence",
+                bio: user.bio || "",
                 password: ""
             });
             setImage(user.image || "");
@@ -135,6 +138,7 @@ export default function EditProfile({ t, language }) {
             formData.append("lastname", data.lastname || "");
             formData.append("email", data.email || "");
             formData.append("field", data.field || "");
+            formData.append("bio", data.bio || "");
             if (imageFile) {
                 formData.append("image", imageFile);
             }
@@ -240,6 +244,18 @@ export default function EditProfile({ t, language }) {
 
                         </select>
                         {errors.field && <InputError error={errors.field} />}
+                    </div>
+
+                    <div className='form-group mb-3'>
+                        <label className={style.text}><b>{t('bio', 'Bio')}</b></label>
+                        <textarea
+                            {...register('bio')}
+                            className='form-control'
+                            maxLength={500}
+                            rows={4}
+                            placeholder={t('bioPlaceholder', 'Tell us a little about yourself')}
+                        />
+                        {errors.bio && <InputError error={errors.bio} />}
                     </div>
 
                     <div className='form-group mb-3'>

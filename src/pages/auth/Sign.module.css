@@ -74,6 +74,38 @@
     background: linear-gradient(to right, #082F43, #1A83A8, #a0d8dd);
 }
 
+.divider {
+    align-items: center;
+    color: #6c757d;
+    display: flex;
+    font-size: 0.85rem;
+    gap: 12px;
+    margin: 18px 0;
+    width: 100%;
+}
+
+.divider::before,
+.divider::after {
+    background: #d7e3e8;
+    content: "";
+    flex: 1;
+    height: 1px;
+}
+
+.googleButton {
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+}
+
+.googleNotConfigured {
+    color: #6c757d;
+    font-size: 0.8rem;
+    margin: 0;
+    text-align: center;
+}
+
 .bgGrid {
     position: fixed;
     inset: 0;
@@ -86,7 +118,8 @@
 }
 
 .bg {
-    height: 100vh;
+    min-height: 100vh;
+    padding: 24px 0;
     display: flex;
     color: #082F43;
     display: flex;
@@ -99,7 +132,7 @@
 }
 
 .left {
-    width: 30%;
+    width: min(520px, calc(100% - 32px));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -173,4 +206,47 @@
     .left form {
         width: 80%;
     }
+}
+
+.signupProfile {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.signupAvatar {
+    border: 2px solid #1a83a8;
+    border-radius: 50%;
+    height: 76px;
+    object-fit: cover;
+    width: 76px;
+}
+
+.imagePicker {
+    background: #e6f7f9;
+    border: 1px solid #1a83a8;
+    border-radius: 10px;
+    color: #1a83a8;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.imagePicker input {
+    display: none;
+}
+
+.bioField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.bioField textarea {
+    border: 1px solid #1a83a8;
+    border-radius: 15px;
+    min-height: 90px;
+    padding: 12px;
+    resize: vertical;
 }

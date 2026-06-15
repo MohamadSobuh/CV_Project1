@@ -3,7 +3,6 @@ import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/ui/Input";
 import InputError from "../../components/ui/InputError";
@@ -12,13 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react"; import Notification from "../../components/ui/Notification";
+import { useState } from "react";
+import profileImg from "../../images/profileImg.png";
+import { notify } from "../../utils/toast";
 
 export default function Signup() {
     const location = useLocation();
     const language = location.state?.language || "en";
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
+    const [imagePreview, setImagePreview] = useState(profileImg);
 
     const inputs = [
         {
@@ -51,12 +53,20 @@ export default function Signup() {
         }
     ];
     const navigate = useNavigate();
-    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchema)
     });
 
     const submitForm = async (data) => {
-        const payload = { ...data, role: 'user' };
+        const payload = new FormData();
+        payload.append("first_name", data.first_name);
+        payload.append("last_name", data.last_name);
+        payload.append("email", data.email);
+        payload.append("password", data.password);
+        payload.append("bio", data.bio || "");
+        if (data.image) {
+            payload.append("image", data.image);
+        }
 
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/users/register/", payload);
@@ -87,7 +97,22 @@ export default function Signup() {
                 }
             }
             console.error("Error details:", error.response?.data);
+            notify(t("signupFailed", "Unable to create your account."), "error");
         }
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            notify(t("imageRequired", "Please choose an image file."), "error");
+            event.target.value = "";
+            return;
+        }
+
+        setValue("image", file);
+        setImagePreview(URL.createObjectURL(file));
     };
     const handlePasswordStrength = (e) => {
         const val = e.target.value;
@@ -121,6 +146,13 @@ export default function Signup() {
                 <h3 ><b>{t('signupTitle')}</b></h3>
                 <br />
                 <form onSubmit={handleSubmit(submitForm)} >
+                    <div className={style.signupProfile}>
+                        <img src={imagePreview} alt="Profile preview" className={style.signupAvatar} />
+                        <label className={style.imagePicker}>
+                            {t("chooseProfileImage", "Choose profile image")}
+                            <input type="file" accept="image/*" onChange={handleImageChange} />
+                        </label>
+                    </div>
 
                     <div className="row">
                         {inputs.slice(0, 2).map((input) => (
@@ -170,6 +202,16 @@ export default function Signup() {
                             )}
                         </div>
                     ))}
+
+                    <div className={style.bioField}>
+                        <label htmlFor="bio">{t("bio", "Bio")}</label>
+                        <textarea
+                            id="bio"
+                            maxLength={500}
+                            placeholder={t("bioPlaceholder", "Tell us a little about yourself")}
+                            {...register("bio")}
+                        />
+                    </div>
 
                     <button type="submit" className={`${style.btn}`}> <b>{t('signup')}</b>  </button>
                 </form>

@@ -6,9 +6,19 @@ import './i18n'; // added i18n
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { BrowserRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './styles/toast.css'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <App />
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      newestOnTop
+      pauseOnFocusLoss
+      theme="light"
+    />
   </BrowserRouter>,
 )

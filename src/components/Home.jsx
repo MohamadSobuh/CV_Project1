@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import lightLogo from "../images/lightLogo.png";
 import darklogo from "../images/darklogo.png";
 import { useTranslation } from "react-i18next";
 
@@ -10,16 +9,17 @@ import axios from 'axios';
 import Hero from "./Hero";
 import WhyCVison from './WhyCVison';
 import { FaBars, FaTimes } from "react-icons/fa";
+import { notify } from "../utils/toast";
 
 export default function Home({ language, setLanguage }) {
     const [email, setEmail] = useState("");
     const handleSubscribe = (e) => {
         e.preventDefault();
-        alert("Thank you for subscribing!");
+        notify("Thank you for subscribing!");
     };
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
 
     useEffect(() => {

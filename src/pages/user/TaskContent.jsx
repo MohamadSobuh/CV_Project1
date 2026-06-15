@@ -107,7 +107,8 @@ export default function TaskContent({ language }) {
                 </button>
                 <button className={styles.navButtonRight} onClick={() => navigate('/user/quiz', {
                     state: {
-                        mode: "task"
+                        mode: "task",
+                        activeTask,
                     }
                 })}>
                     <span>{t('goToQuiz')}</span>

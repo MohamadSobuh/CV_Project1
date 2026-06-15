@@ -1,26 +1,34 @@
-import React, { useState ,useEffect} from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import style from "./TaskAssQuiz.module.css";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
+import useQuizNavigationLock from "../../hooks/useQuizNavigationLock";
+import { confirmToast, notify } from "../../utils/toast";
 
 
 export default function InitalAssQuiz({ language }) {
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
-    const { user } = useUserFlow();
+    const unlockQuizNavigation = useQuizNavigationLock();
+    const { t } = useTranslation();
 
 
 
     const { state } = useLocation();
-    const weaknesses = state?.weaknesses || [];
+    const weaknesses = useMemo(
+        () => state?.weaknesses?.map(w => w.skill) || [],
+        [state?.weaknesses],
+    );
     const [question, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const selectedField = state?.selectedField;
     console.log(weaknesses);
-    
-    const ensureAuth = () => {
+
+
+
+    const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         if (!token || token === "undefined") {
             navigate("/login", {
@@ -32,12 +40,12 @@ export default function InitalAssQuiz({ language }) {
             return false;
         }
         return true;
-    };
-    const fetchQuestions = async (weaknesses) => {
+    }, [language, navigate]);
+    const fetchQuestions = useCallback(async (weaknessSkills) => {
         if (!ensureAuth()) return [];
         try {
-            const response = await api.post('/userr/quiz/start-weakness/', { 
-                weakness_skills: weaknesses
+            const response = await api.post('/userr/quiz/start-weakness/', {
+                weakness_skills: weaknessSkills
              });
             console.log(response.data);
             return response.data;
@@ -45,18 +53,18 @@ export default function InitalAssQuiz({ language }) {
             console.error('Error fetching questions:', error);
             return [];
         }
-    };
+    }, [ensureAuth]);
     useEffect(() => {
         fetchQuestions(weaknesses).then((data) => {
             setQuestions(data || []);
             setLoading(false);
         });
-    }, []);
+    }, [fetchQuestions, weaknesses]);
 
-    
 
-    
- 
+
+
+
     // const weaknesses = [...new Set(questions.map(q => q.skill))];
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState({});
@@ -92,6 +100,20 @@ export default function InitalAssQuiz({ language }) {
         }
     };
 
+    const handleExit = async () => {
+        const shouldExit = await confirmToast(
+            t('exitQuizConfirm', 'Exit the assessment? Your answers will be lost.'),
+            {
+                confirmText: t('exitQuiz', 'Exit quiz'),
+                cancelText: t('cancel', 'Cancel'),
+            },
+        );
+        if (!shouldExit) return;
+
+        unlockQuizNavigation();
+        navigate("/user/dashboard", { replace: true });
+    };
+
     const { setPlacementScore } = useUserFlow();
 
     //هون في تعديلات عشان في mark
@@ -125,19 +147,29 @@ export default function InitalAssQuiz({ language }) {
             console.log(resultData.passed);
             console.log(resultData.skills_results);
 
+
+
+
             // التوجيه لصفحة النتيجة مع تمرير كافة التفاصيل العائدة من السيرفر
+            unlockQuizNavigation();
             navigate('/user/quizResult', {
                 state: {
                     score: resultData.score_percentage,
                     passed: resultData.passed,
                     skillsResults: resultData.skills_results,
-                    mode: "initial"
+                    mode: "initial",
+                    selectedField
                 }
             });
 
         } catch (error) {
             console.error('Error submitting quiz answers:', error);
-            alert(language === 'ar' ? 'حدث خطأ أثناء إرسال إجابات الاختبار.' : 'An error occurred while submitting the quiz.');
+            notify(
+                language === 'ar'
+                    ? 'حدث خطأ أثناء إرسال إجابات الاختبار.'
+                    : 'An error occurred while submitting the quiz.',
+                'error',
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -151,7 +183,7 @@ export default function InitalAssQuiz({ language }) {
         );
     }
 
-    if (!question || question.questions.length === 0) {
+    if (!question || question.questions?.length === 0) {
         return (
             <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz}>
                 <div className={style.bgGrid} />
@@ -164,16 +196,18 @@ export default function InitalAssQuiz({ language }) {
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >
             <div className={style.bgGrid} />
 
-            <h1>
-                <b>
-                    {t('titleQuizPage')}
-                </b>
-            </h1>
+            <main className={style.quizShell}>
+                <div className={style.quizHeader}>
+                    <h1><b>{t('titleQuizPage')}</b></h1>
+                    <button type="button" className={style.exitButton} onClick={handleExit}>
+                        <FaTimes /> {t('exitQuiz', 'Exit quiz')}
+                    </button>
+                </div>
 
-            <div className="row">
-                <div className={`col-md-8 ${style.qA}`}>
-                    <h5>{currentQuestion.question}</h5>
-                    {currentQuestion.options.map((opt) => (
+                <div className={style.quizContent}>
+                <div className={style.qA}>
+                    <h5>{currentQuestion?.question}</h5>
+                    {currentQuestion?.options.map((opt) => (
                         <label key={opt.id} className={style.option}>
                             <input
                                 type="radio"
@@ -193,7 +227,7 @@ export default function InitalAssQuiz({ language }) {
                     </div>
                 </div>
 
-                <div className={`col-md-3 ${style.qCard}`}>
+                <div className={style.qCard}>
                     <p><b>{t('questionsCard')}</b></p>
                     {question.questions?.map((q, index) => {
             const isCurrent = index === current;
@@ -248,6 +282,7 @@ export default function InitalAssQuiz({ language }) {
                     </div>
                 </div>
             </div>
+            </main>
         </div>
     );
 }

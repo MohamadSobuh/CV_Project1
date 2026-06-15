@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 import style from "./TaskAssQuiz.module.css";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
-
+import api from "../../utils/axios";
+import useQuizNavigationLock from "../../hooks/useQuizNavigationLock";
+import { confirmToast } from "../../utils/toast";
 
 export default function TaskAssQuiz({ language }) {
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
-    const { user } = useUserFlow();
+    const unlockQuizNavigation = useQuizNavigationLock();
+    const { t } = useTranslation();
 
     const { state } = useLocation();
     const mode = state?.mode;
+    const activeTask = state?.activeTask;
 
-    const questions = [
+    const initialQuestions = [
         {
             id: 1,
             question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit .?",
@@ -27,81 +29,56 @@ export default function TaskAssQuiz({ language }) {
             ],
             mark: 10,
             skill: "JavaScript"
-        },
-        {
-            id: 2,
-            question: "Which hook is used to manage state?",
-            correctAnswer: "B",
-            options: [
-                { id: "A", text: "useEffect" },
-                { id: "B", text: "useState" },
-                { id: "C", text: "useMemo" },
-                { id: "D", text: "useRef" }
-            ],
-            mark: 10,
-            skill: "JavaScript"
-        },
-        {
-            id: 3,
-            question: "Which hook is used to manage state?",
-            correctAnswer: "B",
-            options: [
-                { id: "A", text: "useEffect" },
-                { id: "B", text: "useState" },
-                { id: "C", text: "useMemo" },
-                { id: "D", text: "useRef" }
-            ]
-            , mark: 10,
-            skill: "JavaScript"
-        },
-        {
-            id: 4,
-            question: "Which hook is used to manage state?",
-            correctAnswer: "B",
-            options: [
-                { id: "A", text: "useEffect" },
-                { id: "B", text: "useState" },
-                { id: "C", text: "useMemo" },
-                { id: "D", text: "useRef" }
-            ],
-            mark: 10,
-            skill: "JavaScript"
-        },
-        {
-            id: 5,
-            question: "Which hook is used to manage state?",
-            correctAnswer: "B",
-            options: [
-                { id: "A", text: "useEffect" },
-                { id: "B", text: "useState" },
-                { id: "C", text: "useMemo" },
-                { id: "D", text: "useRef" }
-            ],
-            mark: 10,
-            skill: "JavaScript"
         }
     ];
 
-    /* رح نستخدم هدول بالربط بدل الاسئلة الفيك 
-    const { state } = useLocation();
-    const weaknesses = state?.weaknesses || [];
-    const [question, setQuestions] = useState([]);
-    useEffect(() => {
-    
-        fetchQuestions(weaknesses).then(setQuestions);
-    }, []);
- */
-
-    const weaknesses = [...new Set(questions.map(q => q.skill))];
+    const [questions, setQuestions] = useState(initialQuestions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState({});
 
-    const answeredCount = Object.keys(answers).length;
-    const progress = (answeredCount / questions.length) * 100;
+    const ensureAuth = useCallback(() => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("userRole");
+        if (!token || token === "undefined" || role !== "user") {
+            navigate("/login", {
+                state: {
+                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
+                    type: "error"
+                }
+            });
+            return false;
+        }
+        return true;
+    }, [navigate, language]);
 
-    const currentQuestion = questions[current];
+    // جلب بيانات الكويز الفعلي من الباك إند
+    useEffect(() => {
+        if (!activeTask?.id) return;
+        const load = async () => {
+            if (!ensureAuth()) return;
+            try {
+                const response = await api.post(`/userr/quiz/start-task/${activeTask.id}/`);
+                const data = response.data;
+                console.log("Fetched task quiz data:", data);
+
+                if (data && data.questions && Array.isArray(data.questions)) {
+                    setQuestions(data.questions);
+                } else if (Array.isArray(data)) {
+                    setQuestions(data);
+                }
+            } catch (error) {
+                console.error("Error fetching task quiz:", error);
+            }
+        };
+        load();
+    }, [activeTask?.id, ensureAuth]);
+
+    const answeredCount = Object.keys(answers).length;
+    const progress = questions.length ? (answeredCount / questions.length) * 100 : 0;
+    const currentQuestion = questions && questions.length ? questions[current] : null;
 
     const handleSelect = (optionId) => {
+        if (!currentQuestion) return;
         setAnswers({
             ...answers,
             [currentQuestion.id]: optionId
@@ -120,47 +97,68 @@ export default function TaskAssQuiz({ language }) {
         }
     };
 
-    const { setPlacementScore } = useUserFlow();
+    const handleExit = async () => {
+        const shouldExit = await confirmToast(
+            t('exitQuizConfirm', 'Exit the quiz? Your answers will be lost.'),
+            {
+                confirmText: t('exitQuiz', 'Exit quiz'),
+                cancelText: t('cancel', 'Cancel'),
+            },
+        );
+        if (!shouldExit) return;
 
-    function handleFinish() {
-        let totalMarks = 0;
-        let earnedMarks = 0;
+        unlockQuizNavigation();
+        navigate("/user/dashboard", { replace: true });
+    };
 
-        questions.forEach(question => {
-            totalMarks += question.mark;
+    // 🟢 تم الإبقاء على نسخة واحدة فقط مرتبطة بالباك إند وتعمل بشكل سليم
+    const handleFinish = async () => {
+        const formattedAnswers = Object.keys(answers).map(qId => ({
+            question_id: parseInt(qId),
+            selected_answer: answers[qId]
+        }));
 
-            if (answers[question.id] === question.correctAnswer) {
-                earnedMarks += question.mark;
-            }
-        });
+        const questionIds = questions.map(q => q.id);
 
-        const percentage = (earnedMarks / totalMarks) * 100;
+        try {
+            const response = await api.post(`/userr/quiz/submit-task/${activeTask.id}/`, {
+                question_ids: questionIds,
+                answers: formattedAnswers
+            });
 
-        setPlacementScore(percentage);
+            const resultData = response.data;
+            console.log("Quiz submit response:", resultData);
 
-        navigate('/user/quizResult', {
-            state: {
-                score: percentage,
-                mode, 
-            }
-        });
-    }
+            unlockQuizNavigation();
+            navigate('/user/TaskAnswerResult', {
+                state: {
+                    score: resultData.score_percentage,
+                    passed: resultData.passed,
+                    results: resultData.results_per_question,
+                }
+            });
+
+        } catch (error) {
+            console.error("حدث خطأ أثناء تسليم الكويز:", error.response?.data);
+        }
+    };
+
     return (
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >
             <div className={style.bgGrid} />
 
-            <h1>
-                <b>
-                    {mode === "task"
-                        ? t('taskQuiz')
-                        : t('titleQuizPage')}
-                </b>
-            </h1>
+            <main className={style.quizShell}>
+                <div className={style.quizHeader}>
+                    <h1><b>{mode === "task" ? t('taskQuiz') : t('titleQuizPage')}</b></h1>
+                    <button type="button" className={style.exitButton} onClick={handleExit}>
+                        <FaTimes /> {t('exitQuiz', 'Exit quiz')}
+                    </button>
+                </div>
 
-            <div className="row">
-                <div className={`col-md-8 ${style.qA}`}>
-                    <h5>{currentQuestion.question}</h5>
-                    {currentQuestion.options.map((opt) => (
+                <div className={style.quizContent}>
+                <div className={style.qA}>
+                    <h5>{currentQuestion ? (currentQuestion.question || currentQuestion.question_text) : t('loading')}</h5>
+                    {currentQuestion && currentQuestion.options && currentQuestion.options.map((opt) => (
                         <label key={opt.id} className={style.option}>
                             <input
                                 type="radio"
@@ -170,7 +168,8 @@ export default function TaskAssQuiz({ language }) {
                                 onChange={() => handleSelect(opt.id)}
                             />
                             <span className={style.newRadio}></span>
-                            <span className={style.text}>{opt.text}</span>
+                            {/* تأمين قراءة حقل النص بأي شكل قادم من السيرفر */}
+                            <span className={style.text}>{opt.text || opt.answer || opt.option_text}</span>
                         </label>
                     ))}
 
@@ -180,16 +179,16 @@ export default function TaskAssQuiz({ language }) {
                     </div>
                 </div>
 
-                <div className={`col-md-3 ${style.qCard}`}>
+                <div className={style.qCard}>
                     <p><b>{t('questionsCard')}</b></p>
-                    {questions.map((q, index) => (
+                    {questions && questions.map((q, index) => (
                         <div
                             key={q.id}
                             className={`
-            ${style.qItem}
-            ${index === current ? style.active : ""}
-            ${answers[q.id] ? style.answeredQ : ""}
-        `}
+                                ${style.qItem}
+                                ${index === current ? style.active : ""}
+                                ${answers[q.id] ? style.answeredQ : ""}
+                            `}
                             onClick={() => setCurrent(index)}
                         >
                             {index + 1}
@@ -219,11 +218,13 @@ export default function TaskAssQuiz({ language }) {
                         <p>{t('notAnswered')}</p>
                     </div>
 
-                    <div className={style.submitContainer} onClick={handleFinish}>
-                        <button className={style.submit} > {t('finish')} </button>
+                    {/* 🟢 تم تعديل سطر الـ onClick هنا لحذف الأقواس المستدعاة فوراً */}
+                    <div className={style.submitContainer}>
+                        <button className={style.submit} onClick={handleFinish}> {t('finish')} </button>
                     </div>
                 </div>
             </div>
+            </main>
         </div>
     );
 }

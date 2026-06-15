@@ -14,6 +14,7 @@ export default function AnalysisReport({ language }) {
     const { state } = useLocation();
     const isNew = state?.mode === "new";
     const score = state?.score;
+    const selectedField = state?.selectedField;
     const navigate = useNavigate();
         console.log("cvId",cvId);
     const {user } = useUserFlow();
@@ -102,8 +103,7 @@ export default function AnalysisReport({ language }) {
                         {strengthsList.map((item) => (
                             <div className={style.strengthStyle}>
                                <b>{typeof item === 'object' ? (item.skill || item.title || "Skill") : item}</b>
-                                <p>{typeof item === 'object' ? item.description : ''}</p>
-                                {/* <p>{item.description}</p> */}
+                                <p>{typeof item === 'object' ? item.matched_text : ''}</p>
                             </div>
                         ))}
                     </div>
@@ -119,8 +119,7 @@ export default function AnalysisReport({ language }) {
                         {weaknessesList.map((item) => (
                             <div className={style.weakStyle}>
                                <b>{typeof item === 'object' ? (item.skill || item.title || "Skill") : item}</b>
-                                <p>{typeof item === 'object' ? item.description : ''}</p>
-                                {/* <p>{item.description}</p> */}
+                               <p>{typeof item === 'object' ? item.reason : ''}</p>
                             </div>
                         ))}
 
@@ -140,7 +139,8 @@ export default function AnalysisReport({ language }) {
                 <button className={style.startAssessment} onClick={() => isNew && navigate('/user/InitalAssQuiz', {
                     state: {
                         weaknesses: analysisResult.weaknesses,
-                        mode: "assessment"
+                        mode: "assessment",
+                        selectedField
                     }
                 })} disabled={!isNew} >
 
