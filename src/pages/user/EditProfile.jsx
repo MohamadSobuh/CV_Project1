@@ -15,7 +15,7 @@ export default function EditProfile({ t, language }) {
     const { user, setUser } = useUserFlow();
     const navigate = useNavigate();
 
-    const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, setError, watch, formState: { errors } } = useForm({
         resolver: yupResolver(editProfileSchema),
         defaultValues: {
             firstname: "",
@@ -26,8 +26,10 @@ export default function EditProfile({ t, language }) {
             password: ""
         }
     });
+    
     const [image, setImage] = useState("");
     const [imageFile, setImageFile] = useState(null);
+    const profileField = watch("field");
     const fileInputRef = React.useRef(null);
 
     const ensureAuth = () => {
@@ -45,27 +47,34 @@ export default function EditProfile({ t, language }) {
         return true;
     };
 
-    const fetchProfile = async () => {
-        if (!ensureAuth()) return;
-        try {
-            const response = await api.get("/userr/profile/");
-            console.log(response.data, "response data");
-            reset({
-                firstname: response.data.firstname || "",
-                lastname: response.data.lastname || "",
-                email: response.data.email || "",
-                field: response.data.field || "Artificial Intelligence",
-                bio: response.data.bio || "",
-                password: ""
-            });
-            setImage(response.data.image || "");
-        } catch (error) {
-            console.error("Error fetching profile:", error);
-        }
-    }
-
     useEffect(() => {
+        let isMounted = true;
+
+        const fetchProfile = async () => {
+            if (!ensureAuth()) return;
+            try {
+                const response = await api.get("/userr/profile/");
+                if (!isMounted) return;
+                console.log(response.data, "response data");
+                reset({
+                    firstname: response.data.firstname || "",
+                    lastname: response.data.lastname || "",
+                    email: response.data.email || "",
+                    field: response.data.field || "",
+                    bio: response.data.bio || "",
+                    password: ""
+                });
+                setImage(response.data.image || "");
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+
         fetchProfile();
+
+        return () => {
+            isMounted = false;
+        };
     }, [reset]);
 
     useEffect(() => {
@@ -74,7 +83,7 @@ export default function EditProfile({ t, language }) {
                 firstname: user.firstname || "",
                 lastname: user.lastname || "",
                 email: user.email || "",
-                field: user.field || "Artificial Intelligence",
+                field: user.field || "",
                 bio: user.bio || "",
                 password: ""
             });
@@ -137,7 +146,6 @@ export default function EditProfile({ t, language }) {
             formData.append("firstname", data.firstname || "");
             formData.append("lastname", data.lastname || "");
             formData.append("email", data.email || "");
-            formData.append("field", data.field || "");
             formData.append("bio", data.bio || "");
             if (imageFile) {
                 formData.append("image", imageFile);
@@ -236,14 +244,16 @@ export default function EditProfile({ t, language }) {
 
                     <div className='form-group mb-3'>
                         <label className={style.text}><b>{t('fieldLabel')}</b></label>
-                        <select {...register('field')} className='form-control'>
-                            <option value="Artificial Intelligence">Artificial Intelligence</option>
-                            <option value="Front-end Development">Front-end Development</option>
-                            <option value="Back-end Development">Back-end Development</option>
-                            <option value="Full-Stack">Full-Stack</option>
-
-                        </select>
-                        {errors.field && <InputError error={errors.field} />}
+                        <input
+                            type="text"
+                            className='form-control bg-light'
+                            value={profileField || "Not selected yet"}
+                            disabled
+                            readOnly
+                        />
+                        <small className="text-muted">
+                            {t('fieldManagedByCv', 'This field is updated when you upload a CV and choose a target field.')}
+                        </small>
                     </div>
 
                     <div className='form-group mb-3'>
