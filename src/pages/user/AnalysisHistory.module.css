@@ -98,6 +98,35 @@
   background-color: #14607a;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.usePlanBtn {
+  border: 1px solid #1A83A8;
+  border-radius: 20px;
+  padding: 8px 16px;
+  background-color: white;
+  color: #1A83A8;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usePlanBtn:hover:not(:disabled) {
+  background-color: #E6F7F9;
+}
+
+.usePlanBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;

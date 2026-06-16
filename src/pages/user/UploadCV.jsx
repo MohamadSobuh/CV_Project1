@@ -17,16 +17,11 @@ export default function UploadCV({ language }) {
     const [isLoading, setIsLoading] = useState(false);
     const { setCvId } = useUserFlow();
     const navigate = useNavigate();
-    const { user } = useUserFlow();
     const fileInputRef = useRef(null);
     useEffect(() => {
-        const data = [
-            { id: 1, name: "Front-end Development" },
-            { id: 2, name: "Back-end Development" },
-            { id: 3, name: "Full Stack" }
-        ];
-
-        setFields(data);
+        api.get('/userr/fields/')
+            .then((response) => setFields(response.data || []))
+            .catch(() => setError("Could not load target fields"));
     }, []);
     const ensureAuth = () => {
         const token = localStorage.getItem("accessToken");
@@ -93,7 +88,7 @@ export default function UploadCV({ language }) {
 
             const response = await api.post('userr/upload-cv/', formData,{
                 headers: {
-        'Content-Type': 'multipart/form-data' // 🍏 تضمن تفكيك الملف كـ Binary بشكل سليم في Django
+        'Content-Type': 'multipart/form-data' 
     }
             });
             setCvId(response.data.cv_id);
@@ -105,7 +100,8 @@ export default function UploadCV({ language }) {
                 state: {
                     mode: "new",
                     fileName: file.name,
-                    selectedField
+                    selectedField,
+                    cvId: response.data.cv_id
                 }
             });
 

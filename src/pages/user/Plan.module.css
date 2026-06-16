@@ -33,6 +33,7 @@
     display: inline-block;
     margin-bottom: 20px;
 }
+
 .planTitle {
     font-size: 2rem;
     font-weight: bold;
@@ -44,6 +45,18 @@
 .planSubtitle {
     font-size: 0.95rem;
     margin-bottom: 30px;
+}
+
+.cvSourceLabel {
+    color: #1A83A8;
+    background-color: white;
+    border-inline-start: 4px solid #1A83A8;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: fit-content;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    margin-bottom: 14px;
 }
 
 .overallProgressContainer {

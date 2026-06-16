@@ -1,47 +1,71 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import style from "./AddTopics.module.css";
 import AdminInput from "../../components/ui/AdminInput";
 import InputError from "../../components/ui/InputError";
 import { topicSchema } from "../../utils/validationSchema";
+import api from "../../utils/axios";
+
 
 
 const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(topicSchema)
     });
-    console.log("Form Data:", formData);
-
+    const [fields, setFields] = useState([]);
     useEffect(() => {
         if (formData?.id) {
-            reset(formData);
+            const selectedFieldId =
+                formData.learning_plan ||
+                formData.learning_plan_id ||
+                fields.find((field) => field.name === formData.category)?.id ||
+                "";
+
+            reset({
+                ...formData,
+                learning_plan: selectedFieldId,
+                difficulty: formData.difficulty?.toLowerCase() || "",
+            });
         } else {
             reset();
         }
-    }, [formData?.id, reset]);
+    }, [fields, formData, reset]);
+
+    useEffect(() => {
+        const fetchAdminPlans = async () => {
+            try {
+                const response = await api.get('/dashboard/learning-plans/');
+                setFields(response.data.results || response.data);
+            } catch (error) {
+                console.error("Error fetching admin catalog plans:", error);
+            }
+        };
+
+        fetchAdminPlans();
+    }, []);
 
     const onFormSubmit = (data) => {
+        const selectedField = fields.find(
+            (field) => String(field.id) === String(data.learning_plan)
+        );
+        const payload = {
+            ...data,
+            category: selectedField?.name || formData?.category || "",
+        };
+
         if (formData?.id) {
-            handleEdit({ ...data, id: formData.id });
+            handleEdit({ ...payload, id: formData.id });
         } else {
-            console.log("Data:", data);
-            handleAdd(data);
+            handleAdd(payload);
         }
     };
-    console.log("Form Errors:", errors);
 
     const handleClose = () => {
         reset();
         onClose();
     };
-    const categories = [
 
-        { id: 1, name: "Front-end Development" },
-        { id: 2, name: "Backend Development" },
-        { id: 3, name: "Artificial Intelligence" },
-        { id: 4, name: "Full-stack Development" }
-    ];
     const difficulties = [
         { id: 1, name: "Easy" },
         { id: 2, name: "Medium" },
@@ -78,15 +102,15 @@ const AddTopicform = ({ formData = null, onClose, handleEdit, handleAdd, t }) =>
 
                     <div style={{ marginBottom: "15px" }}>
                         <label>{t('careerFieldLabel')}</label>
-                        <select {...register("category")} className={style.selectStyle} defaultValue="">
+                        <select {...register("learning_plan")} className={style.selectStyle} defaultValue="">
                             <option value="" disabled hidden>{t('selectField')}</option>
-                            {categories.map(category => (
-                                <option key={category.id} value={category.name}>
-                                    {category.name}
+                            {fields.map(field => (
+                                <option key={field.id} value={field.id}>
+                                    {field.name}
                                 </option>
                             ))}
                         </select>
-                        <InputError error={errors.category} />
+                        <InputError error={errors.learning_plan} />
                     </div>
                     <div style={{ marginBottom: "15px" }}>
                         <label>{t('difficultyLabel')}</label>

@@ -198,6 +198,29 @@
     background-color: #082F43;
 }
 
+.assessmentActions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.changeCvBtn {
+    background-color: white;
+    color: #0a546f;
+    border: 1px solid #0a546f;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.changeCvBtn:hover {
+    background-color: #E6F7F9;
+}
+
 
 .headReport {
     background-color: #082F43;

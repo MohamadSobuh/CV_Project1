@@ -4,7 +4,10 @@ import Header from "./Header";
 
 export default function UserLayout({ user, language, setLanguage }) {
     const { pathname } = useLocation();
-    const isQuizActive = pathname === "/user/initalAssQuiz" || pathname === "/user/quiz";
+    const normalizedPath = pathname.toLowerCase();
+    const isQuizActive =
+        normalizedPath.startsWith("/user/initalassquiz") ||
+        normalizedPath.startsWith("/user/quiz");
 
     return (
         <div>

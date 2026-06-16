@@ -94,10 +94,13 @@ export default function App() {
               <Route path='loading' element={<LoadingPage language={language} />} />
 
               <Route path='analysisReport' element={<AnalysisReport language={language} />} />
+              <Route path='analysisReport/:cvId' element={<AnalysisReport language={language} />} />
               <Route path='quiz' element={<TaskAssQuiz language={language} />} />
+              <Route path='quiz/:planTaskId' element={<TaskAssQuiz language={language} />} />
               <Route path='quizResult' element={<QuizResult language={language} />} />
               <Route path='plan' element={<Plan language={language} />} />
               <Route path='task' element={<TaskContent language={language} />} />
+              <Route path='task/:planTaskId' element={<TaskContent language={language} />} />
               <Route path='endPlan' element={<EndOfPlan language={language} />} />
               <Route path='endTopic' element={<EndOfTopic language={language} />} />
               <Route path='report' element={<Report language={language} />} />

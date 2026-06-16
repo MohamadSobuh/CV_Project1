@@ -90,6 +90,6 @@ export const topicSchema = yup.object().shape({
     title: yup.string().required(i18n.t("topicTitleRequired")),
     desc: yup.string().required(i18n.t("descriptionRequired")).min(10, i18n.t("descriptionTooShort")),
     tasks: yup.number().typeError(i18n.t("mustBeNumber")).notRequired().min(0, i18n.t("tasksNegative")).integer(),
-    category: yup.string().required(i18n.t("categoryRequired")),
+    learning_plan: yup.string().required(i18n.t("categoryRequired")),
     difficulty: yup.string().required(i18n.t("difficultyRequired")),
 });

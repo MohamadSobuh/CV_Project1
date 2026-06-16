@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import style from "./TaskAssQuiz.module.css";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
 import useQuizNavigationLock from "../../hooks/useQuizNavigationLock";
@@ -13,26 +13,12 @@ export default function TaskAssQuiz({ language }) {
     const { t } = useTranslation();
 
     const { state } = useLocation();
+    const { planTaskId } = useParams();
     const mode = state?.mode;
     const activeTask = state?.activeTask;
 
-    const initialQuestions = [
-        {
-            id: 1,
-            question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit .?",
-            correctAnswer: "B",
-            options: [
-                { id: "A", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-                { id: "B", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-                { id: "C", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." },
-                { id: "D", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ." }
-            ],
-            mark: 10,
-            skill: "JavaScript"
-        }
-    ];
-
-    const [questions, setQuestions] = useState(initialQuestions);
+    const taskId = activeTask?.id || Number(planTaskId);
+    const [questions, setQuestions] = useState([]);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState({});
 
@@ -53,11 +39,11 @@ export default function TaskAssQuiz({ language }) {
 
     // جلب بيانات الكويز الفعلي من الباك إند
     useEffect(() => {
-        if (!activeTask?.id) return;
+        if (!taskId) return;
         const load = async () => {
             if (!ensureAuth()) return;
             try {
-                const response = await api.post(`/userr/quiz/start-task/${activeTask.id}/`);
+                const response = await api.post(`/userr/quiz/start-task/${taskId}/`);
                 const data = response.data;
                 console.log("Fetched task quiz data:", data);
 
@@ -71,7 +57,7 @@ export default function TaskAssQuiz({ language }) {
             }
         };
         load();
-    }, [activeTask?.id, ensureAuth]);
+    }, [taskId, ensureAuth]);
 
     const answeredCount = Object.keys(answers).length;
     const progress = questions.length ? (answeredCount / questions.length) * 100 : 0;
@@ -111,7 +97,6 @@ export default function TaskAssQuiz({ language }) {
         navigate("/user/dashboard", { replace: true });
     };
 
-    // 🟢 تم الإبقاء على نسخة واحدة فقط مرتبطة بالباك إند وتعمل بشكل سليم
     const handleFinish = async () => {
         const formattedAnswers = Object.keys(answers).map(qId => ({
             question_id: parseInt(qId),
@@ -121,7 +106,7 @@ export default function TaskAssQuiz({ language }) {
         const questionIds = questions.map(q => q.id);
 
         try {
-            const response = await api.post(`/userr/quiz/submit-task/${activeTask.id}/`, {
+            const response = await api.post(`/userr/quiz/submit-task/${taskId}/`, {
                 question_ids: questionIds,
                 answers: formattedAnswers
             });
@@ -130,11 +115,13 @@ export default function TaskAssQuiz({ language }) {
             console.log("Quiz submit response:", resultData);
 
             unlockQuizNavigation();
-            navigate('/user/TaskAnswerResult', {
+            navigate('/user/quizResult', {
                 state: {
                     score: resultData.score_percentage,
                     passed: resultData.passed,
+                    mode: "task",
                     results: resultData.results_per_question,
+                    progress: resultData.progress,
                 }
             });
 

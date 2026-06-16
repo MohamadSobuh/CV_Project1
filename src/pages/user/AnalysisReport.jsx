@@ -4,20 +4,22 @@ import { useTranslation } from "react-i18next";
 
 import CircularScore from '../../components/ui/CircularScore';
 import { useUserFlow } from '../../context/UserFlowContext';
-import { FaCheckCircle, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FaCheckCircle, FaExchangeAlt, FaExclamationCircle, FaLightbulb } from "react-icons/fa";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import api from '../../utils/axios';
 
 
 export default function AnalysisReport({ language }) {
-    const { analysisResult, setAnalysisResult, targetField, placementScore ,cvId} = useUserFlow();
+    const { analysisResult, setAnalysisResult, placementScore, cvId: contextCvId } = useUserFlow();
+    const { cvId: routeCvId } = useParams();
+    const cvId = routeCvId || contextCvId;
     const { state } = useLocation();
+    const [searchParams] = useSearchParams();
+    const source = state?.source || searchParams.get("source");
     const isNew = state?.mode === "new";
-    const score = state?.score;
     const selectedField = state?.selectedField;
     const navigate = useNavigate();
         console.log("cvId",cvId);
-    const {user } = useUserFlow();
 
 
     const ensureAuth = () => {
@@ -39,7 +41,9 @@ export default function AnalysisReport({ language }) {
         if(!ensureAuth()) return;
         
         try{
-            const response = await api.get(`/userr/analysis-report/${cvId}/`);
+            const response = await api.get(`/userr/analysis-report/${cvId}/`, {
+                params: source ? { source } : {}
+            });
             setAnalysisResult(response.data);
             console.log(response.data);
         }
@@ -51,7 +55,7 @@ export default function AnalysisReport({ language }) {
 
     useEffect(() => {
         fetchAnalysisResult();
-    }, []);
+    }, [cvId, source]);
 
     function getScoreDes(score) {
         if (score < 50) return "Needs Improvement";
@@ -65,7 +69,7 @@ export default function AnalysisReport({ language }) {
         return "#84f4a8";
     }
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
 
     const strengthsList = analysisResult?.strengths || [];
@@ -136,18 +140,22 @@ export default function AnalysisReport({ language }) {
                     : <> <h2>{t('readyToValidateF')}</h2>
                         <p>{t('TakeAdaptiveQuizF')}</p></>}
 
-                <button className={style.startAssessment} onClick={() => isNew && navigate('/user/InitalAssQuiz', {
-                    state: {
-                        weaknesses: analysisResult.weaknesses,
-                        mode: "assessment",
-                        selectedField
-                    }
-                })} disabled={!isNew} >
+                <div className={style.assessmentActions}>
+                    <button className={style.startAssessment} onClick={() => isNew && navigate('/user/InitalAssQuiz', {
+                        state: {
+                            weaknesses: analysisResult.weaknesses,
+                            mode: "assessment",
+                            selectedField: analysisResult.field || selectedField,
+                            cvId
+                        }
+                    })} disabled={!isNew} >
 
-                    {isNew
-                        ? t('startQuiz')
-                        : `Your Quiz Score: ${placementScore || 0}%`}
-                </button>
+                        {isNew
+                            ? t('startQuiz')
+                            : `Your Quiz Score: ${placementScore || 0}%`}
+                    </button>
+    
+                </div>
             </div>
         </div>
     )

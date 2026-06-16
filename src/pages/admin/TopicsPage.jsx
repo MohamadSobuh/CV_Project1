@@ -1,32 +1,24 @@
-import React, { useState } from 'react';
-import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect, useMemo, useState } from 'react';
 import style from "./AddTopics.module.css";
 import { useTranslation } from "react-i18next";
 
 import TopicCard from "../../components/ui/TopicCard";
-import AdminInput from "../../components/ui/AdminInput";
-import InputError from "../../components/ui/InputError";
-import { topicSchema } from "../../utils/validationSchema";
 import AddTopicform from "./AddTopicform";
 import EmptyPage from "../../components/ui/EmptyPage";
 import { FaBookOpen } from 'react-icons/fa';
-import { Outlet } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Notification from '../../components/ui/Notification';
 import api from '../../utils/axios';
 
 const TopicsPage = ({ language = 'en' }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [filterInput, setFilterInput] = useState('');
-    const [topicsFilter, setTopicsFilter] = useState([]);
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
 
     const showMessage = (text, type) => {
@@ -49,7 +41,10 @@ const TopicsPage = ({ language = 'en' }) => {
  
     useEffect(() => {
         if (location.state?.message) {
-            showMessage(location.state.message, location.state.type);
+            const timeoutId = setTimeout(() => {
+                showMessage(location.state.message, location.state.type);
+            }, 0);
+            return () => clearTimeout(timeoutId);
         }
     }, [location.state]);
  
@@ -68,13 +63,11 @@ const TopicsPage = ({ language = 'en' }) => {
     }, []);
     const handleAdd = async (newTopic) => {
         console.log(newTopic);
-        const token = localStorage.getItem("accessToken");
         const payload = {
             title: newTopic.title,
             desc: newTopic.desc,
             difficulty: newTopic.difficulty.toLowerCase(),
-            learning_plan: 5, ////////////////////////////////////////????//
-            
+            learning_plan: Number(newTopic.learning_plan),
             tasks_count: 0,
             order: 0
         }
@@ -89,8 +82,10 @@ const TopicsPage = ({ language = 'en' }) => {
             if (response.status === 201 || response.status === 200) {
                 const savedTopic = {
                     ...response.data,
-                    tasks: response.data.tasks || 0,
-                    category: response.data.category
+                    desc: response.data.desc || newTopic.desc,
+                    tasks: response.data.tasks || response.data.tasks_count || 0,
+                    category: response.data.category || newTopic.category,
+                    learning_plan: response.data.learning_plan || newTopic.learning_plan,
                 };
 
                 setTopics(prev => [savedTopic, ...prev]);
@@ -126,7 +121,7 @@ const TopicsPage = ({ language = 'en' }) => {
             desc: data.desc,
             difficulty: validatedDifficulty,
             tasks: data.tasks,
-            learning_plan: data.learning_plan || showEditModal.learning_plan
+            learning_plan: Number(data.learning_plan || showEditModal.learning_plan)
         };
         // console.log(payload);
 
@@ -153,20 +148,12 @@ const TopicsPage = ({ language = 'en' }) => {
             showMessage(language === 'ar' ? "فشل التحديث" : "Failed to update topic", "error");
         }
     };
-    const handleFilter = () => {
-        const filtered = topics.filter(topic =>
+    const topicsFilter = useMemo(() => {
+        return topics.filter(topic =>
             topic.title.toLowerCase().includes(filterInput.toLowerCase())
         );
-        setTopicsFilter(filtered);
-    };
-    useEffect(() => {
-        handleFilter();
     }, [filterInput, topics]);
-
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        resolver: yupResolver(topicSchema)
-    });
+    console.log(topicsFilter,"topics");
 
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>

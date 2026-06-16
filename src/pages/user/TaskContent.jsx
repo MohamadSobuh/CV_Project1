@@ -1,32 +1,19 @@
 import React from 'react';
-import { FiBookOpen, FiImage } from "react-icons/fi";
-import { FaPlayCircle } from "react-icons/fa";
+import { FiBookOpen } from "react-icons/fi";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import styles from './TaskContent.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect, useState } from 'react';
-import htmlFund from '../../components/media/tasks/html_fund.png';
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
+    const { planTaskId } = useParams();
     const { activeTask } = useUserFlow();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [taskData, setTaskData] = useState(null);
-    const { user } = useUserFlow();
-    console.log("activeTask", activeTask)
-
-    const testData = {
-        "lesson_number": "01",
-        "title": "HTML Fundamentals",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-        "image_url": htmlFund,
-        "video_url": "https://www.youtube.com/embed/ok-plXXHlWw",
-        "quiz_id": 5,
-        "is_completed": true
-    };
 
 
     const ensureAuth = () => {
@@ -49,17 +36,16 @@ export default function TaskContent({ language }) {
         if (!ensureAuth()) return;
         const fetchTaskData = async () => {
             try {
-                const response = await api.get(`/userr/task-content/${32}/`);
+                const response = await api.get(`/userr/task-content/${planTaskId}/`);
                 setTaskData(response.data);
-                console.log("taskData", taskData)
             } catch (error) {
                     console.error('Error fetching task data:', error);
                 }
             };
         fetchTaskData();
-    }, [activeTask]);
+    }, [activeTask, planTaskId]);
 
-    if (!activeTask || !taskData) return <div>Loading...</div>;
+    if (!taskData) return <div>Loading...</div>;
 
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
@@ -105,10 +91,10 @@ export default function TaskContent({ language }) {
                     }
                     <span>{t('backToPlan')}</span>
                 </button>
-                <button className={styles.navButtonRight} onClick={() => navigate('/user/quiz', {
+                <button className={styles.navButtonRight} onClick={() => navigate(`/user/quiz/${planTaskId}`, {
                     state: {
                         mode: "task",
-                        activeTask,
+                        activeTask: activeTask || { id: Number(planTaskId), title: taskData.title },
                     }
                 })}>
                     <span>{t('goToQuiz')}</span>

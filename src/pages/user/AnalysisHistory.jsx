@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from "./AnalysisHistory.module.css";
 import { useTranslation } from "react-i18next";
 
-import { FaFileAlt} from "react-icons/fa"; import { useUserFlow } from '../../context/UserFlowContext';
+import { FaExchangeAlt, FaFileAlt } from "react-icons/fa";
+import { useUserFlow } from '../../context/UserFlowContext';
 import { useNavigate } from "react-router-dom";
 import EmptyPage from "../../components/ui/EmptyPage";
 import emptyHistory from "../../images/emptyHistory.png";
 import api from "../../utils/axios";
+import { notify } from "../../utils/toast";
 
 
 
@@ -15,10 +17,9 @@ import api from "../../utils/axios";
 export default function AnalysisHistory({ language }) {
     const { history,setHistory, setCvId} = useUserFlow(); /*  هاد رح نستخدمها بس يكون الربط كلو شغال*/
     // const [fakeHistory, setFakeHistory] = useState([]);
+    const [preparingId, setPreparingId] = useState(null);
     const navigate = useNavigate();
-    const {user} = useUserFlow();
-    const { t, i18n } = useTranslation();
-    const token = localStorage.getItem("accessToken");
+    const { t } = useTranslation();
 
 
 
@@ -54,6 +55,69 @@ export default function AnalysisHistory({ language }) {
         fetchHistory();
         
     }, []);
+
+    const handleViewAnalysis = (item) => {
+        const analysisId = item.analysisId || item.cv_id || item.id;
+        const sourceQuery = item.source ? `?source=${item.source}` : "";
+        setCvId(item.cv_id || analysisId);
+        navigate(`/user/analysisReport/${analysisId}${sourceQuery}`, {
+            state: {
+                mode: "history",
+                source: item.source,
+                score: item.score
+            }
+        });
+    };
+
+    const handleUseForPlan = async (item) => {
+        if (!ensureAuth()) return;
+        const analysisId = item.analysisId || item.cv_id || item.id;
+
+        try {
+            setPreparingId(item.id);
+            const source = item.source || (item.cv_id ? "cv" : "history");
+            const response = await api.post(
+                `/userr/analysis-history/${analysisId}/prepare-cv/`,
+                { source }
+            );
+            const selectedCvId = response.data.cv_id;
+            if (!selectedCvId) {
+                throw new Error("Missing prepared CV id");
+            }
+            setCvId(selectedCvId);
+
+            if (response.data.requires_assessment === false) {
+                navigate("/user/plan", {
+                    state: {
+                        learningPlanId: response.data.learning_plan_id,
+                        cvId: selectedCvId,
+                    }
+                });
+                return;
+            }
+
+            navigate(`/user/analysisReport/${selectedCvId}?source=cv`, {
+                state: {
+                    mode: "new",
+                    source: "cv",
+                    selectedField: item.field,
+                    score: item.score,
+                    cvId: selectedCvId
+                }
+            });
+        } catch (error) {
+            console.error("Error preparing analysis CV:", error);
+            notify(
+                language === "ar"
+                    ? "تعذر تجهيز هذا التحليل لخطة التعلم"
+                    : "Could not prepare this analysis for the learning plan",
+                "error"
+            );
+        } finally {
+            setPreparingId(null);
+        }
+    };
+
     return (
         <div className={language === 'ar' ? style.historyAr : style.historyEn}>
 
@@ -93,18 +157,26 @@ export default function AnalysisHistory({ language }) {
                                 </div>
                             </div>
 
-                            <button className={style.viewFullAn}
-                                onClick={() =>{
-                                    setCvId(item.id),
-                                    navigate("/user/analysisReport", {
-                                        state: {
-                                            mode: "history",
-                                            score: item.score
-                                        }
-                                    })}}
+                            <div className={style.actions}>
+                                <button
+                                    type="button"
+                                    className={style.viewFullAn}
+                                    onClick={() => handleViewAnalysis(item)}
                                 >
-                                {t('viewFullAnalysis')}
-                            </button>
+                                    {t('viewFullAnalysis')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={style.usePlanBtn}
+                                    onClick={() => handleUseForPlan(item)}
+                                    disabled={preparingId === item.id}
+                                >
+                                    <FaExchangeAlt />
+                                    {preparingId === item.id
+                                        ? t('preparingCv', 'Preparing...')
+                                        : t('useForPlan', 'Use for plan')}
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>

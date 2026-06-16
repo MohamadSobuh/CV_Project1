@@ -24,6 +24,7 @@ export default function InitalAssQuiz({ language }) {
     const [question, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const selectedField = state?.selectedField;
+    const cvId = state?.cvId;
     console.log(weaknesses);
 
 
@@ -45,7 +46,8 @@ export default function InitalAssQuiz({ language }) {
         if (!ensureAuth()) return [];
         try {
             const response = await api.post('/userr/quiz/start-weakness/', {
-                weakness_skills: weaknessSkills
+                weakness_skills: weaknessSkills,
+                target_field: selectedField
              });
             console.log(response.data);
             return response.data;
@@ -53,7 +55,7 @@ export default function InitalAssQuiz({ language }) {
             console.error('Error fetching questions:', error);
             return [];
         }
-    }, [ensureAuth]);
+    }, [ensureAuth, selectedField]);
     useEffect(() => {
         fetchQuestions(weaknesses).then((data) => {
             setQuestions(data || []);
@@ -133,7 +135,7 @@ export default function InitalAssQuiz({ language }) {
             // إرسال طلب حفظ الإجابات وتصحيح الاختبار للباكيند
             const response = await api.post('/userr/quiz/submit-weakness/', {
                 question_ids: question.question_ids || [],
-                weakness_skills: weaknesses,
+                cv_id: cvId,
                 answers: formattedAnswers // البيانات المعدلة هنا جاهزة تماماً 🚀
             });
 
@@ -158,7 +160,9 @@ export default function InitalAssQuiz({ language }) {
                     passed: resultData.passed,
                     skillsResults: resultData.skills_results,
                     mode: "initial",
-                    selectedField
+                    selectedField,
+                    learningPlanId: resultData.learning_plan_id,
+                    unavailableSkills: resultData.unavailable_skills
                 }
             });
 

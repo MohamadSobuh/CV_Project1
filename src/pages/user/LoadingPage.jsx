@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -66,31 +66,27 @@ function generateParticles(count = 22) {
 const particles = generateParticles(22);
 
 
-export default function LoadingPage({ language }) {
+export default function LoadingPage() {
     const { t, i18n } = useTranslation();
-    const btnRef = useRef(null);
-
-    useEffect(() => {
-    }, []);
-
     const location = useLocation();
     const navigate = useNavigate();
 
-    const { mode, file, selectedField } = location.state || {};
+    const { mode, file, selectedField, cvId } = location.state || {};
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigate("/user/analysisReport", {
+            navigate(`/user/analysisReport/${cvId}`, {
                 state: {
                     mode,
                     file,
-                    selectedField
+                    selectedField,
+                    cvId
                 }
             });
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [cvId, file, mode, navigate, selectedField]);
 
     const loadingMessages = [
         t("loadingMessage1"),
