@@ -51,8 +51,6 @@ export default function Plan({ language }) {
         navigate(`/user/task/${task.id}`);
     };
 
-    if (loading) return <div className={style.planContainerEn}>Loading...</div>;
-
     return (
         <div className={language === 'ar' ? style.planContainerAr : style.planContainerEn}>
             {!plan ? (

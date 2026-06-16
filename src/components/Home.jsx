@@ -48,7 +48,6 @@ export default function Home({ language, setLanguage }) {
                 <nav className={style.navLinks}>
                     <a href="#why">{t('navFeatures')}</a>
                     <a href="#how1">{t('navHow')}</a>
-                    <a href="#subscribe">{t('navSubscribe')}</a>
                 </nav>
 
                 <div className={style.headright}>
@@ -189,25 +188,6 @@ export default function Home({ language, setLanguage }) {
                 </div>
             </section>
 
-            <section id="subscribe" className={style.subscription}>
-                <div className='row'>
-                    <div className='col-md-6'>
-                        <h3>{t('subscribeTitle1')} <br /> {t('subscribeTitle2')} </h3>
-                        <br />
-                        <p>{t('subscribeDesc')}</p>
-                    </div>
-
-                    <div className={`${style.stay} col-md-6`}>
-                        <div>
-                            <p>{t('stayUpdated')}</p>
-                            <form onSubmit={handleSubscribe}>
-                                <input type="email" placeholder={t('emailPlaceholder')} value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                <button><b>{t('subscribe')}</b></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <footer className={style.footer}>
                 <div className='row'>
@@ -225,7 +205,6 @@ export default function Home({ language, setLanguage }) {
                             <li><a href="#home">{t('home')}</a></li>
                             <li><a href="#why">{t('why')}</a></li>
                             <li><a href="#how1">{t('how')}</a></li>
-                            <li><a href="#subscribe">{t('stay')}</a></li>
                             <li><Link to={"/login"}>{t('login')}</Link></li>
                             <li><Link to={"/signup"}>{t('signup')}</Link></li>
                         </ul>

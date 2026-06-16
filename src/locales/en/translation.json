@@ -359,5 +359,10 @@
     "loadingWait": "Please wait a moment",
     "invalidEmailOrPassword": "Invalid email or password",
     "sending": "Sending",
-    "uploading": "Uploading"
+    "uploading": "Uploading",
+    "chooseProfileImage": "Choose profile image",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell us a little about yourself",
+    "useForPlan": "Use for plan",
+    "preparingCv": "Preparing..."
 }

@@ -209,10 +209,14 @@
 }
 
 .signupProfile {
-    align-items: center;
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 16px;
     margin-bottom: 18px;
+    background: #f0f9fb;  
+    padding: 12px;
+    border-radius: 12px;
 }
 
 .signupAvatar {

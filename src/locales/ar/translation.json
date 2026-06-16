@@ -370,5 +370,10 @@
   "loadingWait": "يرجى الانتظار لحظة",
   "invalidEmailOrPassword": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
   "sending": "إرسال",
-  "uploading": "تحميل"
+  "uploading": "تحميل",
+  "chooseProfileImage": "اختر صورة الملف الشخصي",
+  "bio": "نبذة تعريفية",
+  "bioPlaceholder": "أخبرنا قليلاً عن نفسك",
+  "useForPlan": "استخدم للخطة",
+  "preparingCv": "جاري التحضير..."
 }
