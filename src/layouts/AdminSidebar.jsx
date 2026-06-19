@@ -1,7 +1,7 @@
 import style from "./SidebarAdminUser.module.css";
 import { NavLink, Link } from "react-router-dom";
 import { FaThLarge, FaUsers, FaBookOpen, FaListUl, FaQuestionCircle, FaCog, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
-import Admin from "../images/Admin.jpg";
+import lightlogo from "../images/lightlogo.png";
 import { useTranslation } from "react-i18next";
 
 import { useState, useEffect } from 'react';
@@ -12,7 +12,7 @@ export default function AdminSidebar({ language }) {
 
     useEffect(() => {
         setUserImg({
-            image: Admin
+            image: lightlogo
         });
     }, []);
 
@@ -43,9 +43,7 @@ export default function AdminSidebar({ language }) {
             <nav className={`${style.nav} ${language === 'ar' ? style['nav-rtl'] : ''} ${open ? style.navOpen : ''}`}
             >
 
-                <Link to="/admin/profile" className="style.center">
-                    <img src={userImg.image} alt="adminImg" className={`${style.adimnImg} rounded-circle`} />
-                </Link>
+                    <img src={userImg.image} alt="adminImg" className={`${style.logo} `} />
 
                 <NavLink className={({ isActive }) => `${style.links} ${isActive ? style.activeLink : ''}`} to="/admin/dashboard">
                     <FaThLarge className="m-3" />{t('dash')}

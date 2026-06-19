@@ -110,15 +110,7 @@ const Settings = () => {
         showMessage(language === 'ar' ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully");
     };
 
-    if (loading) {
-        return (
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-                <div className="spinner-border" style={{ color: '#082F43' }} role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        );
-    }
+
 
     return (
 
