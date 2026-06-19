@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import style from "./Quiz.module.css";
 import QuestionCard from "../../components/ui/QuestionCard";
 import { useTranslation } from "react-i18next";
 
-import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import { questionSchema } from "../../utils/validationSchema";
-import InputError from "../../components/ui/InputError";
-import AdminInput from "../../components/ui/AdminInput";
 import AddQuestionsForm from "./AddQuestionsForm";
 import EmptyPage from "../../components/ui/EmptyPage";
-import { FaQuestionCircle } from 'react-icons/fa';
-import axios from 'axios';
+import { FaQuestionCircle, FaSpinner } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { FaFilter } from "react-icons/fa";
 import Notification from '../../components/ui/Notification';
@@ -30,8 +24,9 @@ const QuizQuestions = ({ language = 'en' }) => {
     const [filterTopic, setFilterTopic] = useState('');
     const [filterQuestionType, setFilterQuestionType] = useState('');
     const [filterTask, setFilterTask] = useState('');
-    const [questionsFilter, setQuestionsFilter] = useState([]);
     const [topics, setTopics] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
 
@@ -41,15 +36,7 @@ const QuizQuestions = ({ language = 'en' }) => {
             setMessage(prev => ({ ...prev, show: false }));
         }, 3000);
     };
-
-
-
-
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        resolver: yupResolver(questionSchema)
-    });
-const ensureAuth = () => {
+    const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("userRole");
         if (!token || token === "undefined" || role !== "admin") {
@@ -62,7 +49,7 @@ const ensureAuth = () => {
             return false;
         }
         return true;
-    }; 
+    }, [language, navigate]);
     
     
     const handleEdit = async (data) => {
@@ -89,7 +76,7 @@ const ensureAuth = () => {
     const handleDelete = async () => {
         if (!ensureAuth()) return;
         try {
-            const response = await api.delete(`/dashboard/questions/${showDeleteModal}/`);
+            await api.delete(`/dashboard/questions/${showDeleteModal}/`);
             setQuestions(questions.filter((q) => q.id !== showDeleteModal));
             showMessage(language === "ar" ? "تم حذف السؤال بنجاح" : "Question deleted successfully", "success");
             setShowDeleteModal(null);
@@ -100,37 +87,33 @@ const ensureAuth = () => {
         }
     };
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
+    const loadPageData = useCallback(async () => {
+        if (!ensureAuth()) return;
+
+        setLoading(true);
+        setLoadError(false);
+        try {
+            const [questionsResponse, tasksResponse, topicsResponse] = await Promise.all([
+                api.get("/dashboard/questions/"),
+                api.get("/dashboard/tasks/"),
+                api.get("/dashboard/topics/"),
+            ]);
+            setQuestions(questionsResponse.data);
+            setTasksFromDB(tasksResponse.data);
+            setTopics(topicsResponse.data);
+        } catch (error) {
+            console.error("Error loading questions page:", error);
+            setLoadError(true);
+        } finally {
+            setLoading(false);
+        }
+    }, [ensureAuth]);
 
     useEffect(() => {
-        const fetchQuestions = async () => {
-            if (!ensureAuth()) return;
-            try {
-                const response = await api.get("/dashboard/questions/");
-                setQuestions(response.data);
-                console.log(response.data, "questions");
-            } catch (error) {
-                console.error("Error fetching questions:", error);
-            }
-        };
-        fetchQuestions();
-
-    }, []);
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            if (!ensureAuth()) return ;
-            try {
-                const response = await api.get("/dashboard/tasks/");
-                setTasksFromDB(response.data);
-                console.log(response.data, "tasks");
-            } catch (err) {
-                console.error("Error fetching tasks:", err);
-            }
-        };
-        console.log(tasksFromDB, "tasksFromDB");
-        fetchTasks();
-    }, []);
+        loadPageData();
+    }, [loadPageData]);
 
     const handleAdd = async (data) => {
         console.log(data);
@@ -176,38 +159,20 @@ const ensureAuth = () => {
 
         setShowAddModal(false);
     };
-    useEffect(() => {
-        const fetchTopics = async () => {
-            if (!ensureAuth()) return;
-            try {
-                const response = await api.get("/dashboard/topics");
-                console.log(response.data);
-                setTopics(response.data);
-            } catch (err) {
-                console.error("Error fetching topics:", err);
-            }
-
-
-
-        };
-        fetchTopics();
-
-    }, []);
-
-    const handleFilter = () => {
-        const filteredQuestions = questions.filter((question) => {
+    const questionsFilter = useMemo(
+        () => questions.filter((question) => {
             return (
-                question.topic?.toLowerCase().includes(filterTopic.toLowerCase()) &&
-                question.type?.toLowerCase().includes(filterQuestionType.toLowerCase()) &&
-                question.task?.toLowerCase().includes(filterTask.toLowerCase())
+                (question.topic || "").toLowerCase().includes(filterTopic.toLowerCase()) &&
+                (question.type || "").toLowerCase().includes(filterQuestionType.toLowerCase()) &&
+                (question.task || "").toLowerCase().includes(filterTask.toLowerCase())
             );
-        });
-        setQuestionsFilter(filteredQuestions);
-    };
+        }),
+        [filterQuestionType, filterTask, filterTopic, questions],
+    );
+
     useEffect(() => {
-        handleFilter();
-        console.log(filterQuestionType);
-    }, [filterTopic, filterQuestionType, filterTask, questions]);
+        setCurrentPage(1);
+    }, [filterTopic, filterQuestionType, filterTask]);
 
     const totalPagesFilter = Math.ceil(questionsFilter.length / questionsPerPage);
     const indexOfLastQuestionFilter = currentPage * questionsPerPage;
@@ -219,7 +184,22 @@ const ensureAuth = () => {
 
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-            {questions.length === 0 ? (
+            {loading ? (
+                <div className={style.loadingState} role="status" aria-live="polite">
+                    <FaSpinner className={style.loadingSpinner} />
+                    <h3>{t("loadingQuestions", "Loading questions")}</h3>
+                    <p>{t("loadingQuestionsWait", "Fetching questions, topics, and tasks...")}</p>
+                </div>
+            ) : loadError ? (
+                <div className={style.errorState}>
+                    <FaQuestionCircle className={style.errorIcon} />
+                    <h3>{t("questionsLoadError", "Could not load questions")}</h3>
+                    <p>{t("questionsLoadErrorMessage", "Please check the connection and try again.")}</p>
+                    <button type="button" className={style.btnAdd} onClick={loadPageData}>
+                        {t("retry", "Retry")}
+                    </button>
+                </div>
+            ) : questions.length === 0 ? (
                 <EmptyPage
                     icon={<FaQuestionCircle />}
                     title={t('emptyQuestionsTitle')}
