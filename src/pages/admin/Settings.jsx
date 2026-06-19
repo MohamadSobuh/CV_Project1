@@ -177,28 +177,6 @@ const Settings = () => {
                                 onChange={handleSecurityChange}
                             />
                         </div>
-
-                        <div className={`d-flex align-items-center justify-content-between ${style.toggleSection}`}>
-                            <div>
-                                <h6 className="mb-0 fw-bold" style={{ fontSize: '0.9rem', color: '#082F43' }}>
-                                    {t('twoFactorAuth')}
-                                </h6>
-                                <small style={{ fontSize: '0.75rem', color: '#546e7a' }}>
-                                    {t('twoFactorDesc')}
-                                </small>
-                            </div>
-                            <div className="form-check form-switch">
-                                <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    name="twoFactorAuth"
-                                    checked={siteSettings.twoFactorAuth}
-                                    onChange={handleSecurityChange}
-                                    style={{ cursor: 'pointer', borderColor: '#CFE9EC' }}
-                                />
-                            </div>
-                        </div>
                     </SettingsCard>
                 </div>
             </div>

@@ -69,11 +69,7 @@
         padding: 8px;
     }
 
-    .toggleSection {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 10px;
-    }
+
 }
 
 .settingsCard {
@@ -120,11 +116,6 @@
     font-size: 0.85rem;
 }
 
-.toggleSection {
-    background-color: #F0F9FA;
-    border-radius: 12px;
-    padding: 15px;
-}
 
 .btnAdd {
     background-color: #6997A4;
