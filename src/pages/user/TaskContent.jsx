@@ -7,6 +7,7 @@ import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
+import LoadingScreen from "../../components/ui/LoadingScreen";
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function TaskContent({ language }) {
         }
         return true;
     };
-    
+
 
     useEffect(() => {
         if (!ensureAuth()) return;
@@ -39,14 +40,16 @@ export default function TaskContent({ language }) {
                 const response = await api.get(`/userr/task-content/${planTaskId}/`);
                 setTaskData(response.data);
             } catch (error) {
-                    console.error('Error fetching task data:', error);
-                }
-            };
+                console.error('Error fetching task data:', error);
+            }
+        };
         fetchTaskData();
     }, [activeTask, planTaskId]);
 
-    if (!taskData) return <div>Loading...</div>;
-
+    if (!taskData) {
+        return <LoadingScreen />;
+    }
+    
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
             <div className={styles.bgGrid} />

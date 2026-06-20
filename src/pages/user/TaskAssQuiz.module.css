@@ -372,7 +372,6 @@
     align-items: center;
     justify-content: center;
     min-height: 85vh;
-    padding-left: 240px;
 
 }
 
@@ -384,7 +383,6 @@
     align-items: center;
     justify-content: center;
     min-height: 85vh;
-    padding-right: 240px;
     direction: rtl;
     text-align: right;
 }
