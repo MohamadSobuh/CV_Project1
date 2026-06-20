@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import style from "../user/UserProfile.module.css"
 import { FaSave, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import profileImg from "../../images/profileImg.png";
+import profileImg from "../../images/profileImg.PNG";
 import { useUserFlow } from '../../context/UserFlowContext';
 import axios from 'axios';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,7 +35,7 @@ export default function EditAdminProfile({ t, language }) {
             password: ""
         }
     });
-    const [image, setImage] = useState(user?.image || "");
+    const [image, setImage] = useState(user?.image || profileImg);
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = React.useRef(null);
 
@@ -47,7 +47,7 @@ export default function EditAdminProfile({ t, language }) {
                 email: user.email || "",
                 password: ""
             });
-            setImage(user.image || "");
+            setImage(user.image || profileImg);
         }
     }, [user, reset]);
     const handleImageClick = () => {

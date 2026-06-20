@@ -3,7 +3,7 @@ import style from "../user/UserProfile.module.css";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import profileImg from "../../images/profileImg.png";
+import profileImg from "../../images/profileImg.PNG";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useEffect } from "react";
 import axios from "axios";

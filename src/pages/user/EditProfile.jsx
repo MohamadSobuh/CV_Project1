@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import style from "./UserProfile.module.css";
 import { useNavigate } from 'react-router-dom';
-import profileImg from "../../images/profileImg.png";
+import profileImg from "../../images/profileImg.PNG";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../components/ui/Input";
@@ -27,7 +27,7 @@ export default function EditProfile({ t, language }) {
         }
     });
     
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(profileImg);
     const [imageFile, setImageFile] = useState(null);
     const profileField = watch("field");
     const fileInputRef = React.useRef(null);
@@ -64,7 +64,7 @@ export default function EditProfile({ t, language }) {
                     bio: response.data.bio || "",
                     password: ""
                 });
-                setImage(response.data.image || "");
+                setImage(response.data.image || profileImg);
             } catch (error) {
                 console.error("Error fetching profile:", error);
             }
@@ -87,7 +87,7 @@ export default function EditProfile({ t, language }) {
                 bio: user.bio || "",
                 password: ""
             });
-            setImage(user.image || "");
+            setImage(user.image || profileImg);
         }
     }, [user, reset]);
 
@@ -194,7 +194,7 @@ export default function EditProfile({ t, language }) {
             <div className={style.profile}>
                 <div className={style.center}>
                     <img
-                        src={image}
+                        src={image || profileImg}
                         alt="Profile"
                         className={`${style.imgProfile} rounded-circle`}
                         onClick={handleImageClick}

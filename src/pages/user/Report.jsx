@@ -1,19 +1,20 @@
-import React, { useState ,useEffect} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import style from "./Report.module.css";
-import { FaCloudUploadAlt, FaBolt, FaCheckCircle } from "react-icons/fa";
+import { FaCloudUploadAlt, FaBolt, FaCheckCircle, FaTimes } from "react-icons/fa";
 import api from "../../utils/axios";
 import {useNavigate} from "react-router-dom";
-import { useUserFlow } from "../../context/UserFlowContext";
 
 
 
 export default function Report({ language }) {
-    const { t, i18n } = useTranslation();
-    const { user } = useUserFlow();
+    const { t } = useTranslation();
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
     const [priority, setPriority] = useState("");
     const [screenshot, setScreenshot] = useState(null);
+    const [screenshotPreview, setScreenshotPreview] = useState("");
+    const [screenshotError, setScreenshotError] = useState("");
     const [dragActive, setDragActive] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -21,11 +22,28 @@ export default function Report({ language }) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    const selectScreenshot = (file) => {
+        setScreenshotError("");
+
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            setScreenshotError(t("imageFileRequired"));
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setScreenshotError(t("imageFileTooLarge"));
+            return;
+        }
+
+        setScreenshot(file);
+    };
+
     const handleDrop = (e) => {
         e.preventDefault();
         setDragActive(false);
-        const file = e.dataTransfer.files[0];
-        if (file) setScreenshot(file);
+        selectScreenshot(e.dataTransfer.files[0]);
     };
 
     const handleDragOver = (e) => {
@@ -35,6 +53,16 @@ export default function Report({ language }) {
 
     const handleDragLeave = () => {
         setDragActive(false);
+    };
+
+    const removeScreenshot = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setScreenshot(null);
+        setScreenshotError("");
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     const handleSubmit = async () => {
@@ -63,9 +91,10 @@ export default function Report({ language }) {
         }
 
         try {
-            console.log(formData);
             setLoading(true);
-            const response = await api.post('/userr/send-report/', formData);
+            await api.post('/userr/send-report/', formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
 
             setSuccess(true);
             setTitle("");
@@ -74,19 +103,19 @@ export default function Report({ language }) {
             setScreenshot(null);
             navigate("/user/dashboard", {
                 state: {
-                    message: language == 'ar' ? "تم إرسال التقرير بنجاح" : "Report sent successfully",
+                    message: language === 'ar' ? "تم إرسال التقرير بنجاح" : "Report sent successfully",
                     success: true
                 }
             });
-        } catch (err) {
+        } catch {
             setError("Network error. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
     };
-        const ensureAuth = () => {
-            const token = localStorage.getItem("accessToken");
-            const role = localStorage.getItem("userRole");
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("userRole");
         if (!token || token === "undefined" || role !== "user") {
             navigate("/login", {
                 state: {
@@ -94,14 +123,20 @@ export default function Report({ language }) {
                     type: "error"
                 }
             });
-            return false;
         }
-        return true;
-    }
+    }, [language, navigate]);
 
     useEffect(() => {
-        ensureAuth();
-    }, []);
+        if (!screenshot) {
+            setScreenshotPreview("");
+            return;
+        }
+
+        const previewUrl = URL.createObjectURL(screenshot);
+        setScreenshotPreview(previewUrl);
+
+        return () => URL.revokeObjectURL(previewUrl);
+    }, [screenshot]);
 
     return (
         <div className={language === 'ar' ? style.reportAr : style.report}>
@@ -164,20 +199,46 @@ export default function Report({ language }) {
                                 <p>{t("orClick")}</p>
                             </>
                         ) : (
-                            <>
-                                <FaCheckCircle className={style.successIcon} />
-                                <br />
-                                <b >{t("uploadSuccess")}</b>
-                            </>
+                            <div className={style.previewContent}>
+                                <img
+                                    src={screenshotPreview}
+                                    alt={t("screenshotPreview")}
+                                    className={style.screenshotPreview}
+                                />
+                                <div className={style.fileDetails}>
+                                    <FaCheckCircle className={style.successIcon} />
+                                    <div>
+                                        <b>{t("uploadSuccess")}</b>
+                                        <span>{screenshot.name}</span>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    className={style.removeImage}
+                                    onClick={removeScreenshot}
+                                    aria-label={t("removeScreenshot")}
+                                    title={t("removeScreenshot")}
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
                         )}
 
                         <input
+                            ref={fileInputRef}
                             type="file"
                             accept="image/*"
                             className={style.hiddenInput}
-                            onChange={(e) => setScreenshot(e.target.files[0])}
+                            aria-label={t("uploadScreenshot")}
+                            onChange={(e) => selectScreenshot(e.target.files[0])}
                         />
                     </div>
+
+                    {screenshotError && (
+                        <div className={style.errorBox}>
+                            {screenshotError}
+                        </div>
+                    )}
 
                     {error && (
                         <div className={style.errorBox}>

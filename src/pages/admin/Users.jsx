@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import style from "./AdminTables.module.css";
 import Admin from "../../images/Admin.jpg";
+import profileImg from "../../images/profileImg.PNG";
 import { useTranslation } from "react-i18next";
 
 import { FaTrash, FaUsers } from 'react-icons/fa';
@@ -226,7 +227,7 @@ export default function Users({ language }) {
                                     <tr key={user.id}>
                                         <td>
                                             <div className={style.userInfo}>
-                                                <img src={user.image || `https://robohash.org/${user.id}.png?set=set1`} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
+                                                <img src={user.image || profileImg} alt="Profile" className={`${style.imgProfile} rounded-circle`} />
                                                 <div className={style.userText}>
                                                     <b>{user.first_name} {user.last_name}</b>
                                                     <span>{user.email}</span>

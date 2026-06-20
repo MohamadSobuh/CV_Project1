@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
-import profileImg from "../../images/profileImg.png";
+import profileImg from "../../images/profileImg.PNG";
 import { notify } from "../../utils/toast";
 
 export default function Signup() {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import profileImg from '../images/profileImg.png';
+import profileImg from '../images/profileImg.PNG';
 import api from '../utils/axios';
 
 const UserFlowContext = createContext({
