@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaHtml5, FaJs, FaReact, FaSlack } from 'react-icons/fa';
 import style from './Plan.module.css';
+import { FaPython } from 'react-icons/fa';
 
 export default function TopicSection({ topic, isActive, onClick }) {
     const { title, description, difficulty, tasks } = topic;
