@@ -388,8 +388,18 @@
     "assessmentQuizLoadError": "Could not load the assessment",
     "loadingTaskQuiz": "Loading task quiz",
     "loadingTaskQuizWait": "Fetching the questions for this task...",
+    "loadingPlan": "Loading learning plan",
+    "loadingPlanWait": "Fetching your personalized topics, tasks, and progress...",
+    "planLoadError": "Could not load your learning plan",
+    "planLoadErrorMessage": "Please check your connection and try again.",
     "taskQuizLoadError": "Could not load the task quiz",
     "quizLoadErrorMessage": "Please check the connection and try again.",
     "noQuizQuestions": "No questions available",
-    "noQuizQuestionsMessage": "There are no questions configured for this quiz yet."
+    "noQuizQuestionsMessage": "There are no questions configured for this quiz yet.",
+    "emptyPlanTitle": "No learning plan available currently",
+    "emptyPlanMessage": "No learning plan has been created for you yet. Start by uploading your CV and taking the assessment quiz to identify your strengths and weaknesses, so we can build the perfect learning path for you.",
+    "reportIssue": "Report an Issue",
+    "assessmentRequiredTitle": "Assessment Required",
+    "assessmentRequiredMessage": "You need to complete the initial assessment quiz to create your learning plan. Start by uploading your CV, reviewing your weaknesses, then taking the assessment quiz. Your learning plan will be generated after you pass the quiz.",
+    "goToHistory": "Go to Analysis History"
 }

@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import planEmpty from "../../images/planEmpty.png";
 import { useTranslation } from "react-i18next";
 import EmptyPage from "../../components/ui/EmptyPage";
+import AdminDataState from "../../components/ui/AdminDataState";
 import { useNavigate } from "react-router-dom";
 import style from "./Plan.module.css";
 import TopicList from "./TopicList";
@@ -13,23 +14,36 @@ import api from '../../utils/axios';
 export default function Plan({ language }) {
     const [plan, setPlan] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [activeTopicId, setActiveTopicId] = useState(null);
     const { setActiveTask } = useUserFlow();
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        api.get("/userr/learning-plan/")
-            .then((response) => {
-                setPlan(response.data);
-                setActiveTopicId(response.data.modules?.[0]?.id ?? null);
-            })
-            .catch((error) => {
-                if (error.response?.status !== 404) console.error(error);
-                setPlan(null);
-            })
-            .finally(() => setLoading(false));
+    const loadPlan = useCallback(async () => {
+        setLoading(true);
+        setLoadError(false);
+
+        try {
+            const response = await api.get("/userr/learning-plan/");
+            setPlan(response.data);
+            setActiveTopicId(response.data.modules?.[0]?.id ?? null);
+        } catch (error) {
+            setPlan(null);
+            setActiveTopicId(null);
+
+            if (error.response?.status !== 404) {
+                console.error("Error loading learning plan:", error);
+                setLoadError(true);
+            }
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        loadPlan();
+    }, [loadPlan]);
 
     const planData = useMemo(() => plan?.modules || [], [plan?.modules]);
     const selectedTopic = useMemo(
@@ -53,17 +67,30 @@ export default function Plan({ language }) {
 
     return (
         <div className={language === 'ar' ? style.planContainerAr : style.planContainerEn}>
-            {!plan ? (
+            <div className={style.bgGrid} />
+            {loading ? (
+                <AdminDataState
+                    title={t("loadingPlan")}
+                    message={t("loadingPlanWait")}
+                />
+            ) : loadError ? (
+                <AdminDataState
+                    type="error"
+                    title={t("planLoadError")}
+                    message={t("planLoadErrorMessage")}
+                    retryLabel={t("retry")}
+                    onRetry={loadPlan}
+                />
+            ) : !plan ? (
                 <EmptyPage
                     icon={<img src={planEmpty} width="200" alt="" />}
-                    title={t('assessmentRequiredTitle', 'Take the assessment quiz to see your plan')}
-                    message={t('assessmentRequiredMessage', 'Choose a CV analysis, review the weaknesses, then complete the assessment quiz. Your learning plan will be generated after the quiz.')}
-                    btnText={t('goToHistory', 'Go to analysis history')}
+                    title={t('assessmentRequiredTitle')}
+                    message={t('assessmentRequiredMessage')}
+                    btnText={t('goToHistory')}
                     onClick={() => navigate("/user/analysisHistory")}
                 />
             ) : (
                 <>
-                    <div className={style.bgGrid} />
                     <div className={style.planHead}><b>{plan.target_field}</b> {t("planTitle")}</div>
                     <div className={style.headerRow}>
                         <div className={style.headerLeft}>
