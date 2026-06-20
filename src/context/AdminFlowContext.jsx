@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useCallback, useState, useContext } from 'react';
 
 import api from '../utils/axios';
 
@@ -19,21 +19,19 @@ export const AdminFlowProvider = ({ children }) => {
   const [activeTask, setActiveTask] = useState(null);
   const [editTask, setEditTask] = useState(null);
 
-  const fetchTopics = async () => {
+  const fetchTopics = useCallback(async () => {
     setLoadingTopics(true);
     try {
      
       const response = await api.get("/dashboard/topics/");
       setTopics(response.data);
+      return true;
     } catch (err) {
       console.error("Error fetching topics:", err);
+      return false;
     } finally {
       setLoadingTopics(false);
     }
-  };
-
-  useEffect(() => {
-    fetchTopics();
   }, []);
 
   return (
@@ -46,4 +44,6 @@ export const AdminFlowProvider = ({ children }) => {
   );
 };
 
+// The provider and its companion hook intentionally share this module.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAdminFlow = () => useContext(AdminFlowContext);

@@ -1,19 +1,24 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import profileImg from '../images/profileImg.png';
 import api from '../utils/axios';
 
 const UserFlowContext = createContext({
   uploadedCV: null,
-  setUploadedCV: () => { },
+  setUploadedCV: () => {},
   targetField: '',
-  setTargetField: () => { },
+  setTargetField: () => {},
 });
 
 export const UserFlowProvider = ({ children }) => {
   const [userId, setUserId] = useState(() => localStorage.getItem("userId") || null);
   const [history, setHistory] = useState([]);
   const [targetField, setTargetField] = useState('');
-  const [analysisResult, setAnalysisResult] = useState({ DesCV: "", strengths: [{ skill: "", description: "" }], weaknesses: [{ skill: "", description: "" }], score: 0 });
+  const [analysisResult, setAnalysisResult] = useState({
+    DesCV: "",
+    strengths: [{ skill: "", description: "" }],
+    weaknesses: [{ skill: "", description: "" }],
+    score: 0,
+  });
   const [placementScore, setPlacementScore] = useState(0);
   const [topics, setTopics] = useState([]);
   const [cvId, setCvId] = useState(null);
@@ -23,27 +28,15 @@ export const UserFlowProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // Fetch user profile from API on mount and keep context in sync
-    const ensureAuth = () => {
-        const token = localStorage.getItem("accessToken");
-        if (!token || token === "undefined") {
-            navigate("/login", {
-                state: {
-                    message: language === "ar" ? "انتهت جلسة التسجيل، يرجى تسجيل الدخول مجدداً" : "Session expired, please log in again",
-                    type: "error"
-                }
-            });
-            return false;
-        }
-        return true;
-    };
   useEffect(() => {
     const fetchUser = async () => {
-        if (!ensureAuth()) return;
+      const token = localStorage.getItem("accessToken");
+      const role = localStorage.getItem("userRole");
+      if (!token || token === "undefined" || role !== "user") return;
+
       try {
         const response = await api.get('/userr/profile/');
         const data = response.data;
-        // Normalise image: backend may return a URL or nothing
         if (!data.image) data.image = profileImg;
         setUser(data);
         localStorage.setItem('user', JSON.stringify(data));
@@ -51,24 +44,36 @@ export const UserFlowProvider = ({ children }) => {
         console.error('Failed to fetch user profile:', err);
       }
     };
+
     fetchUser();
   }, []);
 
   return (
     <UserFlowContext.Provider value={{
-      userId, setUserId,
-      user, setUser,
-      history, setHistory,
-      targetField, setTargetField,
-      analysisResult, setAnalysisResult,
-      placementScore, setPlacementScore,
-      topics, setTopics,
-      activeTask, setActiveTask,
-      cvId, setCvId,
+      userId,
+      setUserId,
+      user,
+      setUser,
+      history,
+      setHistory,
+      targetField,
+      setTargetField,
+      analysisResult,
+      setAnalysisResult,
+      placementScore,
+      setPlacementScore,
+      topics,
+      setTopics,
+      activeTask,
+      setActiveTask,
+      cvId,
+      setCvId,
     }}>
       {children}
     </UserFlowContext.Provider>
   );
 };
 
+// The provider and its companion hook intentionally share this module.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUserFlow = () => useContext(UserFlowContext);

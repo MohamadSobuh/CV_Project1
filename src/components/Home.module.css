@@ -142,11 +142,6 @@
     pointer-events: auto;
 }
 
-.row {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-}
-
 .hero {
     display: flex;
     align-items: center;
@@ -263,8 +258,8 @@
 .howWorks {
     color: #082F43;
     margin-bottom: 200px;
-
-
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
 }
 
 .iconhowWorks {
@@ -286,9 +281,21 @@
 }
 
 .step {
+    display: flex;
     gap: 130px;
     padding: 50px;
     justify-content: center;
+    align-items: stretch;
+}
+
+.stepText,
+.workcard {
+    flex: 0 1 420px;
+    min-width: 0;
+}
+
+.workcard {
+    min-height: 280px;
 }
 
 .allsteps {
@@ -307,7 +314,18 @@
     padding: 40px 0;
     border-top: 1px solid #082F43;
     position: relative;
+    content-visibility: auto;
+    contain-intrinsic-size: 320px;
+}
 
+.footerGrid {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.footerColumn {
+    min-width: 0;
 }
 
 .footer ul {
@@ -451,8 +469,12 @@
         text-align: center;
     }
 
-    .footer .row>div {
+    .footerColumn {
         margin-bottom: 30px;
+    }
+
+    .footerGrid {
+        grid-template-columns: 1fr;
     }
 
 
@@ -488,7 +510,8 @@
         padding: 40px !important;
     }
 
-    .step>div[class*="col-md-4"] {
+    .stepText,
+    .workcard {
         width: 100% !important;
         text-align: center;
     }

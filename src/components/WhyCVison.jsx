@@ -46,7 +46,7 @@ const steps = [
 ];
 
 export default function WhyCVison({ language }) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const isRTL = language === "ar";
 
     return (

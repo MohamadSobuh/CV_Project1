@@ -1,5 +1,4 @@
 import styles from "./CVAnalyzerHero.module.css";
-import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Link } from "react-router-dom";
@@ -12,7 +11,7 @@ const PARTICLE_COLORS = [
     "rgba(255,255,255,0.5)",
 ];
 
-function generateParticles(count = 22) {
+function generateParticles(count = 12) {
     return Array.from({ length: count }, (_, i) => {
         const isLine = Math.random() > 0.5;
         const w = isLine
@@ -52,11 +51,10 @@ function generateParticles(count = 22) {
     });
 }
 
-const particles = generateParticles(22);
+const particles = generateParticles();
 
 export default function Hero({ language }) {
-    const btnRef = useRef(null);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <div className={styles.cvAnalyzerRoot} >

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import style from "./AdminTables.module.css";
 import Admin from "../../images/Admin.jpg";
 import { useTranslation } from "react-i18next";
@@ -9,8 +9,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
 import EmptyPage from "../../components/ui/EmptyPage";
+import AdminDataState from "../../components/ui/AdminDataState";
 import { signupSchema } from "../../utils/validationSchema";
-import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Notification from "../../components/ui/Notification";
@@ -24,7 +24,8 @@ export default function Users({ language }) {
     const usersPerPage = 4;
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [filterInput, setFilterInput] = useState("");
-    const [usersFilter, setUsersFilter] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     // const [imgSrc, setImgSrc] = useState(user.image);
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
 
@@ -35,13 +36,13 @@ export default function Users({ language }) {
         }, 3000);
     };
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchema)
     });
-    const ensureAuth = () => {
+    const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("userRole");
         if (!token || token === "undefined" || role !== "admin") {
@@ -50,24 +51,27 @@ export default function Users({ language }) {
             return false;
         }
         return true;
-    };
+    }, [language, navigate]);
+
+    const loadUsers = useCallback(async () => {
+        if (!ensureAuth()) return;
+
+        setLoading(true);
+        setLoadError(false);
+        try {
+            const response = await api.get("/dashboard/profiles/");
+            setUsers(response.data);
+        } catch (err) {
+            console.error("Error fetching users:", err);
+            setLoadError(true);
+        } finally {
+            setLoading(false);
+        }
+    }, [ensureAuth]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            if (!ensureAuth()) return;
-            try {
-                const response = await api.get("/dashboard/profiles/");
-
-                console.log(response.data);
-                setUsers(response.data);
-            } catch (err) {
-                console.error("Error fetching users:", err);
-            }
-        };
-        fetchUsers();
-
-
-    }, []);
+        loadUsers();
+    }, [loadUsers]);
 
     const handleDelete = async () => {
         if (!ensureAuth()) return;
@@ -84,6 +88,15 @@ export default function Users({ language }) {
             showMessage(language === "ar" ? "فشل حذف المستخدم" : "Failed to delete user", "error");
         }
     };
+    const usersFilter = useMemo(
+        () => users.filter(user => {
+            const fullName = `${user.first_name || ""} ${user.last_name || ""}`.toLowerCase();
+            const searchInput = filterInput.toLowerCase();
+            return fullName.includes(searchInput);
+        }),
+        [filterInput, users],
+    );
+
     const totalPagesFilter = Math.ceil(usersFilter.length / usersPerPage);
     const indexOfLastUserFilter = currentPage * usersPerPage;
     const indexOfFirstUserFilter = indexOfLastUserFilter - usersPerPage;
@@ -96,17 +109,9 @@ export default function Users({ language }) {
         prev > 1 ? prev - 1 : prev
     ));
 
-    const handleFilter = () => {
-        const filteredUsers = users.filter(user => {
-            const fullName = `${user.first_name || ""} ${user.last_name || ""}`.toLowerCase();
-            const searchInput = filterInput.toLowerCase();
-            return fullName.includes(searchInput);
-        });
-        setUsersFilter(filteredUsers);
-    };
     useEffect(() => {
-        handleFilter();
-    }, [filterInput, users]);
+        setCurrentPage(1);
+    }, [filterInput]);
 
     const onSubmit = async (data) => {
         const name = data.first_name + " " + data.last_name;
@@ -151,7 +156,20 @@ export default function Users({ language }) {
 
     return (
         <div className={language === 'ar' ? style.usersPageArabic : style.usersPage}>
-            {users.length === 0 ? (
+            {loading ? (
+                <AdminDataState
+                    title={t("loadingUsers")}
+                    message={t("loadingUsersWait")}
+                />
+            ) : loadError ? (
+                <AdminDataState
+                    type="error"
+                    title={t("usersLoadError")}
+                    message={t("adminLoadErrorMessage")}
+                    retryLabel={t("retry")}
+                    onRetry={loadUsers}
+                />
+            ) : users.length === 0 ? (
                 <EmptyPage
                     icon={<FaUsers />}
                     title={t('emptyUsersTitle')}

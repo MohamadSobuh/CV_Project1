@@ -4,6 +4,8 @@
     padding: 80px 40px 90px;
     font-family: 'Sora', sans-serif;
     text-align: center;
+    content-visibility: auto;
+    contain-intrinsic-size: 580px;
 }
 
 .sectionLabel {

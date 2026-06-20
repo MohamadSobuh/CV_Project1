@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 export default function AdminLayout({ user, language, setLanguage }) {

@@ -64,6 +64,11 @@ export default function SessionTimeout() {
     }, [location.pathname, resetTimeout]);
 
     useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (!token || token === "undefined") {
+            return undefined;
+        }
+
         const events = ['mousemove', 'keydown', 'click', 'scroll'];
 
         const handleActivity = () => {
@@ -78,7 +83,7 @@ export default function SessionTimeout() {
             events.forEach(event => window.removeEventListener(event, handleActivity));
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, [resetTimeout, isTimedOut]);
+    }, [location.pathname, resetTimeout, isTimedOut]);
 
     if (!isTimedOut) return null;
 

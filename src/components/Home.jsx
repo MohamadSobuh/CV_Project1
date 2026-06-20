@@ -4,46 +4,19 @@ import { useTranslation } from "react-i18next";
 
 import style from "./Home.module.css";
 import { FaCloudUploadAlt, FaSearch, FaClipboardList, FaChartLine, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import Hero from "./Hero";
 import WhyCVison from './WhyCVison';
 import { FaBars, FaTimes } from "react-icons/fa";
-import { notify } from "../utils/toast";
 
 export default function Home({ language, setLanguage }) {
-    const [email, setEmail] = useState("");
-    const handleSubscribe = (e) => {
-        e.preventDefault();
-        notify("Thank you for subscribing!");
-    };
-
     const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
-
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const response = await axios.get("http://127.0.0.1:8000/api/dashboard/settings/");
-                if (response.data && response.data.defaultLanguage) {
-                    if (!localStorage.getItem("language")) {
-                        setLanguage(response.data.defaultLanguage);
-                        localStorage.setItem("language", response.data.defaultLanguage);
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching settings:", error);
-            }
-        };
-
-        fetchSettings();
-    }, [setLanguage]);
 
     return (
         <div id="home" className={style.bg}>
             <header className={style.head} >
-                <img src={darklogo} className={style.logo} alt="logo" />
+                <img src={darklogo} className={style.logo} alt="CVision" width="48" height="58" fetchPriority="high" />
 
                 <nav className={style.navLinks}>
                     <a href="#why">{t('navFeatures')}</a>
@@ -96,8 +69,8 @@ export default function Home({ language, setLanguage }) {
             <section id="how1" className={style.howWorks}>
                 <h1 className={style.section2}><b>{t('howWorks')}</b></h1>
                 <div className={style.allsteps}>
-                    <div className={`${style.step} row`} >
-                        <div className='col-md-4 me-md-5'>
+                    <div className={style.step}>
+                        <div className={style.stepText}>
                             <h1 style={{ color: "#cd93ff" }} >01</h1>
                             <div className={style.steptitle}>
                                 <FaCloudUploadAlt className={style.iconInside} style={{ color: "#AC40FB" }} />
@@ -112,20 +85,20 @@ export default function Home({ language, setLanguage }) {
                             </ul>
                         </div>
 
-                        <div className={`${style.workcard}  col-md-4`} style={{ boxShadow: " 0 0 30px 1px #AC40FB" }}>
+                        <div className={style.workcard} style={{ boxShadow: "0 0 30px 1px #AC40FB" }}>
                             <div className={style.iconhowWorks} style={{ backgroundColor: "#F2E3FF" }}>
                                 <FaCloudUploadAlt className={style.iconInsideHowWorks} style={{ color: "#AC40FB" }} />
                             </div>
                         </div>
                     </div>
 
-                    <div className={`${style.step} row`} >
-                        <div className={`${style.workcard}  col-md-4 me-md-5`} style={{ boxShadow: " 0 0 30px 1px #F1416F" }}>
+                    <div className={style.step}>
+                        <div className={style.workcard} style={{ boxShadow: "0 0 30px 1px #F1416F" }}>
                             <div className={style.iconhowWorks} style={{ backgroundColor: "#fce1e6" }}>
                                 <FaSearch className={style.iconInsideHowWorks} style={{ color: "#F1416F" }} />
                             </div>
                         </div>
-                        <div className='col-md-4'>
+                        <div className={style.stepText}>
                             <h1 style={{ color: "#d48f9c" }}>02</h1>
                             <div className={style.steptitle}>
                                 <FaSearch className={style.iconInside} style={{ color: "#F1416F" }} />
@@ -141,8 +114,8 @@ export default function Home({ language, setLanguage }) {
                         </div>
                     </div>
 
-                    <div className={`${style.step} row`} >
-                        <div className='col-md-4 me-md-5'>
+                    <div className={style.step}>
+                        <div className={style.stepText}>
                             <h1 style={{ color: "#7cc5a7" }} >03</h1>
                             <div className={style.steptitle}>
                                 <FaClipboardList className={style.iconInside} style={{ color: "#3FB48D" }} />
@@ -157,20 +130,20 @@ export default function Home({ language, setLanguage }) {
                             </ul>
                         </div>
 
-                        <div className={`${style.workcard}  col-md-4 `} style={{ boxShadow: " 0 0 30px 1px #3FB48D" }}>
+                        <div className={style.workcard} style={{ boxShadow: "0 0 30px 1px #3FB48D" }}>
                             <div className={style.iconhowWorks} style={{ backgroundColor: "#ccf3e3" }}>
                                 <FaClipboardList className={style.iconInsideHowWorks} style={{ color: "#3FB48D" }} />
                             </div>
                         </div>
                     </div>
 
-                    <div className={`${style.step} row`} >
-                        <div className={`${style.workcard}  col-md-4 me-md-5`} style={{ boxShadow: " 0 0 30px 1px #F76D2F" }}>
+                    <div className={style.step}>
+                        <div className={style.workcard} style={{ boxShadow: "0 0 30px 1px #F76D2F" }}>
                             <div className={style.iconhowWorks} style={{ backgroundColor: "#FEE9DA" }}>
                                 <FaChartLine className={style.iconInsideHowWorks} style={{ color: "#F76D2F" }} />
                             </div>
                         </div>
-                        <div className='col-md-4 '>
+                        <div className={style.stepText}>
                             <h1 style={{ color: "#e6a171" }} >04</h1>
                             <div className={style.steptitle}>
                                 <FaChartLine className={style.iconInside} style={{ color: "#F76D2F" }} />
@@ -190,15 +163,15 @@ export default function Home({ language, setLanguage }) {
 
 
             <footer className={style.footer}>
-                <div className='row'>
-                    <div className='col-md-4'>
+                <div className={style.footerGrid}>
+                    <div className={style.footerColumn}>
                         <a href="#home">
-                            <img src={darklogo} className={style.logo} alt="logo" />
+                            <img src={darklogo} className={style.logo} alt="CVision" width="48" height="58" loading="lazy" />
                         </a>
                         <p>{t('footerTagline')}</p>
                     </div>
 
-                    <div className="col-md-4">
+                    <div className={style.footerColumn}>
                         <b>{t('footerQuickLinks')}</b>
                         <br />
                         <ul>
@@ -209,7 +182,7 @@ export default function Home({ language, setLanguage }) {
                             <li><Link to={"/signup"}>{t('signup')}</Link></li>
                         </ul>
                     </div>
-                    <div className='col-md-4'>
+                    <div className={style.footerColumn}>
                         <b>{t('footerFollow')}</b>
                         <br />
                         <div className={style.socialIcons}>

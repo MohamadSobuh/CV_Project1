@@ -20,6 +20,71 @@
     z-index: 1;
 }
 
+.quizState {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+.quizState h2 {
+    color: #082f43;
+    margin: 0;
+}
+
+.quizState p {
+    color: #6997a4;
+    margin: 10px 0 22px;
+}
+
+.quizStateSpinner {
+    animation: quizStateSpin 0.9s linear infinite;
+    color: #157253;
+    font-size: 3.25rem;
+    margin-bottom: 20px;
+}
+
+.quizStateErrorIcon {
+    color: #b73549;
+    font-size: 3.25rem;
+    margin-bottom: 20px;
+}
+
+.quizStateActions {
+    display: flex;
+    gap: 12px;
+}
+
+.quizRetryButton,
+.quizExitStateButton {
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 10px 22px;
+}
+
+.quizRetryButton {
+    background: #157253;
+    border: 1px solid #157253;
+    color: white;
+}
+
+.quizExitStateButton {
+    background: white;
+    border: 1px solid #b73549;
+    color: #b73549;
+}
+
+@keyframes quizStateSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .quizHeader {
     align-items: center;
     display: flex;

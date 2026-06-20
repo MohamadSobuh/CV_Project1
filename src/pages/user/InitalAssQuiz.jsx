@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import style from "./TaskAssQuiz.module.css";
-import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaExclamationCircle, FaSpinner, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUserFlow } from '../../context/UserFlowContext';
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,7 @@ export default function InitalAssQuiz({ language }) {
     );
     const [question, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const selectedField = state?.selectedField;
     const cvId = state?.cvId;
     console.log(weaknesses);
@@ -43,24 +44,24 @@ export default function InitalAssQuiz({ language }) {
         return true;
     }, [language, navigate]);
     const fetchQuestions = useCallback(async (weaknessSkills) => {
-        if (!ensureAuth()) return [];
+        if (!ensureAuth()) return;
+        setLoading(true);
+        setLoadError(false);
         try {
             const response = await api.post('/userr/quiz/start-weakness/', {
                 weakness_skills: weaknessSkills,
                 target_field: selectedField
              });
-            console.log(response.data);
-            return response.data;
+            setQuestions(response.data || {});
         } catch (error) {
             console.error('Error fetching questions:', error);
-            return [];
+            setLoadError(true);
+        } finally {
+            setLoading(false);
         }
     }, [ensureAuth, selectedField]);
     useEffect(() => {
-        fetchQuestions(weaknesses).then((data) => {
-            setQuestions(data || []);
-            setLoading(false);
-        });
+        fetchQuestions(weaknesses);
     }, [fetchQuestions, weaknesses]);
 
 
@@ -182,16 +183,32 @@ export default function InitalAssQuiz({ language }) {
         return (
             <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz}>
                 <div className={style.bgGrid} />
-                <p style={{ textAlign: 'center', marginTop: '4rem', color: '#4E6A54', fontSize: '1.2rem' }}>Loading questions...</p>
+                <div className={style.quizState} role="status" aria-live="polite">
+                    <FaSpinner className={style.quizStateSpinner} />
+                    <h2>{t('loadingAssessmentQuiz')}</h2>
+                    <p>{t('loadingAssessmentQuizWait')}</p>
+                </div>
             </div>
         );
     }
 
-    if (!question || question.questions?.length === 0) {
+    if (loadError || !question || question.questions?.length === 0) {
         return (
             <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz}>
                 <div className={style.bgGrid} />
-                <p style={{ textAlign: 'center', marginTop: '4rem', color: '#4E6A54', fontSize: '1.2rem' }}>No questions available.</p>
+                <div className={style.quizState} role="alert">
+                    <FaExclamationCircle className={style.quizStateErrorIcon} />
+                    <h2>{t(loadError ? 'assessmentQuizLoadError' : 'noQuizQuestions')}</h2>
+                    <p>{t(loadError ? 'quizLoadErrorMessage' : 'noQuizQuestionsMessage')}</p>
+                    <div className={style.quizStateActions}>
+                        <button type="button" className={style.quizRetryButton} onClick={() => fetchQuestions(weaknesses)}>
+                            {t('retry')}
+                        </button>
+                        <button type="button" className={style.quizExitStateButton} onClick={handleExit}>
+                            {t('exitQuiz')}
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }

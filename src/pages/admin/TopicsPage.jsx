@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import style from "./AddTopics.module.css";
 import { useTranslation } from "react-i18next";
 
 import TopicCard from "../../components/ui/TopicCard";
 import AddTopicform from "./AddTopicform";
 import EmptyPage from "../../components/ui/EmptyPage";
+import AdminDataState from "../../components/ui/AdminDataState";
 import { FaBookOpen } from 'react-icons/fa';
 import { FaSearch } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -19,6 +20,8 @@ const TopicsPage = ({ language = 'en' }) => {
     const [showEditModal, setShowEditModal] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(null);
     const [filterInput, setFilterInput] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
 
     const showMessage = (text, type) => {
@@ -28,7 +31,7 @@ const TopicsPage = ({ language = 'en' }) => {
 
 
     const [topics, setTopics] = useState([]);
-    const ensureAuth = () => {
+    const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("userRole");
         if (!token || token === "undefined" || role !== "admin") {
@@ -37,7 +40,7 @@ const TopicsPage = ({ language = 'en' }) => {
             return false;
         }
         return true;
-    };
+    }, [language, navigate]);
  
     useEffect(() => {
         if (location.state?.message) {
@@ -48,19 +51,25 @@ const TopicsPage = ({ language = 'en' }) => {
         }
     }, [location.state]);
  
+    const loadTopics = useCallback(async () => {
+        if (!ensureAuth()) return;
+
+        setLoading(true);
+        setLoadError(false);
+        try {
+            const response = await api.get("/dashboard/topics/");
+            setTopics(response.data);
+        } catch (err) {
+            console.error("Error fetching topics:", err);
+            setLoadError(true);
+        } finally {
+            setLoading(false);
+        }
+    }, [ensureAuth]);
+
     useEffect(() => {
-        const fetchTopics = async () => {
-            if (!ensureAuth()) return;
-            try {
-                const response = await api.get("/dashboard/topics");
-                console.log(response.data,"data");
-                setTopics(response.data);
-            } catch (err) {
-                console.error("Error fetching topics:", err);
-            }
-        };
-        fetchTopics();
-    }, []);
+        loadTopics();
+    }, [loadTopics]);
     const handleAdd = async (newTopic) => {
         console.log(newTopic);
         const payload = {
@@ -162,7 +171,20 @@ const TopicsPage = ({ language = 'en' }) => {
                 text={message.text}
                 type={message.type}
             />
-            {topics.length === 0 ? (
+            {loading ? (
+                <AdminDataState
+                    title={t("loadingTopics")}
+                    message={t("loadingTopicsWait")}
+                />
+            ) : loadError ? (
+                <AdminDataState
+                    type="error"
+                    title={t("topicsLoadError")}
+                    message={t("adminLoadErrorMessage")}
+                    retryLabel={t("retry")}
+                    onRetry={loadTopics}
+                />
+            ) : topics.length === 0 ? (
                 <EmptyPage
                     icon={<FaBookOpen />}
                     title={t('emptyTopicsTitle')}

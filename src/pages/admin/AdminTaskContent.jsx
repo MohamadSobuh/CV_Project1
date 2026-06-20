@@ -16,7 +16,7 @@ import api from '../../utils/axios';
 
 export default function AdminTaskContent({ language }) {
     const navigate = useNavigate();
-    const { activeTask, topics } = useAdminFlow();
+    const { activeTask, topics, fetchTopics } = useAdminFlow();
     const { t, i18n } = useTranslation();
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
     
@@ -56,6 +56,12 @@ export default function AdminTaskContent({ language }) {
             navigate('/admin/tasks');
         }
     }, [activeTask, reset, navigate]);
+
+    useEffect(() => {
+        if (topics.length === 0) {
+            fetchTopics();
+        }
+    }, [fetchTopics, topics.length]);
         const ensureAuth = () => {
             const token = localStorage.getItem("accessToken");
             const role = localStorage.getItem("userRole");

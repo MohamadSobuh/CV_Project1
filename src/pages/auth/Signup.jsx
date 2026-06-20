@@ -1,4 +1,5 @@
 import darklogo from "../../images/darklogo.png";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import style from "./Sign.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";

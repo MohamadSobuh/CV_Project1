@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import style from "./TaskAssQuiz.module.css";
-import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaExclamationCircle, FaSpinner, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
@@ -21,6 +21,8 @@ export default function TaskAssQuiz({ language }) {
     const [questions, setQuestions] = useState([]);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
     const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
@@ -38,26 +40,32 @@ export default function TaskAssQuiz({ language }) {
     }, [navigate, language]);
 
     // جلب بيانات الكويز الفعلي من الباك إند
-    useEffect(() => {
-        if (!taskId) return;
-        const load = async () => {
-            if (!ensureAuth()) return;
-            try {
-                const response = await api.post(`/userr/quiz/start-task/${taskId}/`);
-                const data = response.data;
-                console.log("Fetched task quiz data:", data);
+    const loadQuestions = useCallback(async () => {
+        if (!taskId || !ensureAuth()) return;
 
-                if (data && data.questions && Array.isArray(data.questions)) {
-                    setQuestions(data.questions);
-                } else if (Array.isArray(data)) {
-                    setQuestions(data);
-                }
-            } catch (error) {
-                console.error("Error fetching task quiz:", error);
+        setLoading(true);
+        setLoadError(false);
+        try {
+            const response = await api.post(`/userr/quiz/start-task/${taskId}/`);
+            const data = response.data;
+            if (data?.questions && Array.isArray(data.questions)) {
+                setQuestions(data.questions);
+            } else if (Array.isArray(data)) {
+                setQuestions(data);
+            } else {
+                setQuestions([]);
             }
-        };
-        load();
+        } catch (error) {
+            console.error("Error fetching task quiz:", error);
+            setLoadError(true);
+        } finally {
+            setLoading(false);
+        }
     }, [taskId, ensureAuth]);
+
+    useEffect(() => {
+        loadQuestions();
+    }, [loadQuestions]);
 
     const answeredCount = Object.keys(answers).length;
     const progress = questions.length ? (answeredCount / questions.length) * 100 : 0;
@@ -129,6 +137,40 @@ export default function TaskAssQuiz({ language }) {
             console.error("حدث خطأ أثناء تسليم الكويز:", error.response?.data);
         }
     };
+
+    if (loading) {
+        return (
+            <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz}>
+                <div className={style.bgGrid} />
+                <div className={style.quizState} role="status" aria-live="polite">
+                    <FaSpinner className={style.quizStateSpinner} />
+                    <h2>{t('loadingTaskQuiz')}</h2>
+                    <p>{t('loadingTaskQuizWait')}</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (loadError || questions.length === 0) {
+        return (
+            <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz}>
+                <div className={style.bgGrid} />
+                <div className={style.quizState} role="alert">
+                    <FaExclamationCircle className={style.quizStateErrorIcon} />
+                    <h2>{t(loadError ? 'taskQuizLoadError' : 'noQuizQuestions')}</h2>
+                    <p>{t(loadError ? 'quizLoadErrorMessage' : 'noQuizQuestionsMessage')}</p>
+                    <div className={style.quizStateActions}>
+                        <button type="button" className={style.quizRetryButton} onClick={loadQuestions}>
+                            {t('retry')}
+                        </button>
+                        <button type="button" className={style.quizExitStateButton} onClick={handleExit}>
+                            {t('exitQuiz')}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={language === 'ar' ? style.taskAssQuizAr : style.taskAssQuiz} >

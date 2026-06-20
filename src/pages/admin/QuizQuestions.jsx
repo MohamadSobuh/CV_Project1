@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import AddQuestionsForm from "./AddQuestionsForm";
 import EmptyPage from "../../components/ui/EmptyPage";
-import { FaQuestionCircle, FaSpinner } from 'react-icons/fa';
+import AdminDataState from "../../components/ui/AdminDataState";
+import { FaQuestionCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { FaFilter } from "react-icons/fa";
 import Notification from '../../components/ui/Notification';
@@ -185,20 +186,18 @@ const QuizQuestions = ({ language = 'en' }) => {
     return (
         <div className={language === 'ar' ? style.dashArabic : style.dash} dir={language === 'ar' ? 'rtl' : 'ltr'}>
             {loading ? (
-                <div className={style.loadingState} role="status" aria-live="polite">
-                    <FaSpinner className={style.loadingSpinner} />
-                    <h3>{t("loadingQuestions", "Loading questions")}</h3>
-                    <p>{t("loadingQuestionsWait", "Fetching questions, topics, and tasks...")}</p>
-                </div>
+                <AdminDataState
+                    title={t("loadingQuestions")}
+                    message={t("loadingQuestionsWait")}
+                />
             ) : loadError ? (
-                <div className={style.errorState}>
-                    <FaQuestionCircle className={style.errorIcon} />
-                    <h3>{t("questionsLoadError", "Could not load questions")}</h3>
-                    <p>{t("questionsLoadErrorMessage", "Please check the connection and try again.")}</p>
-                    <button type="button" className={style.btnAdd} onClick={loadPageData}>
-                        {t("retry", "Retry")}
-                    </button>
-                </div>
+                <AdminDataState
+                    type="error"
+                    title={t("questionsLoadError")}
+                    message={t("adminLoadErrorMessage")}
+                    retryLabel={t("retry")}
+                    onRetry={loadPageData}
+                />
             ) : questions.length === 0 ? (
                 <EmptyPage
                     icon={<FaQuestionCircle />}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import style from "./AdminTables.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import AdminInput from '../../components/ui/AdminInput';
 import InputError from "../../components/ui/InputError";
-import * as yup from "yup";
 import { signupSchemaForTasks } from "../../utils/validationSchema";
 import EmptyPage from "../../components/ui/EmptyPage";
+import AdminDataState from "../../components/ui/AdminDataState";
 import { useAdminFlow } from '../../context/AdminFlowContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -38,12 +38,13 @@ export default function Tasks({ language }) {
     const [showModal, setShowModal] = useState(false);
     const tasksPerPage = 4;
     const [showDeleteModal, setShowDeleteModal] = useState(null);
-    const { topics, fetchTopics, loadingTopics } = useAdminFlow();
+    const { topics, fetchTopics, loadingTopics, setActiveTask } = useAdminFlow();
     const navigate = useNavigate();
-    const { setActiveTask } = useAdminFlow();
     const [filterInput, setFilterInput] = useState('');
     const [filterTopic, setFilterTopic] = useState('');
     const location = useLocation();
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
 
 
@@ -66,7 +67,7 @@ export default function Tasks({ language }) {
     };
 
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     
 
 
@@ -75,7 +76,7 @@ export default function Tasks({ language }) {
             showMessage(location.state.message, location.state.type);
         }
     }, [location.state]);
-    const ensureAuth = () => {
+    const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("userRole");
         if (!token || token === "undefined" || role !== "admin") {
@@ -84,23 +85,33 @@ export default function Tasks({ language }) {
             return false;
         }
         return true;
-    };
+    }, [language, navigate]);
+
+    const loadPageData = useCallback(async () => {
+        if (!ensureAuth()) return;
+
+        setLoading(true);
+        setLoadError(false);
+        try {
+            const [tasksResponse, topicsLoaded] = await Promise.all([
+                api.get("/dashboard/tasks/"),
+                fetchTopics(),
+            ]);
+            if (!topicsLoaded) {
+                throw new Error("Topics could not be loaded");
+            }
+            setTasks(tasksResponse.data);
+        } catch (err) {
+            console.error("Error loading tasks page:", err);
+            setLoadError(true);
+        } finally {
+            setLoading(false);
+        }
+    }, [ensureAuth, fetchTopics]);
 
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                if (!ensureAuth()) return;
-                const response = await api.get("/dashboard/tasks");
-                console.log(response.data);
-                setTasks(response.data);
-            } catch (err) {
-                console.error("Error fetching topics:", err);
-            }
-
-        };
-        fetchTasks();
-        fetchTopics();
-    }, []);
+        loadPageData();
+    }, [loadPageData]);
     //  const handleEditChange = (e) => {
     //     const { name, value } = e.target;
     //     setEditData(prev => ({ ...prev, [name]: value }));
@@ -198,7 +209,20 @@ export default function Tasks({ language }) {
                 text={message.text}
                 type={message.type}
             />
-            {tasks.length === 0 ? (
+            {loading ? (
+                <AdminDataState
+                    title={t("loadingTasks")}
+                    message={t("loadingTasksWait")}
+                />
+            ) : loadError ? (
+                <AdminDataState
+                    type="error"
+                    title={t("tasksLoadError")}
+                    message={t("adminLoadErrorMessage")}
+                    retryLabel={t("retry")}
+                    onRetry={loadPageData}
+                />
+            ) : tasks.length === 0 ? (
                 <EmptyPage
                     icon={<FaTasks />}
                     title={t('emptyTasksTitle')}
