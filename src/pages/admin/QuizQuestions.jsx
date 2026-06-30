@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import style from "./Quiz.module.css";
 import QuestionCard from "../../components/ui/QuestionCard";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,7 @@ import api from '../../utils/axios';
 
 const QuizQuestions = ({ language = 'en' }) => {
     const [questions, setQuestions] = useState([]);
+    const [totalQuestionsCount, setTotalQuestionsCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
     const questionsPerPage = 4;
@@ -28,6 +29,7 @@ const QuizQuestions = ({ language = 'en' }) => {
     const [topics, setTopics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
+    const filtersLoadedRef = useRef(false);
 
     const [message, setMessage] = useState({ show: false, text: "", type: "success" });
 
@@ -79,6 +81,7 @@ const QuizQuestions = ({ language = 'en' }) => {
         try {
             await api.delete(`/dashboard/questions/${showDeleteModal}/`);
             setQuestions(questions.filter((q) => q.id !== showDeleteModal));
+            setTotalQuestionsCount(prev => Math.max(prev - 1, 0));
             showMessage(language === "ar" ? "تم حذف السؤال بنجاح" : "Question deleted successfully", "success");
             setShowDeleteModal(null);
         } catch (error) {
@@ -97,20 +100,39 @@ const QuizQuestions = ({ language = 'en' }) => {
         setLoadError(false);
         try {
             const [questionsResponse, tasksResponse, topicsResponse] = await Promise.all([
-                api.get("/dashboard/questions/"),
-                api.get("/dashboard/tasks/"),
-                api.get("/dashboard/topics/"),
+                api.get("/dashboard/questions/", {
+                    params: {
+                        paginate: 1,
+                        page: currentPage,
+                        page_size: questionsPerPage,
+                        topic: filterTopic || undefined,
+                        question_type: filterQuestionType || undefined,
+                        task: filterTask || undefined,
+                    }
+                }),
+                filtersLoadedRef.current ? Promise.resolve(null) : api.get("/dashboard/tasks/", {
+                    params: {
+                        summary: 1,
+                    }
+                }),
+                filtersLoadedRef.current ? Promise.resolve(null) : api.get("/dashboard/topics/"),
             ]);
-            setQuestions(questionsResponse.data);
-            setTasksFromDB(tasksResponse.data);
-            setTopics(topicsResponse.data);
+            setQuestions(questionsResponse.data.results || questionsResponse.data);
+            setTotalQuestionsCount(questionsResponse.data.count ?? questionsResponse.data.length);
+            if (tasksResponse) {
+                setTasksFromDB(tasksResponse.data);
+            }
+            if (topicsResponse) {
+                setTopics(topicsResponse.data);
+            }
+            filtersLoadedRef.current = true;
         } catch (error) {
             console.error("Error loading questions page:", error);
             setLoadError(true);
         } finally {
             setLoading(false);
         }
-    }, [ensureAuth]);
+    }, [currentPage, ensureAuth, filterQuestionType, filterTask, filterTopic, questionsPerPage]);
 
     useEffect(() => {
         loadPageData();
@@ -149,9 +171,13 @@ const QuizQuestions = ({ language = 'en' }) => {
         if (!ensureAuth()) return;
         try {
             const response = await api.post("/dashboard/questions/", payload);
-            setQuestions(prev => [response.data, ...prev]);
             showMessage(language === "ar" ? "تم إضافة السؤال بنجاح" : "Question added successfully", "success");
             console.log(response.data, "questions");
+            if (currentPage !== 1) {
+                setCurrentPage(1);
+            } else {
+                loadPageData();
+            }
         } catch (error) {
             console.error("Server Validation Error:", error.response?.data);
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
@@ -160,25 +186,12 @@ const QuizQuestions = ({ language = 'en' }) => {
 
         setShowAddModal(false);
     };
-    const questionsFilter = useMemo(
-        () => questions.filter((question) => {
-            return (
-                (question.topic || "").toLowerCase().includes(filterTopic.toLowerCase()) &&
-                (question.type || "").toLowerCase().includes(filterQuestionType.toLowerCase()) &&
-                (question.task || "").toLowerCase().includes(filterTask.toLowerCase())
-            );
-        }),
-        [filterQuestionType, filterTask, filterTopic, questions],
-    );
-
     useEffect(() => {
         setCurrentPage(1);
     }, [filterTopic, filterQuestionType, filterTask]);
 
-    const totalPagesFilter = Math.ceil(questionsFilter.length / questionsPerPage);
-    const indexOfLastQuestionFilter = currentPage * questionsPerPage;
-    const indexOfFirstQuestionFilter = indexOfLastQuestionFilter - questionsPerPage;
-    const currentQuestionsFilter = questionsFilter.slice(indexOfFirstQuestionFilter, indexOfLastQuestionFilter);
+    const totalPagesFilter = Math.ceil(totalQuestionsCount / questionsPerPage);
+    const currentQuestionsFilter = questions;
 
     const handleNext = () => currentPage < totalPagesFilter && setCurrentPage(prev => prev + 1);
     const handlePrev = () => currentPage > 1 && setCurrentPage(prev => prev - 1);
@@ -250,8 +263,8 @@ const QuizQuestions = ({ language = 'en' }) => {
                                             onChange={(e) => setFilterQuestionType(e.target.value)}
                                         >
                                             <option value="">{t('allTypesQuestions')}</option>
-                                            <option value="task quiz">{t('taskQuiz')}</option>
-                                            <option value="placement test">{t('placementTest')}</option>
+                                            <option value="task_quiz">{t('taskQuiz')}</option>
+                                            <option value="placement">{t('placementTest')}</option>
                                         </select>
                                     </div>
                                 </div>

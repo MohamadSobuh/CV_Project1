@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import style from "./AdminTables.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -35,6 +35,7 @@ export default function Tasks({ language }) {
     };
 
     const [tasks, setTasks] = useState([]);
+    const [totalTasksCount, setTotalTasksCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const tasksPerPage = 4;
@@ -42,6 +43,7 @@ export default function Tasks({ language }) {
     const { topics, fetchTopics, loadingTopics, setActiveTask } = useAdminFlow();
     const navigate = useNavigate();
     const [filterInput, setFilterInput] = useState('');
+    const [debouncedFilterInput, setDebouncedFilterInput] = useState('');
     const [filterTopic, setFilterTopic] = useState('');
     const location = useLocation();
     const [loading, setLoading] = useState(true);
@@ -65,6 +67,19 @@ export default function Tasks({ language }) {
             showMessage(location.state.message, location.state.type);
         }
     }, [location.state]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setDebouncedFilterInput(filterInput);
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [filterInput]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedFilterInput, filterTopic]);
+
     const ensureAuth = useCallback(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("userRole");
@@ -83,20 +98,30 @@ export default function Tasks({ language }) {
         setLoadError(false);
         try {
             const [tasksResponse, topicsLoaded] = await Promise.all([
-                api.get("/dashboard/tasks/"),
-                fetchTopics(),
+                api.get("/dashboard/tasks/", {
+                    params: {
+                        paginate: 1,
+                        summary: 1,
+                        page: currentPage,
+                        page_size: tasksPerPage,
+                        search: debouncedFilterInput || undefined,
+                        topic: filterTopic || undefined,
+                    }
+                }),
+                topics.length ? Promise.resolve(true) : fetchTopics(),
             ]);
             if (!topicsLoaded) {
                 throw new Error("Topics could not be loaded");
             }
-            setTasks(tasksResponse.data);
+            setTasks(tasksResponse.data.results || tasksResponse.data);
+            setTotalTasksCount(tasksResponse.data.count ?? tasksResponse.data.length);
         } catch (err) {
             console.error("Error loading tasks page:", err);
             setLoadError(true);
         } finally {
             setLoading(false);
         }
-    }, [ensureAuth, fetchTopics]);
+    }, [currentPage, debouncedFilterInput, ensureAuth, fetchTopics, filterTopic, tasksPerPage, topics.length]);
 
     useEffect(() => {
         loadPageData();
@@ -116,13 +141,24 @@ export default function Tasks({ language }) {
     //     setEditData(taskData);
     //     setIsEditing(false);
     // };
+    const openTaskPage = async (task, path) => {
+        if (!ensureAuth()) return;
+
+        try {
+            const response = await api.get(`/dashboard/tasks/${task.id}/`);
+            setActiveTask(response.data);
+            navigate(path);
+        } catch (err) {
+            console.error("Error loading task details:", err);
+            showMessage(language === "ar" ? "تعذر تحميل تفاصيل المهمة" : "Could not load task details", "error");
+        }
+    };
+
     const handleShowEditPage = async (data) => {
-        setActiveTask(data);
-        navigate('/admin/editTask');
+        openTaskPage(data, '/admin/editTask');
     }
     const handleView = (task) => {
-        setActiveTask(task);
-        navigate('/admin/viewTaskContent');
+        openTaskPage(task, '/admin/viewTaskContent');
     };
     const handleDelete = async () => {
         try {
@@ -130,6 +166,7 @@ export default function Tasks({ language }) {
             const response = await api.delete(`/dashboard/tasks/${showDeleteModal}/`);
             console.log(response)
             setTasks(tasks.filter(task => task.id !== showDeleteModal));
+            setTotalTasksCount(prev => Math.max(prev - 1, 0));
             setShowDeleteModal(null);
             showMessage(language === "ar" ? "تم حذف المهمة بنجاح" : "Task deleted successfully", "success");
         } catch (err) {
@@ -138,18 +175,8 @@ export default function Tasks({ language }) {
             showMessage(language === "ar" ? "حدث خطأ" : "An error occurred", "error");
         }
     };
-    const filteredTasks = useMemo(() => {
-        return tasks.filter(task => {
-            const matchesInput = (task.title || task.task || "").toLowerCase().includes(filterInput.toLowerCase());
-            const matchesTopic = (task.topic || "").toString().includes(filterTopic);
-            return matchesInput && matchesTopic;
-        });
-    }, [filterInput, filterTopic, tasks]);
-
-    const totalPagesFilter = Math.ceil(filteredTasks.length / tasksPerPage);
-    const indexOfLastTaskFilter = currentPage * tasksPerPage;
-    const indexOfFirstTaskFilter = indexOfLastTaskFilter - tasksPerPage;
-    const currentTasksFilter = filteredTasks.slice(indexOfFirstTaskFilter, indexOfLastTaskFilter);
+    const totalPagesFilter = Math.ceil(totalTasksCount / tasksPerPage);
+    const currentTasksFilter = tasks;
 
     const handleNext = () => setCurrentPage(prev => (
         prev < totalPagesFilter ? prev + 1 : prev
@@ -177,9 +204,13 @@ export default function Tasks({ language }) {
             const response = await api.post("/dashboard/tasks/", payload);
             console.log(response.data);
             showMessage(language === "ar" ? "تم إضافة المهمة بنجاح" : "Task added successfully", "success");
-            setTasks(prev => [...prev, response.data]);
             reset();
             setShowModal(false);
+            if (currentPage !== 1) {
+                setCurrentPage(1);
+            } else {
+                loadPageData();
+            }
         }
         catch (err) {
             setShowModal(false);
