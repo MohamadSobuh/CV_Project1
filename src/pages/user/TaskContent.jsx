@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import api from "../../utils/axios";
 import LoadingScreen from "../../components/ui/LoadingScreen";
+import { getVideoEmbedUrl } from "../../utils/video";
 
 export default function TaskContent({ language }) {
     const navigate = useNavigate();
@@ -49,6 +50,8 @@ export default function TaskContent({ language }) {
     if (!taskData) {
         return <LoadingScreen />;
     }
+
+    const embedVideoUrl = getVideoEmbedUrl(taskData.video_url);
     
     return (
         <div className={language === 'ar' ? styles.taskAr : styles.taskEn}>
@@ -74,14 +77,16 @@ export default function TaskContent({ language }) {
                     </div>
 
                     <div className={styles.mediaBoxVideo}>
-                        <iframe
-                            src={taskData.video_url}
-                            frameBorder="0"
-                            allowFullScreen
-                            title="Task Video"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            className={styles.videoFrame}
-                        ></iframe>
+                        {embedVideoUrl && (
+                            <iframe
+                                src={embedVideoUrl}
+                                frameBorder="0"
+                                allowFullScreen
+                                title="Task Video"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                className={styles.videoFrame}
+                            ></iframe>
+                        )}
                     </div>
                 </div>
             </div>

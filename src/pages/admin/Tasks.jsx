@@ -18,6 +18,7 @@ import { FaFilter } from "react-icons/fa";
 import Notification from '../../components/ui/Notification';
 import { useLocation } from "react-router-dom";
 import api from '../../utils/axios';
+import { getVideoEmbedUrl } from '../../utils/video';
 
 
 
@@ -55,18 +56,6 @@ export default function Tasks({ language }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchemaForTasks)
     });
-    const getEmbedUrl = (url) => {
-        if (!url) return "";
-        if (url.includes("watch?v=")) {
-            return url.replace("watch?v=", "embed/");
-        }
-        if (url.includes("m.youtube.com")) {
-            return url.replace("m.youtube.com/", "www.youtube.com/embed/");
-        }
-        return url;
-    };
-
-
     const { t } = useTranslation();
     
 
@@ -179,7 +168,7 @@ export default function Tasks({ language }) {
             title: data.task,
             topic_id: Number(data.topic),
             content: data.content,
-            video_url: getEmbedUrl(data.videoUrl),
+            video_url: getVideoEmbedUrl(data.videoUrl),
             image_url: data.imageUrl,
         };
         console.log("Payload to be sent:", payload);

@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import  Notification  from "../../components/ui/Notification";
 import api from '../../utils/axios';
+import { getVideoEmbedUrl } from '../../utils/video';
 
 export default function AdminTaskContent({ language }) {
     const navigate = useNavigate();
@@ -27,18 +28,6 @@ export default function AdminTaskContent({ language }) {
         }, 3000);
     };
 
-    // embed youtube video
-    const getEmbedUrl = (url) => {
-        if (!url) return "";
-        if (url.includes("watch?v=")) {
-            return url.replace("watch?v=", "embed/");
-        }
-        if (url.includes("m.youtube.com")) {
-            return url.replace("m.youtube.com/", "www.youtube.com/embed/");
-        }
-        return url;
-    };
-
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(signupSchemaForTasks),
     });
@@ -49,7 +38,7 @@ export default function AdminTaskContent({ language }) {
                 task: activeTask.task,
                 topic: activeTask.topic_id,
                 content: activeTask.content,
-                videoUrl: getEmbedUrl(activeTask.video_url),
+                videoUrl: getVideoEmbedUrl(activeTask.video_url),
                 imageUrl: activeTask.image_url,
             });
         } else {
@@ -80,12 +69,19 @@ export default function AdminTaskContent({ language }) {
     const onSubmit = async (data) => {
         if (!activeTask) return;
 
+        const selectedTopicId = Number(data.topic || activeTask.topic_id);
+
+        if (!Number.isInteger(selectedTopicId)) {
+            showMessage(language === "ar" ? "يرجى اختيار الموضوع" : "Please select a topic", "error");
+            return;
+        }
+
         const payload = {
             title: data.task,
-            topic_id: Number(data.topic),
+            topic_id: selectedTopicId,
             content: data.content,
-            video_url: getEmbedUrl(data.videoUrl),
-            image_url: data.imageUrl,
+            video_url: getVideoEmbedUrl(data.videoUrl) || null,
+            image_url: data.imageUrl?.trim() || null,
         };
 
         try {
@@ -100,7 +96,12 @@ export default function AdminTaskContent({ language }) {
             });
         } catch (err) {
             console.error("Error updating task:", err);
-            showMessage(language === "ar" ? "فشل تحديث المهمة. يرجى المحاولة مرة أخرى." : "Failed to update task. Please try again.", "error");
+            const apiError = err.response?.data;
+            const fallbackMessage = language === "ar" ? "فشل تحديث المهمة. يرجى المحاولة مرة أخرى." : "Failed to update task. Please try again.";
+            const detail = apiError && typeof apiError === "object"
+                ? Object.entries(apiError).map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(", ") : messages}`).join(" | ")
+                : "";
+            showMessage(detail || fallbackMessage, "error");
         }
     };
 
@@ -162,8 +163,8 @@ export default function AdminTaskContent({ language }) {
                         <p className={styles.cardDescription} style={{ marginBottom: 10 }}><strong>{t('topicSection')}</strong><br />{t('selectTopic')}</p>
                     </div>
                     <div style={{ flex: '1 1 50%' }}>
-                        <select {...register("topic")} defaultValue="" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1A83A8", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", fontSize: "14px" }}>
-                            <option value={activeTask.topic_id} disabled hidden>{activeTask.topic}</option>
+                        <select {...register("topic")} defaultValue={activeTask.topic_id || ""} style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #1A83A8", backgroundColor: "#E6F7F9", color: "#1A83A8", outline: "none", fontSize: "14px" }}>
+                            <option value={activeTask.topic_id}>{activeTask.topic}</option>
                             {topics && topics.map((topic) => (
                                 <option key={topic.id} value={topic.id}>{topic.title}</option>
                             ))}
@@ -190,7 +191,7 @@ export default function AdminTaskContent({ language }) {
                         <div className={styles.mediaBoxVideo} style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', justifyContent: 'flex-start' }}>
                             {taskData.video_url ? (
                                 <iframe
-                                    src={getEmbedUrl(taskData.video_url)}
+                                    src={getVideoEmbedUrl(taskData.video_url)}
                                     frameBorder="0"
                                     allowFullScreen
                                     title="Task Video"

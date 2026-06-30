@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAdminFlow } from '../../context/AdminFlowContext';
 import { useTranslation } from "react-i18next";
+import { getVideoEmbedUrl } from '../../utils/video';
 
 export default function ViewTaskContent({ language }) {
     const { t } = useTranslation();
@@ -65,16 +66,15 @@ export default function ViewTaskContent({ language }) {
                     </div>
 
                     <div className={styles.mediaBoxVideo}>
-                        <iframe
-                            src={taskData.video_url?.includes("embed")
-                                ? taskData.video_url
-                                : taskData.video_url?.replace("watch?v=", "embed/")
-                            }
-                            frameBorder="0"
-                            allowFullScreen
-                            title="Task Video"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                        ></iframe>
+                        {taskData.video_url && (
+                            <iframe
+                                src={getVideoEmbedUrl(taskData.video_url)}
+                                frameBorder="0"
+                                allowFullScreen
+                                title="Task Video"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                            ></iframe>
+                        )}
                         <span className={styles.mediaTextVid}>Video support</span>
                     </div>
                 </div>
