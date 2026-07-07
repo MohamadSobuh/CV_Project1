@@ -73,7 +73,7 @@ const ensureAuth = () => {
     <div className={language === 'ar' ? style.dashArabic : style.dash}>
       <div className={style.bgGrid} />
 
-      <h1><b>{t('dash')}</b></h1>
+      <h1><b>Admin {t('dash')}</b></h1>
       <p>{t('overview')}</p>
       <br />
       <div className={`row ${style.cardsContainer}`}>

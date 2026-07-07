@@ -16,6 +16,7 @@ export default function TaskContent({ language }) {
     const { activeTask } = useUserFlow();
     const { t } = useTranslation();
     const [taskData, setTaskData] = useState(null);
+    const [isImageOpen, setIsImageOpen] = useState(false);
 
 
     const ensureAuth = () => {
@@ -73,7 +74,16 @@ export default function TaskContent({ language }) {
 
                 <div className={styles.mediaRow}>
                     <div className={styles.mediaBoxImage}>
-                        {taskData.image_url && <img src={taskData.image_url} alt="Task" className={styles.img} />}
+                        {taskData.image_url && (
+                            <button
+                                type="button"
+                                className={styles.imageButton}
+                                onClick={() => setIsImageOpen(true)}
+                                aria-label="Open task image"
+                            >
+                                <img src={taskData.image_url} alt="Task" className={styles.img} />
+                            </button>
+                        )}
                     </div>
 
                     <div className={styles.mediaBoxVideo}>
@@ -112,6 +122,22 @@ export default function TaskContent({ language }) {
                     }
                 </button>
             </div>
+
+            {isImageOpen && taskData.image_url && (
+                <div className={styles.imageOverlay} onClick={() => setIsImageOpen(false)}>
+                    <div className={styles.imagePreview} onClick={(event) => event.stopPropagation()}>
+                        <button
+                            type="button"
+                            className={styles.closeImageButton}
+                            onClick={() => setIsImageOpen(false)}
+                            aria-label="Close image preview"
+                        >
+                            ×
+                        </button>
+                        <img src={taskData.image_url} alt="Task enlarged" />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

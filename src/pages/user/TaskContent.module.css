@@ -123,12 +123,70 @@
   color: #92A6E3;
 }
 
+.imageButton {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
 .img{
   width: 100%;
   height: 100%;
   padding: 10px 10px 0 10px;
   border-radius: 25px;
+  object-fit: contain;
 } 
+
+.imageOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(8, 47, 67, 0.76);
+  backdrop-filter: blur(4px);
+  cursor: zoom-out;
+}
+
+.imagePreview {
+  position: relative;
+  max-width: min(1100px, 94vw);
+  max-height: 90vh;
+  padding: 16px;
+  border-radius: 22px;
+  background: #FFFFFF;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  cursor: default;
+}
+
+.imagePreview img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(90vh - 32px);
+  border-radius: 16px;
+  object-fit: contain;
+}
+
+.closeImageButton {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: #082F43;
+  color: #FFFFFF;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+}
 
 .mediaTextImg {
   color: #92A6E3;
